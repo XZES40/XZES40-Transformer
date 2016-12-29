@@ -10,4 +10,7 @@ apt install -y curl \
                libxerces-c-dev \
                libxerces-c-doc \
                libxerces-c-samples \
-               libxerces-c3.1
+               libxerces-c3.1 \
+               clang
+
+ln -s /xzes40 /home/vagrant/xzes40
