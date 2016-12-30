@@ -1,22 +1,41 @@
+#include <xalanc/Include/PlatformDefinitions.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
-// Other include files, declarations, and non-Xerces-C++ initializations.
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
+#include <iostream>
 
-using namespace xercesc;
+XALAN_USING_XERCES(XMLPlatformUtils)
+XALAN_USING_XALAN(XalanTransformer)
+XALAN_USING_XALAN(XSLTInputSource)
+XALAN_USING_XALAN(XSLTResultTarget)
 
-int main(int argc, char* argv[])
+////
+// XZES40 Xerces C++ proof of concept.
+// Segmentation faults, but compiles correctly.
+// TODO: Fix that.
+////
+
+int main( int argc , char* argv[] )
 {
-  try {
+
     XMLPlatformUtils::Initialize();
-  }
-  catch (const XMLException& toCatch) {
-    // Do your failure processing here
-    return 1;
-  }
+    XalanTransformer::initialize();
 
-  // Do your actual work with Xerces-C++ here.
+    XalanTransformer the_xalan_transformer;
 
-  XMLPlatformUtils::Terminate();
+    XSLTInputSource xmlIn("test/foo.xml");
+    XSLTInputSource xslIn("test/foo.xsl");
+    XSLTResultTarget xmlOut("test/foo.out");
 
-  // Other terminations and cleanup.
-  return 0;
+    std::cout <<  "before\n";
+
+    int theResult = the_xalan_transformer.transform(xmlIn, xslIn, xmlOut);
+
+    std::cout << "after. TheResult: " << theResult << "\n";
+
+    XalanTransformer::terminate();
+    XMLPlatformUtils::Terminate();
+
+    std::cout << "last\n";
+
+    return 0;
 }
