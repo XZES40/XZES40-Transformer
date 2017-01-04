@@ -1,41 +1,37 @@
+///////////////////////////////////////////////////////////////////////////////
+// Filename: xzes40.cpp
+// Description: Main entrypoint for the XZES40 Transformer application
+///////////////////////////////////////////////////////////////////////////////
+
 #include <xalanc/Include/PlatformDefinitions.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
+
 #include <iostream>
+
+#include <lib.hpp>
+#include <transform.hpp>
 
 XALAN_USING_XERCES(XMLPlatformUtils)
 XALAN_USING_XALAN(XalanTransformer)
 XALAN_USING_XALAN(XSLTInputSource)
 XALAN_USING_XALAN(XSLTResultTarget)
 
-////
-// XZES40 Xerces C++ proof of concept.
-// Segmentation faults, but compiles correctly.
-// TODO: Fix that.
-////
-
-int main( int argc , char* argv[] )
+// ----------------------------------------------------------------------------
+// int main ( int argc , char* argv[] )
+// Performs the following operations:
+// 1. Parses user input (xml, xslt, and output file locations).
+// 2. Passes cli arguments to 'transform' function. 
+// 3. Exits with an appropriate status code.
+// ----------------------------------------------------------------------------
+int main( int argc , char * argv[] )
 {
+    // Parse CLI arguments into struct `cli_args`
 
-    XMLPlatformUtils::Initialize();
-    XalanTransformer::initialize();
+    // Pass file to transform
 
-    XalanTransformer the_xalan_transformer;
+    int status = EXIT_SUCCESS;
 
-    XSLTInputSource xmlIn("test/foo.xml");
-    XSLTInputSource xslIn("test/foo.xsl");
-    XSLTResultTarget xmlOut("test/foo.out");
-
-    std::cout <<  "before\n";
-
-    int theResult = the_xalan_transformer.transform(xmlIn, xslIn, xmlOut);
-
-    std::cout << "after. TheResult: " << theResult << "\n";
-
-    XalanTransformer::terminate();
-    XMLPlatformUtils::Terminate();
-
-    std::cout << "last\n";
-
-    return 0;
+    return status;
 }
