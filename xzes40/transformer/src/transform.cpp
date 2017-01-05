@@ -4,8 +4,10 @@
 // and classes used in XZES40 Transformer transformation pipeline.
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <lib.hpp>
+#include <cstdlib>
+
 #include <transform.hpp>
+#include <lib.hpp>
 
 // ----------------------------------------------------------------------------
 // int transform( cli_arguments args )
@@ -14,7 +16,7 @@
 // 2. Calls 'performs transform' with parsed input xml and xslt files.
 // 3. Returns an appropriate status code.
 // ----------------------------------------------------------------------------
-int transform( cli_arguments args )
+int transform( struct cli_arguments args )
 {
-
+    return EXIT_SUCCESS;
 }

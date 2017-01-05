@@ -1,19 +1,36 @@
-CCOMPILER=clang
-COMPILER_FLAGS=-Wall -g -Iinclude -lxalan-c -lxerces-c -lstdc++
+###############################################################################
+# Filename: Makefile
+# Description: Automatic build instructions for xzes40/transformer
+# Thanks: http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
+###############################################################################
 
-CPPCOMPILER=clang++
-CPPCOMPILER_FLAGS=-Wall -g -Iinclude -lxalan-c -lxerces-c -lstdc++
+CPP_C       = clang++
+CPP_FLAGS   = -Wall -g
 
-BUILD_DIR=bin
-SOURCE_DIR=src
+BUILD_DIR   = build
+LIBRARY_DIR = lib
+INCLUDE_DIR = include
+SRC_DIR     = src
 
-cpp: $(SOURCE_DIR)/xzes40.cpp transform.o cache.o
-	$(CPPCOMPILER) -o $(BUILD_DIR)/xzes40.out $(SOURCE_DIR)/xzes40.cpp $(CPPCOMPILER_FLAGS)
+LIBRARIES = -Iinclude -lxalan-c -lxerces-c -lstdc++
 
-#c: $(SOURCE_DIR)/xzes40.c
-#	$(CCOMPILER) -o $(BUILD_DIR)/xzes40-c $(SOURCE_DIR)/xzes40.c $(COMPILER_FLAGS)
+_SRC = cache.cpp lib.cpp transform.cpp main.cpp
+SRC  = $(patsubst %,$(SRC_DIR)/%,$(_SRC))
 
-.default: cpp
+_DEPS = cache.hpp lib.hpp transform.hpp
+DEPS  = $(patsubst %,$(INCLUDE_DIR)/%,$(_DEPS))
 
+_OBJS = cache.o lib.o transform.o main.o
+OBJS  = $(patsubst %,$(BUILD_DIR)/%,$(_OBJS))
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CPP_C) -c -o $@ $< $(CFLAGS) $(LIBRARIES)
+
+main: $(OBJS)
+	$(CPP_C) -o $(BUILD_DIR)/$@ $^ $(CPP_FLAGS) $(LIBRARIES)
+
+.DEFAULT_GOAL := main
+
+.PHONY: clean
 clean:
-	rm -rf bin/*.{out,o}
+	rm -f $(BUILD_DIR)/*.o $(BUILD_DIR)/main

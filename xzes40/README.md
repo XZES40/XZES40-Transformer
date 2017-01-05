@@ -11,10 +11,12 @@ This looks as follows:
 
 ```
 project/
-|-- bin
-|   `-- generated binaries (a.out)
+|-- build
+|   `-- generated binaries (*.o, main)
 |-- doc
 |   `-- documentation (*.txt, *.md, *.rst)
+|-- examples
+|   `-- code examples not necessary for building but helpful
 |-- include
 |   `-- headers (*.h, *.hpp)
 |-- lib
