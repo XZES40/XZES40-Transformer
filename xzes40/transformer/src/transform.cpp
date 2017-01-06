@@ -16,7 +16,7 @@
 // 2. Calls 'performs transform' with parsed input xml and xslt files.
 // 3. Returns an appropriate status code.
 // ----------------------------------------------------------------------------
-int transform( struct cli_arguments args )
+int transform( cli_arguments_t* args )
 {
     return EXIT_SUCCESS;
 }

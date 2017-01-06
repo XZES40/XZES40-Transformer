@@ -8,6 +8,7 @@
 
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
+#include <cstdlib>
 #include <iostream>
 
 #include <lib.hpp>
@@ -18,8 +19,14 @@ XALAN_USING_XALAN(XalanTransformer)
 XALAN_USING_XALAN(XSLTInputSource)
 XALAN_USING_XALAN(XSLTResultTarget)
 
+std::string USAGE = "\
+Usage: \n\
+  a.out --xml=input.xml --xsl=style.xslt [--out=output file] \n\
+";
+
 // ----------------------------------------------------------------------------
 // int main ( int argc , char* argv[] )
+//
 // Performs the following operations:
 // 1. Parses user input (xml, xslt, and output file locations).
 // 2. Passes cli arguments to 'transform' function. 
@@ -27,11 +34,24 @@ XALAN_USING_XALAN(XSLTResultTarget)
 // ----------------------------------------------------------------------------
 int main( int argc , char * argv[] )
 {
-    // Parse CLI arguments into struct `cli_args`
+	int status;
 
-    // Pass file to transform
+    // Parse CLI arguments into struct `cli_arguments_t`
+    cli_arguments_t *args = parse_args( &argc , &argv );
 
-    int status = EXIT_SUCCESS;
+	// User supplied bad arguments
+    if( args->xml == "" || args->xsl == "" )
+	{
+		// Print usage
+        std::cout << USAGE;
+		// Set exit status code
+		status = EXIT_FAILURE;
+	}
+	else
+	{
+		// Pass args to transform
+    	status = transform( args );
+	}
 
     return status;
 }

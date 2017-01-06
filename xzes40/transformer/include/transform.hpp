@@ -9,6 +9,6 @@
 #if !defined transformer
 #define transformer
 
-int transform( cli_arguments args );
+int transform( cli_arguments_t* args );
 
 #endif
