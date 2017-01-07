@@ -4,11 +4,25 @@
 // XZES40 Transformer transformation pipeline.
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <string>
+
 #include <lib.hpp>
+#include <cache.hpp>
 
-#if !defined transformer
-#define transformer
+#if !defined transform
+#define transform
 
-int transform( cli_arguments_t* args );
+int transform( cli_arguments_t );
+
+class Transformer
+{
+    private:
+        document_t xml, xsl, out;
+
+    public:
+        struct document_t transform( document_t, document_t );
+        struct document_t parse_xml( std::string );
+        struct document_t parse_xsl( std::string );
+};
 
 #endif

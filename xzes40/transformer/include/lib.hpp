@@ -26,6 +26,7 @@ struct cli_arguments_t
     std::string out; // Output file location
 };
 
-cli_arguments_t* parse_args( int *argc , char* *argv[] );
+cli_arguments_t* parse_args( int*, char*** );
+bool _file_exists( std::string );
 
 #endif

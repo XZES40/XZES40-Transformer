@@ -4,29 +4,29 @@
 // and classes used in XZES40 Transformer
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+#include <fstream>
 #include <getopt.h>
 
 #include <lib.hpp>
-
 
 // ----------------------------------------------------------------------------
 // cli_arguments parse_args( int argc, char* argv[] )
 //
 // Parses argv into a cli_arguments_t struct
+// Assigns an argument to "NUL" ("\0") if the file does not exist.
 // ----------------------------------------------------------------------------
-cli_arguments_t* parse_args( int *argc , char* *argv[] )
+cli_arguments_t* parse_args( int *argc , char* *argv[ ] )
 {
 	int c;
 	cli_arguments_t *args = new cli_arguments_t;
-	while ( 1 )
+	while ( true )
 	{
 		static struct option long_options[] =
 		{
-			  {"xml", required_argument, 0, 'm'},
-			  {"xsl", required_argument, 0, 's'},
-			  {"out", required_argument, 0, 'o'},
+			  { "xml", required_argument, 0, 'm' },
+			  { "xsl", required_argument, 0, 's' },
+			  { "out", required_argument, 0, 'o' },
 		};
 
 		int i = 0;
@@ -38,17 +38,58 @@ cli_arguments_t* parse_args( int *argc , char* *argv[] )
 		switch( c )
 		{
 			case 'm':
-				args->xml = optarg;
+                if ( _file_exists( optarg ) )
+                {
+                    args->xml = optarg;
+                }
+                else
+                {
+                    args->xml = "\0";
+                }
 				break;
 
 			case 's':
-				args->xsl = optarg;
+                if ( _file_exists( optarg ) )
+                {
+                    args->xsl = optarg;
+                }
+                else
+                {
+                    args->xsl = "\0";
+                }
 				break;
 
 			case 'o':
-				args->out = optarg;
+                if ( _file_exists( optarg ) )
+                {
+                    args->out = optarg;
+                }
+                else
+                {
+                    args->out = "\0";
+                }
 				break;
 		}
 	}
     return args;
+}
+
+// ----------------------------------------------------------------------------
+// bool _file_exists( string file_path )
+//
+// Returns True if file exists, False if file does not exist.
+// ----------------------------------------------------------------------------
+bool _file_exists( std::string file_path )
+{
+    // The filepath is non-empty
+    if( file_path.length( ) )
+    {
+        std::ifstream infile( file_path.c_str() );
+        return infile.good( );
+    }
+    // If the input is empty return True
+    else
+    {
+        return true;
+    }
 }

@@ -37,10 +37,11 @@ int main( int argc , char * argv[] )
 	int status;
 
     // Parse CLI arguments into struct `cli_arguments_t`
-    cli_arguments_t *args = parse_args( &argc , &argv );
+    cli_arguments_t* args = parse_args( &argc , &argv );
 
-	// User supplied bad arguments
-    if( args->xml == "" || args->xsl == "" )
+	// User supplied bad arguments or input files that don't exist.
+    if( args->xml == "\0" || args->xsl == "\0" ||
+        args->xml == ""   || args->xsl == "" )
 	{
 		// Print usage
         std::cout << USAGE;
