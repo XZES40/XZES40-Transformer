@@ -1,6 +1,10 @@
 ###############################################################################
 # Filename: Makefile
 # Description: Automatic build instructions for xzes40/transformer
+# Builds with:
+#   $ make --version
+#   GNU Make 4.0
+#   Built for x86_64-pc-linux-gnu
 # Thanks: http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
 ###############################################################################
 

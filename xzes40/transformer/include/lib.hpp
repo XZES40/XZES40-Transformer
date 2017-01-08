@@ -29,19 +29,37 @@ namespace xzes
     } cli_arguments_t;
 
     // ------------------------------------------------------------------------
-    // typedef struct document_t
-    //
-    // Stores objects held in the cache.
-    // Includes:
-    //   - Parsed XML contents.
-    //   - Unique ID of object.
+    // class Document
+    // 
+    // Stores all data about documents and functions to act on that data.
+    // Data includes:
+    // - Document contents (Parsed XML/XSL document, not raw)
+    // - Document ID  (Unique identifier for document)
+    // - Document URI (Path to find file)
+    // Functions include:
+    // - set_id( )
+    // - set_uri( )
+    // - set_uri( ) 
     // ------------------------------------------------------------------------
-    typedef struct
+    class Document
     {
-        // TODO Complete this struct definition
-        int contents;
-        int id;
-    } document_t;
+        private:
+            int contents;
+            int id;
+            int uri;
+
+        public:
+            Document( std::string );
+
+            int set_id( );
+            int get_id( );
+
+            int set_contents(  );
+            int get(  );
+
+            int set_uri( std::string );
+            int get_uri( );
+    };
 
 
     cli_arguments_t* parse_args( int*, char*** );

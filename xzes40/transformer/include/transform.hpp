@@ -17,19 +17,19 @@ namespace xzes
     // class Transformer
     //
     // May perform the following operations:
-    // - Parse an xml file into a document_t.
-    // - Parse an xsl file into a document_t.
-    // - Transform the xml and xsl document_t into the out document_t.
+    // - Parse an xml file into a Document.
+    // - Parse an xsl file into a Document.
+    // - Transform the xml and xsl Document into the out Document.
     // ------------------------------------------------------------------------
     class Transformer
     {
         private:
-//            xzes::document_t xml, xsl, out;
+//            xzes::Document xml, xsl, out;
 
         public:
-            xzes::document_t* transformation( );
-            xzes::document_t* parse_xml( std::string* );
-            xzes::document_t* parse_xsl( std::string* );
+            xzes::Document* transformation( );
+            xzes::Document* parse_xml( std::string* );
+            xzes::Document* parse_xsl( std::string* );
             int set_output( std::string* out );
     };
 

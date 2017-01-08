@@ -16,9 +16,9 @@ namespace xzes
         private:
 
         public:
-            document_t* get( document_t* );
-            document_t* set( document_t* );
-            int del( document_t* );
+            Document* get( Document* );
+            Document* set( Document* );
+            int del( Document* );
     };
 }
 

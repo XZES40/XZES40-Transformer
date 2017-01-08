@@ -38,38 +38,38 @@ int xzes::transform_documents( xzes::cli_arguments_t* args )
 }
 
 // ----------------------------------------------------------------------------
-// xzes::document_t transformation( )
+// xzes::Document transformation( )
 //
-// Transforms two document_t structs into a new document_t.
+// Transforms two Document structs into a new Document.
 // ----------------------------------------------------------------------------
-xzes::document_t* xzes::Transformer::transformation( )
+xzes::Document* xzes::Transformer::transformation( )
 {
     // TODO Write this
-    xzes::document_t* object = new xzes::document_t;
+    xzes::Document* object = new xzes::Document;
     return object;
 }
 
 // ----------------------------------------------------------------------------
-// xzes::document_t parse_xml( string* xml )
+// xzes::Document parse_xml( string* xml )
 //
-// Parses an XML file into a document_t.
+// Parses an XML file into a Document.
 // ----------------------------------------------------------------------------
-xzes::document_t* xzes::Transformer::parse_xml( std::string* xml )
+xzes::Document* xzes::Transformer::parse_xml( std::string* xml )
 {
-    // TODO Write this
-    xzes::document_t* object = new xzes::document_t;
+    // Check cache for document
+    xzes::Document* object = new xzes::Document;
     return object;
 }
 
 // ----------------------------------------------------------------------------
-// document_t parse_xsl( string* xsl )
+// Document parse_xsl( string* xsl )
 //
-// Parses an XSLT file into a document_t.
+// Parses an XSLT file into a Document.
 // ----------------------------------------------------------------------------
-xzes::document_t* xzes::Transformer::parse_xsl( std::string* xsl )
+xzes::Document* xzes::Transformer::parse_xsl( std::string* xsl )
 {
     // TODO Write this
-    xzes::document_t* object = new xzes::document_t;
+    xzes::Document* object = new xzes::Document;
     return object;
 }
 

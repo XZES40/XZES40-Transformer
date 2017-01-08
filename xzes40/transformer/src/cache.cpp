@@ -10,42 +10,42 @@
 #include <lib.hpp>
 
 // ----------------------------------------------------------------------------
-// document_t* Cache::get( document_t* )
+// Document* Cache::get( Document* )
 //
-// Attempts to get a document_t from the cache.
+// Attempts to get a Document from the cache.
 // Returns the object if it is in the cache.
 // Returns NULL if it does not exist in the cache.
 // ----------------------------------------------------------------------------
-xzes::document_t* xzes::Cache::get( xzes::document_t* )
+xzes::Document* xzes::Cache::get( xzes::Document* )
 {
     // TODO: Write this function
-    xzes::document_t* object = new xzes::document_t;
+    xzes::Document* object = new xzes::Document;
     return object;
 }
 
 // ----------------------------------------------------------------------------
-// document_t* Cache::set( document_t* )
+// Document* Cache::set( Document* )
 //
-// Attempts to put a document_t object in the in-memory cache.
+// Attempts to put a Document object in the in-memory cache.
 // Returns the object if successful.
 // Returns NULL if not successful.
 // ----------------------------------------------------------------------------
-xzes::document_t* xzes::Cache::set( xzes::document_t* )
+xzes::Document* xzes::Cache::set( xzes::Document* )
 {
     // TODO: Write this function
-    xzes::document_t* object = new xzes::document_t;
+    xzes::Document* object = new xzes::Document;
     return object;
 }
 
 // ----------------------------------------------------------------------------
-// int Cache::del( document_t* )
+// int Cache::del( Document* )
 //
 // Deletes an object from the cache.
 // Returns EXIT_SUCCESS if the object was delete successfully.
 // Returns EXIT_SUCCESS if the object was not in the cache (still does not exist in cache).
 // Returns EXIT_FAILURE if the object is in the cache but was not deleted.
 // ----------------------------------------------------------------------------
-int xzes::Cache::del( xzes::document_t* )
+int xzes::Cache::del( xzes::Document* )
 {
     // TODO: Write ths function
     int status = EXIT_SUCCESS;
