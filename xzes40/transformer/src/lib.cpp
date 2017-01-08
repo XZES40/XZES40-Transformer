@@ -16,10 +16,10 @@
 // Parses argv into a cli_arguments_t struct
 // Assigns an argument to "NUL" ("\0") if the file does not exist.
 // ----------------------------------------------------------------------------
-cli_arguments_t* parse_args( int *argc , char* *argv[ ] )
+xzes::cli_arguments_t* xzes::parse_args( int *argc , char* *argv[ ] )
 {
 	int c;
-	cli_arguments_t *args = new cli_arguments_t;
+	xzes::cli_arguments_t *args = new xzes::cli_arguments_t;
 	while ( true )
 	{
 		static struct option long_options[] =
@@ -38,7 +38,7 @@ cli_arguments_t* parse_args( int *argc , char* *argv[ ] )
 		switch( c )
 		{
 			case 'm':
-                if ( _file_exists( optarg ) )
+                if ( xzes::_file_exists( optarg ) )
                 {
                     args->xml = optarg;
                 }
@@ -49,7 +49,7 @@ cli_arguments_t* parse_args( int *argc , char* *argv[ ] )
 				break;
 
 			case 's':
-                if ( _file_exists( optarg ) )
+                if ( xzes::_file_exists( optarg ) )
                 {
                     args->xsl = optarg;
                 }
@@ -60,7 +60,7 @@ cli_arguments_t* parse_args( int *argc , char* *argv[ ] )
 				break;
 
 			case 'o':
-                if ( _file_exists( optarg ) )
+                if ( xzes::_file_exists( optarg ) )
                 {
                     args->out = optarg;
                 }
@@ -75,11 +75,11 @@ cli_arguments_t* parse_args( int *argc , char* *argv[ ] )
 }
 
 // ----------------------------------------------------------------------------
-// bool _file_exists( string file_path )
+// bool xzes::_file_exists( string file_path )
 //
 // Returns True if file exists, False if file does not exist.
 // ----------------------------------------------------------------------------
-bool _file_exists( std::string file_path )
+bool xzes::_file_exists( std::string file_path )
 {
     // The filepath is non-empty
     if( file_path.length( ) )

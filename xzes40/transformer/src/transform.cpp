@@ -11,14 +11,14 @@
 #include <lib.hpp>
 
 // ----------------------------------------------------------------------------
-// int transform( cli_arguments args )
+// int transform_documents( xzes::cli_arguments* args )
 //
 // Performs the following operations:
 // 1. Fetches input files from cache
 // 2. Calls 'performs transform' with parsed input xml and xslt files.
 // 3. Returns an appropriate status code.
 // ----------------------------------------------------------------------------
-int transform( cli_arguments_t* args )
+int xzes::transform_documents( xzes::cli_arguments_t* args )
 {
     // TODO: Remove debugging information
     std::cout << "Processing xml file " << args->xml
@@ -27,60 +27,59 @@ int transform( cli_arguments_t* args )
               << "."                    << std::endl;
 
     // Create transformation object;
-    t = Transformer;
-    t.parse_xml( args->xml );
-    t.parse_xsl( args->xsl );
-    t.transform( );
+    xzes::Transformer t;
+    t.parse_xml( &args->xml );
+    t.parse_xsl( &args->xsl );
+    t.set_output( &args->out );
+    t.transformation( );
 
     return EXIT_SUCCESS;
 }
 
 // ----------------------------------------------------------------------------
-// class Transformer
+// xzes::document_t transformation( )
 //
-// May perform the following operations:
-// - Parse an xml file into a document_t.
-// - Parse an xsl file into a document_t.
-// - Transform the xml and xsl document_t into the out document_t.
+// Transforms two document_t structs into a new document_t.
 // ----------------------------------------------------------------------------
-class Transformer
+xzes::document_t* xzes::Transformer::transformation( )
 {
-        document_t xml, xsl, out;
+    // TODO Write this
+    xzes::document_t* object = new xzes::document_t;
+    return object;
+}
 
-    public:
-        // --------------------------------------------------------------------
-        // document_t transform( document_t xml, document_t xsl )
-        //
-        // Transforms two document_t structs into a new document_t.
-        // --------------------------------------------------------------------
-        document_t transform( document_t xml, document_t xsl )
-        {
-            // TODO Write this
-            document_t object;
-            return object;
-        }
+// ----------------------------------------------------------------------------
+// xzes::document_t parse_xml( string* xml )
+//
+// Parses an XML file into a document_t.
+// ----------------------------------------------------------------------------
+xzes::document_t* xzes::Transformer::parse_xml( std::string* xml )
+{
+    // TODO Write this
+    xzes::document_t* object = new xzes::document_t;
+    return object;
+}
 
-        // --------------------------------------------------------------------
-        // document_t parse_xml( string xml )
-        //
-        // Parses an XML file into a document_t.
-        // --------------------------------------------------------------------
-        document_t parse_xml( std::string xml )
-        {
-            // TODO Write this
-            document_t object;
-            return object;
-        }
+// ----------------------------------------------------------------------------
+// document_t parse_xsl( string* xsl )
+//
+// Parses an XSLT file into a document_t.
+// ----------------------------------------------------------------------------
+xzes::document_t* xzes::Transformer::parse_xsl( std::string* xsl )
+{
+    // TODO Write this
+    xzes::document_t* object = new xzes::document_t;
+    return object;
+}
 
-        // --------------------------------------------------------------------
-        // document_t parse_xsl( string xsl )
-        //
-        // Parses an XSLT file into a document_t.
-        // --------------------------------------------------------------------
-        document_t parse_xsl( std::string xsl )
-        {
-            // TODO Write this
-            document_t object;
-            return object;
-        }
-};
+// ----------------------------------------------------------------------------
+// set_output( string* out )
+//
+// Set the output of the transformation( ) method.
+// ----------------------------------------------------------------------------
+int xzes::Transformer::set_output( std::string* out )
+{
+    // TODO Write this
+    int status = EXIT_SUCCESS;
+    return status;
+}
