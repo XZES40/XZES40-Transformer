@@ -7,8 +7,9 @@
 #include <cstdlib>
 #include <iostream>
 
-#include <transform.hpp>
+#include <cache.hpp>
 #include <lib.hpp>
+#include <transform.hpp>
 
 // ----------------------------------------------------------------------------
 // int transform_documents( xzes::cli_arguments* args )
