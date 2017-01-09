@@ -7,6 +7,7 @@
 #include <string>
 
 #include <lib.hpp>
+#include <document.hpp>
 
 #if !defined transform
 #define transform
@@ -24,12 +25,15 @@ namespace xzes
     class Transformer
     {
         private:
-//            xzes::Document xml, xsl, out;
+            Document* xml;
+            Document* xsl;
+            Document* out;
 
         public:
-            xzes::Document* transformation( );
-            xzes::Document* parse_xml( std::string* );
-            xzes::Document* parse_xsl( std::string* );
+            Transformer( );
+            Document* transformation( );
+            Document* parse_xml( std::string* );
+            Document* parse_xsl( std::string* );
             int set_output( std::string* out );
     };
 

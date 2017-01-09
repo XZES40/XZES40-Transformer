@@ -18,13 +18,13 @@ SRC_DIR     = src
 
 LIBRARIES = -Iinclude -lxalan-c -lxerces-c -lstdc++
 
-_SRC = cache.cpp lib.cpp transform.cpp main.cpp
+_SRC = cache.cpp lib.cpp document.cpp transform.cpp main.cpp
 SRC  = $(patsubst %,$(SRC_DIR)/%,$(_SRC))
 
-_DEPS = cache.hpp lib.hpp transform.hpp
+_DEPS = cache.hpp lib.hpp document.hpp transform.hpp
 DEPS  = $(patsubst %,$(INCLUDE_DIR)/%,$(_DEPS))
 
-_OBJS = cache.o lib.o transform.o main.o
+_OBJS = cache.o lib.o document.o transform.o main.o
 OBJS  = $(patsubst %,$(BUILD_DIR)/%,$(_OBJS))
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp

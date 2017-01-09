@@ -3,10 +3,10 @@
 // Description: Main entrypoint for the XZES40 Transformer application
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <xalanc/Include/PlatformDefinitions.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
+// #include <xalanc/Include/PlatformDefinitions.hpp>
+// #include <xercesc/util/PlatformUtils.hpp>
 
-#include <xalanc/XalanTransformer/XalanTransformer.hpp>
+// #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 #include <cstdlib>
 #include <iostream>
@@ -14,10 +14,10 @@
 #include <lib.hpp>
 #include <transform.hpp>
 
-XALAN_USING_XERCES(XMLPlatformUtils)
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XSLTInputSource)
-XALAN_USING_XALAN(XSLTResultTarget)
+// XALAN_USING_XERCES(XMLPlatformUtils);
+// XALAN_USING_XALAN(XalanTransformer);
+// XALAN_USING_XALAN(XSLTInputSource);
+// XALAN_USING_XALAN(XSLTResultTarget);
 
 std::string USAGE = "\
 Usage: \n\

@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include <cache.hpp>
+#include <document.hpp>
 #include <lib.hpp>
 #include <transform.hpp>
 
@@ -38,6 +39,16 @@ int xzes::transform_documents( xzes::cli_arguments_t* args )
 }
 
 // ----------------------------------------------------------------------------
+// Transformer initialize
+//
+// Initialized a document Transformer.
+// ----------------------------------------------------------------------------
+xzes::Transformer::Transformer( )
+{
+    // TODO write this method
+}
+
+// ----------------------------------------------------------------------------
 // xzes::Document transformation( )
 //
 // Transforms two Document structs into a new Document.
@@ -45,7 +56,7 @@ int xzes::transform_documents( xzes::cli_arguments_t* args )
 xzes::Document* xzes::Transformer::transformation( )
 {
     // TODO Write this
-    xzes::Document* object = new xzes::Document;
+    xzes::Document* object = new xzes::Document( );
     return object;
 }
 
@@ -57,7 +68,7 @@ xzes::Document* xzes::Transformer::transformation( )
 xzes::Document* xzes::Transformer::parse_xml( std::string* xml )
 {
     // Check cache for document
-    xzes::Document* object = new xzes::Document;
+    xzes::Document* object = new xzes::Document( );
     return object;
 }
 
@@ -69,7 +80,7 @@ xzes::Document* xzes::Transformer::parse_xml( std::string* xml )
 xzes::Document* xzes::Transformer::parse_xsl( std::string* xsl )
 {
     // TODO Write this
-    xzes::Document* object = new xzes::Document;
+    xzes::Document* object = new xzes::Document( );
     return object;
 }
 
