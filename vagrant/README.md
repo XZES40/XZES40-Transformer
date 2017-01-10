@@ -27,5 +27,11 @@ Nothing more, nothing less.
 6. On your host OS, run `vagrant destroy` to destroy the machine.
    This will not delete any data on your host machine, only data stored exclusively on the machine.
 
+**NOTE:** You may need to install the vagrant plugin `vagrant-vbguest` if you get an error about mounting directories:
+
+```
+$ vagrant plugin install vagrant-vbguest
+```
+
 [vbox]: https://www.virtualbox.org/wiki/Downloads
 [vagrant]: https://www.vagrantup.com/docs/getting-started/

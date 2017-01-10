@@ -30,4 +30,4 @@
 
 # Project
 .vagrant/
-build/
+build/*
