@@ -1,6 +1,6 @@
 # Cache
 
-The caching component of XZES40 Transformer si designed to create an easily usable Caching API for the Transformer and Document components.
+The caching component of XZES40 Transformer is designed to create an easily usable Caching API for the Transformer and Document components.
 
 The underlying implementation of the Caching system may be done using [Redis][redis], a database, or an in-memory cache managed by a daemon.
 Either way, the excessable API should be simple to use and maintain so that changes to the caching system do not require refactoring of the Transformer and Document components.
