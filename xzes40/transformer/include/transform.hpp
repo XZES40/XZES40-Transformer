@@ -25,16 +25,16 @@ namespace xzes
     class Transformer
     {
         private:
-            Document* xml;
-            Document* xsl;
-            Document* out;
+            Document xml;
+            Document xsl;
+            Document out;
 
         public:
             Transformer( );
-            Document* transformation( );
-            Document* parse_xml( std::string* );
-            Document* parse_xsl( std::string* );
-            int set_output( std::string* out );
+            Document transformation( );
+            Document parse_xml( xzes::uri_t );
+            Document parse_xsl( xzes::uri_t );
+            int set_output( xzes::uri_t );
     };
 
     int transform_documents( cli_arguments_t* );

@@ -22,20 +22,25 @@
 // ----------------------------------------------------------------------------
 int xzes::transform_documents( xzes::cli_arguments_t* args )
 {
+
+    int status = EXIT_SUCCESS;
+
     // TODO: Remove debugging information
-    std::cout << "Processing xml file " << args->xml
-              << " xsl file "           << args->xsl
-              << ". Writing to "        << args->out
+    std::cout << "Processing xml file " << args->xml.uri
+              << " xsl file "           << args->xsl.uri
+              << ". Writing to "        << args->out.uri
               << "."                    << std::endl;
 
     // Create transformation object;
-    xzes::Transformer t;
-    t.parse_xml( &args->xml );
-    t.parse_xsl( &args->xsl );
-    t.set_output( &args->out );
+    xzes::Transformer t = xzes::Transformer( );
+    t.parse_xml( args->xml );
+    t.parse_xsl( args->xsl );
+    t.set_output( args->out );
     t.transformation( );
 
-    return EXIT_SUCCESS;
+    // TODO cache output object.
+
+    return status;
 }
 
 // ----------------------------------------------------------------------------
@@ -46,6 +51,9 @@ int xzes::transform_documents( xzes::cli_arguments_t* args )
 xzes::Transformer::Transformer( )
 {
     // TODO write this method
+    xml = Document( );
+    xsl = Document( );
+    out = Document( );
 }
 
 // ----------------------------------------------------------------------------
@@ -53,43 +61,42 @@ xzes::Transformer::Transformer( )
 //
 // Transforms two Document structs into a new Document.
 // ----------------------------------------------------------------------------
-xzes::Document* xzes::Transformer::transformation( )
+xzes::Document xzes::Transformer::transformation( )
 {
     // TODO Write this
-    xzes::Document* object = new xzes::Document( );
-    return object;
+    return xml;
 }
 
 // ----------------------------------------------------------------------------
-// xzes::Document parse_xml( string* xml )
+// xzes::Document parse_xml( string xml )
 //
 // Parses an XML file into a Document.
 // ----------------------------------------------------------------------------
-xzes::Document* xzes::Transformer::parse_xml( std::string* xml )
+xzes::Document xzes::Transformer::parse_xml( xzes::uri_t xml_path )
 {
     // Check cache for document
-    xzes::Document* object = new xzes::Document( );
-    return object;
+    xml = xzes::Document( );
+    return xml;
 }
 
 // ----------------------------------------------------------------------------
-// Document parse_xsl( string* xsl )
+// Document parse_xsl( string xsl )
 //
 // Parses an XSLT file into a Document.
 // ----------------------------------------------------------------------------
-xzes::Document* xzes::Transformer::parse_xsl( std::string* xsl )
+xzes::Document xzes::Transformer::parse_xsl( xzes::uri_t xsl_path )
 {
     // TODO Write this
-    xzes::Document* object = new xzes::Document( );
-    return object;
+    xsl = xzes::Document( );
+    return xsl;
 }
 
 // ----------------------------------------------------------------------------
-// set_output( string* out )
+// set_output( string out )
 //
 // Set the output of the transformation( ) method.
 // ----------------------------------------------------------------------------
-int xzes::Transformer::set_output( std::string* out )
+int xzes::Transformer::set_output( xzes::uri_t out_path )
 {
     // TODO Write this
     int status = EXIT_SUCCESS;

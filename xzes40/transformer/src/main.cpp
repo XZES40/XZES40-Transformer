@@ -40,9 +40,9 @@ int main( int argc , char * argv[] )
     xzes::cli_arguments_t* args = xzes::parse_args( &argc , &argv );
 
 	// User input files that do not exist.
-    if( args->xml == "\0" || args->xsl == "\0" ||
+    if( args->xml.uri == "\0" || args->xsl.uri == "\0" ||
 	// User supplied empty xml or xsl arguments.
-        args->xml == ""   || args->xsl == "" )
+        args->xml.uri == ""   || args->xsl.uri == "" )
 	{
 		// Print usage
         std::cout << USAGE;

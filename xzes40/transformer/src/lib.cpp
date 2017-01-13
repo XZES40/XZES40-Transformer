@@ -40,33 +40,33 @@ xzes::cli_arguments_t* xzes::parse_args( int *argc , char* *argv[ ] )
 			case 'm':
                 if ( xzes::_file_exists( optarg ) )
                 {
-                    args->xml = optarg;
+                    args->xml.uri = optarg;
                 }
                 else
                 {
-                    args->xml = "\0";
+                    args->xml.uri = "\0";
                 }
 				break;
 
 			case 's':
                 if ( xzes::_file_exists( optarg ) )
                 {
-                    args->xsl = optarg;
+                    args->xsl.uri = optarg;
                 }
                 else
                 {
-                    args->xsl = "\0";
+                    args->xsl.uri = "\0";
                 }
 				break;
 
 			case 'o':
                 if ( xzes::_file_exists( optarg ) )
                 {
-                    args->out = optarg;
+                    args->out.uri = optarg;
                 }
                 else
                 {
-                    args->out = "\0";
+                    args->out.uri = "\0";
                 }
 				break;
 		}

@@ -14,20 +14,19 @@ namespace xzes
     class Document
     {
         private:
-            int contents;
-            hash_t id;
-            std::string uri;
+            dom_t contents;
+            id_t  uid;
+            uri_t uri;
 
         public:
             Document( );
-            int set_uri( std::string* );
-            std::string get_uri( );
-            int set_contents( );
-            int get_contents( );
-            int set_id( );
-            int get_id( );
+            int set_uri( uri_t );
+            uri_t get_uri( );
+            int set_contents( dom_t );
+            dom_t get_contents( );
+            int set_id( id_t );
+            id_t get_id( );
     };
-
 }
 
 #endif

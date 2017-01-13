@@ -39,7 +39,7 @@ xzes::Document::Document( )
 // ----------------------------------------------------------------------------
 // int set_uri( );
 // ----------------------------------------------------------------------------
-int xzes::Document::set_uri( std::string* file_path )
+int xzes::Document::set_uri( xzes::uri_t file_path )
 {
     // TODO: Write this method
     int status = EXIT_SUCCESS;
@@ -49,17 +49,24 @@ int xzes::Document::set_uri( std::string* file_path )
 
 // ----------------------------------------------------------------------------
 // int get_uri( );
+//
+// Get the Universal Resource Identifier of a Document.
+// E.g., file:///home/username/docs/example.xml
+// or https:///www.example.com/docs/example.xml
 // ----------------------------------------------------------------------------
-std::string xzes::Document::get_uri( )
+xzes::uri_t xzes::Document::get_uri( )
 {
     // TODO: Write this method
-    return uri;
+    xzes::uri_t file_path;
+    return file_path;
 }
 
 // ----------------------------------------------------------------------------
 // int set_id( );
+//
+// Set the Unique ID of a Document.
 // ----------------------------------------------------------------------------
-int xzes::Document::set_id( )
+int xzes::Document::set_id( xzes::id_t id )
 {
     // TODO: Write this method
     int status = EXIT_SUCCESS;
@@ -68,19 +75,23 @@ int xzes::Document::set_id( )
 }
 
 // ----------------------------------------------------------------------------
-// int get_id( );
+// id_t get_id( );
+//
+// Return the unique ID of a Document.
 // ----------------------------------------------------------------------------
-int xzes::Document::get_id( )
+xzes::id_t xzes::Document::get_id( )
 {
     // TODO: Write this method
-    int status = EXIT_SUCCESS;
-    return status;
+    xzes::id_t obj;
+    return obj;
 }
 
 // ----------------------------------------------------------------------------
 // int set_contents( );
+//
+// Set the DOM contents of a Document.
 // ----------------------------------------------------------------------------
-int xzes::Document::set_contents( )
+int xzes::Document::set_contents( xzes::dom_t contents )
 {
     // TODO: Write this method
     int status = EXIT_SUCCESS;
@@ -90,10 +101,12 @@ int xzes::Document::set_contents( )
 
 // ----------------------------------------------------------------------------
 // int get_contents( );
+//
+// Return the DOM contents of a Document.
 // ----------------------------------------------------------------------------
-int xzes::Document::get_contents( )
+xzes::dom_t xzes::Document::get_contents( )
 {
     // TODO: Write this method
-    int status = EXIT_SUCCESS;
-    return status;
+    xzes::dom_t doc;
+    return doc;
 }
