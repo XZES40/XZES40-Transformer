@@ -3,7 +3,7 @@
 Document is a class with three main components and methods that operate on those components.
 
 Documents are stored and retrieved from the Cache and operated on by the Transformer.
-While we could us the Xerces and Xalan object natively, this wrapper allows for a seperation of concerns.
+While we could use the Xerces and Xalan object natively, this wrapper allows for a seperation of concerns.
 The Cache can worry about storing an arbitrary `class`, the Transformer worries about transforming the `Document.contents`, and the each component can be developed (mostly) seperate.
 
 ## Members
