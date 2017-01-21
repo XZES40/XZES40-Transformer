@@ -1,0 +1,270 @@
+CUSTOM XPATH 1.1 FUNCTIONS - FOR APACHE XALAN/C LIBRARY
+
+	Uses XALAN/C 1.11 and XERCES/C 3.01
+
+
+Namespace:  "http://www.oregon.gov/OSP/CJIS/xml/xpath"
+
+	xmlns:lx="http://www.oregon.gov/OSP/CJIS/xml/xpath"
+
+	prefix "lx:" to identify the namespace binding for XPATH extensions.
+
+
+=================================================================================
+
+------------------------
+XPATH Function: "cvdate"
+------------------------
+
+	out-string = lx:cvdate("in-string")
+
+	out-string = lx:cvdate("in-string", "format-id")
+
+	out-string = lx:cvdate("in-string", "format-id", "window")
+
+  Parameters:
+
+	"in-string"	any string that may look like a date.
+
+	"format-id"	a three-char formatting code 
+			(Default is "FH8" returning a format of CCYY-MM-DD)
+
+		CC = century
+		YY = year within the century
+		MM = 2-digit decimal value of month
+		DD = 2-digit decimal value of day
+		MON = 3-char upper-case abbreviation for month
+		MONTH = full upper-case name for the month
+
+		"YR2"	YY
+		"YR4"	CCYY
+		"FD6"	YYMMDD
+		"FD8"	CCYYMMDD
+		"FH6"	YY-MM-DD
+		"FS6"	YY/MM/DD
+		"FH8"	CCYY-MM-DD
+		"FS8"	CCYY/MM/DD
+		"ND6"	MMDDYY
+		"ND8"	MMDDCCYY
+		"NH6"	MM-DD-YY
+		"NS6"	MM/DD/YY
+		"NH8"	MM-DD-CCYY
+		"NS8"	MM/DD/CCYY
+		"MYR"	MON CCYY
+		"MXR"	MONTH CCYY
+		"MDY"	MON DD CCYY
+		"MDX"	MONTH DD CCYY
+		"DM6"	DD MON YY
+		"DM8"	DD MON CCYY
+		"DX6"	DD MONTH YY
+		"DX8"	DD MONTH CCYY
+		"IDT"	CCYY-MM-DDT00:00:00
+
+		-- new --
+
+		"LXR"	Month CCYY
+		"LYR"	Mon CCYY
+		"LDX"	Month DD CCYY
+		"LDY"	Month DD CCYY
+		"DL6"	DD Mon YY
+		"DL8"	DD Mon CCYY
+		"XL6"	DD Month YY
+		"XL8"	DD Month CCYY	
+
+	"window"	an integer number of years from the timestamp of
+			TODAY + 2Days + 2Hours.   (Default is +10)
+
+  Returning:
+
+	"out-string"	the formatted date, otherwise the "in-string"
+
+
+-------------------------------
+XPATH Function: "setTableValue"
+-------------------------------
+
+	boolean		= lx:setTableValue("table-name", "table-key", "value-string")
+
+  Returning:
+
+	true		if successful -- usually the case.
+			If "table-name" does not exist, a new named table is created.
+			If "table-key" does not exist, a new key code is created.
+			If "table-key" already exists, its "value-string" is replaced.
+
+-------------------------------
+XPATH Function: "getTableValue"
+-------------------------------
+
+	out-string	= lx:getTableValue("table-name", "table-key")
+
+  Returning:
+
+	"out-string"	the "value-string" associated with "table-key" and "table-name"
+			An empty string is returned on failure.
+
+
+----------------------------------
+XPATH Function: "getTableRowCount"
+----------------------------------
+
+	integer		= lx:getTableRowCount("table-name")
+
+  Returning:
+
+	Number of "table-key" "value-string" pairs found in "table-name"
+
+
+----------------------------------
+XPATH Function: "getTableKeyRow"
+----------------------------------
+
+	integer		= lx:getTableKeyRow("table-name", "table-key")
+
+  Returning:
+
+	Row number of "table-key" in the "table-name".
+	Value of zero means that "table-key" does not exist in "table-name".
+
+
+----------------------------------
+XPATH Function: "getTableRowKey"
+----------------------------------
+
+	table-key	= lx:getTableRowKey("table-name", row)
+
+  Returning:
+
+	"table-key" string from the "table-name" referenced by row
+
+
+------------------------------------
+XPATH Function: "getTableRowValue"
+------------------------------------
+
+	value-string	= lx:getTableRowValue("table-name", row)
+
+  Returning:
+
+	"value-string" from the "table-name" referenced by row number
+
+
+-------------------------------
+XPATH Function: "dropTableName"
+-------------------------------
+
+	void	lx:dropTableName("table-name")
+
+	Removes the "table-name" and all associated content.
+
+
+------------------------------
+XPATH Function: "dropTableKey"
+------------------------------
+
+	void	lx:dropTableKey("table-name", "table-key")
+
+	Removes the "table-key" record from the named "table-name"
+	The existing row numbers are recomputed.
+
+
+--------------------------------
+XPATH Function: "dropTableRow"
+--------------------------------
+
+	void	lx:dropTableRow("table-name", row)
+
+	Removes the row record from the named "table-name"
+	The existing row numbers are recomputed.
+
+-------------------------------
+XPATH Function: "sortTableKeys"
+-------------------------------
+
+	void	lx:sortTableKeys("table-name")
+
+	Sorts the table by "table-key" and recomputes the row numbers
+	The order is ascending.
+
+---------------------------------
+XPATH Function: "sortTableValues"
+---------------------------------
+
+	void	lx:sortTableValues("table-name")
+
+	Sorts the table by associated "value-string" and recomputes the row numbers
+	The order is ascending.
+
+
+-----------------------------
+XPATH Function: "invertTable"
+-----------------------------
+
+	void	lx:invertTable("table-name")
+
+	A table that is in "ascending" order is inverted to become "descending"
+	The row numbers are recomputed.
+
+
+-----------------------------
+XPATH Function: "dropTableDB"
+-----------------------------
+
+	void	lx:dropTableDB(void)
+
+	Removes all memory-resident tables in the virtual database for the process.
+
+	This is functionally equivalent to initTableDB().
+
+
+-----------------------------
+XPATH Function: "initTableDB"
+-----------------------------
+
+	void	lx:initTableDB(void)
+
+	Initializes the memory-resident tables in the virtual database for the process.
+
+	This is functionally equivalent to dropTableDB().
+
+
+-----------------------------------
+XPATH Function: "getTableAsNodeset"
+-----------------------------------
+
+	nodeset	lx:getTableAsNodeset("table-name")
+
+	The virtual table is converted to a temporary XML file with encoding='UTF-8'
+	associated with Namespace="http://www.oregon.gov/OSP/CJIS/xml/keytable"
+	with DOCTYPE definitions in keytable.dtd and XMLSchema definitions in keytable.xsd.
+
+	Upon a successful create of nodeset, the temporary xml file is released and
+	the nodeset can be used as if the XPath "document(..)" function was issued.
+	When the element having a select="lx:getTableAsNodeset('table-name')" goes 
+	out of scope, the temporary xalan-source-tree nodeset is destroyed.
+
+	<ktb:table xmlns:ktb="http://www.oregon.gov/OSP/CJIS/xml/keytable" 
+		table='table-name'  file='tempfilename.xml'>
+	<ktb:row table='table-name' row='row-number' key='key-string' value='value-string'/>
+	--	minOccurs='0' maxOccurs='unlimited' 	--
+	</ktb:table>
+
+	<xsl:for-each select="lx:getTableAsNodeset('tablename')/ktb:table/ktb:row">
+	... template information to process each row in the table ...
+	</xsl:for-each>
+
+	<xsl:copy-of select="lx:getTableAsNodeset('tablename')"/>
+	will create a XML or HTML rendition of table elements.  An output mode of TEXT
+	will either be spaces or empty depending on the value of <xsl:strip-spaces/>
+
+
+Note:	The tables referenced by these functions are implemented in memory as
+	linked lists that are global to a process and may not be thread-safe.
+	A future version may use thread-local-storage and thread-safe programming.
+	I have yet to reengineer a set of platform-independent thread management rules.
+
+	Currently the virtual database and its tables is bound to a process and
+	not specific to any thread associated with the process.
+
+
+

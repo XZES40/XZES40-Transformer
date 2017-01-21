@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+   File: keytable.dtd
+
+   This is the DOCTYPE Definition File for Temporary Key Table XML files.
+
+   <ktb:table xmlns:xtb="http://www.oregon.gov/OSP/CJIS/xml/keytable"/>
+     <ktb:row table="tablename" row="rownumber" key="keystring" value="valuestring">
+     ... unlimited occurrences
+   </ktb:table>
+   
+-->
+
+<!-- Parameter Entities for keytable.dtd -->
+
+<!ENTITY % ns "ktb" >
+<!ENTITY % xns "xmlns:%ns;" >
+<!ENTITY % nsname "http://www.oregon.gov/OSP/CJIS/xml/keytable" >
+
+<!ENTITY % row "%ns;:row" >
+<!ENTITY % table "%ns;:table" >
+
+<!-- Element and Attribute List Definitions -->
+
+<!ELEMENT %row; EMPTY>
+<!ATTLIST %row;
+    %xns;       CDATA     #FIXED "http://www.oregon.gov/OSP/CJIS/xml/keytable"
+    table	CDATA     #REQUIRED
+    row	        CDATA     #REQUIRED
+    key         CDATA     #IMPLIED
+    value       CDATA     #IMPLIED
+>
+
+<!ELEMENT %table; (%row;)*>
+<!ATTLIST %table;
+    %xns;	CDATA	  #FIXED "http://www.oregon.gov/OSP/CJIS/xml/keytable"
+    xmlns:xsi	CDATA     #FIXED "http://www.w3.org/2001/XMLSchemaI-instance"
+    xsi:schemaLocation  CDATA  #FIXED "http://www.oregon.gov/OSP/CJIS/xml/keytable keytable.xsd"
+    file	CDATA     #IMPLIED
+    table	CDATA     #IMPLIED
+>
+

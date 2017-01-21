@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:ktb="http://www.oregon.gov/OSP/CJIS/xml/keytable"
+  targetNamespace="http://www.oregon.gov/OSP/CJIS/xml/keytable">
+
+<xs:annotation>
+  <xs:documentation>
+
+This schema definition defines the validation for "table" and "row" elements
+that are extracted into an XML document using the dumpKeyRows("tablename")
+extension XPATH function that is installed for Oregon State Police applications.
+Namespace = "http://www.oregon.gov/OSP/CJIS/xml/xpath".
+
+The library of extension functions uses Apache XALAN-C and XERCES-C libraries.
+The table is exported to Namespace = "http://www.oregon.gov/OSP/CJIS/xml/keytable"
+as a schema-validated document type.
+
+The DOCTYPE validation file is "keytable.dtd".
+
+  </xs:documentation>
+</xs:annotation>
+
+<xs:element name="row">
+  <xs:annotation>
+    <xs:documentation>
+The virtual tables allow only for values of xs:string type.  The row elements
+are empty.  The table column values are rendered as attributes.
+The key attribute is unique to the table but not between tables.
+The row attribute is computed relative to the table construction or sorting
+sequence.  The value attribute is the effective stored string value for the row
+referenced either by row number or key value.
+    </xs:documentation>
+  </xs:annotation>
+  <xs:complexType>
+    <xs:attribute name="table" type="xs:token" use="required"/>
+    <xs:attribute name="row" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="key" type="xs:string" use="required"/>
+    <xs:attribute name="value" type="xs:string" use="required"/>
+  </xs:complexType>
+</xs:element>
+
+<xs:complexType name="KeyTableElementType">
+  <xs:sequence>
+    <xs:element ref="ktb:row" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="file" type="xs:string"  use="optional">
+    <xs:annotation>
+      <xs:documentation>
+The table element may contain a "file" attribute that gives the identity
+or filename of a temporary file that contains the source XML document.
+The resource identified by "file" is not guaranteed to persist, but
+can be used to identify a document tree when used in XSLT as an identity
+when multiple documents are processed during a single transformation session.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="table" type="xs:string" use="optional">
+    <xs:annotation>
+      <xs:documentation>
+The table element may contain a "table" attriibute that gives the identity
+of the table for which an XML rowset document is being created.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+</xs:complexType>
+
+<xs:element name="table" type="ktb:KeyTableElementType"/>
+
+</xs:schema>

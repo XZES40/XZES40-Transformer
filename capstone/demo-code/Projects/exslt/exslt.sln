@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exslt", "exslt.vcproj", "{5FA3F644-E242-4C7D-ACE4-F53AAB6F7757}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dumptoxml", "..\dumptoxml\dumptoxml.vcproj", "{2AB53F31-3C5D-429E-ACBF-4C802ED90CC9}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{5FA3F644-E242-4C7D-ACE4-F53AAB6F7757}.Debug.ActiveCfg = Debug|Win32
+		{5FA3F644-E242-4C7D-ACE4-F53AAB6F7757}.Debug.Build.0 = Debug|Win32
+		{5FA3F644-E242-4C7D-ACE4-F53AAB6F7757}.Release.ActiveCfg = Release|Win32
+		{5FA3F644-E242-4C7D-ACE4-F53AAB6F7757}.Release.Build.0 = Release|Win32
+		{2AB53F31-3C5D-429E-ACBF-4C802ED90CC9}.Debug.ActiveCfg = Debug|Win32
+		{2AB53F31-3C5D-429E-ACBF-4C802ED90CC9}.Debug.Build.0 = Debug|Win32
+		{2AB53F31-3C5D-429E-ACBF-4C802ED90CC9}.Release.ActiveCfg = Release|Win32
+		{2AB53F31-3C5D-429E-ACBF-4C802ED90CC9}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,18 @@
+"MONTH","count","PROJECT","count","USER-TYPE"
+Aug 2011,1550,,,,
+,,ADMIN MSG,5,,
+,,,,From LEDS,1
+,,,,From NCIC,2
+,,,,From NLETS,2
+,,QUERIES TO DMV,9,,
+,,,,From CJIS Users,9
+,,QUERIES TO LEDS,1506,,
+,,,,From DMV,1484
+,,,,From NCIC,10
+,,,,From Users,12
+,,QUERIES TO NCIC,10,,
+,,,,From LEDS,10
+,,QUERIES TO NLETS,10,,
+,,,,From Users,10
+,,UPDATES TO LEDS,10,,
+,,,,From Users,10

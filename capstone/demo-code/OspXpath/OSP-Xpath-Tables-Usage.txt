@@ -1,0 +1,51 @@
+
+
+Using OSP Xpath Table Extensions in XSLT Stylesheets
+
+// Imported Virtual Table Loader href="../Common_Library/Table.Loaders.xslt"
+
+<xsl:stylesheet version="1.00"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:lx="http://www.oregon.gov/OSP/CJIS/xml/xpath">
+  <xsl:strip-space/>
+  <xsl:template name="LoadTableABC">
+    <xsl:value_of select="lx:dropTableName('TableABC')"/>
+    <xsl:value_of select="lx:setTableKeyValue('TableABC','A','A-Descriptor')"/>
+    <xsl:value_of select="lx:setTableKeyValue('TableABC','B','B-Descriptor')"/>
+    <xsl:value_of select="lx:setTableKeyValue('TableABC','C','C-Descriptor')"/>
+    <xsl:value_of select="lx:setTableKeyValue('TableABC','X','UNKNOWN')"/>
+  </xsl:template>
+  <xsl:template name="LoadTableEyeColor">
+    <xsl:value_of select="lx:dropTableName('EyeColor')"/>
+    <xsl:value_of select="lx:setTableKeyValue('EyeColor','BRN','BROWN')"/>
+    <xsl:value_of select="lx:setTableKeyValue('EyeColor','BLU','BLUE')"/>
+    <xsl:value_of select="lx:setTableKeyValue('EyeColor','HAZ','HAZEL')"/>
+    <xsl:value_of select="lx:setTableKeyValue('EyeColor','GRN','GREEN')"/>
+    <xsl:value_of select="lx:setTableKeyValue('EyeColor','MIX','MIXED')"/>
+    <xsl:value_of select="lx:setTableKeyValue('EyeColor','SIL','SILVER OR GRAY')"/>
+    <xsl:value_of select="lx:setTableKeyValue('EyeColor','BLK','BLACK')"/>
+    <xsl:value_of select="lx:setTableKeyValue('EyeColor','UNK','UNKNOWN')/>
+  </xsl:template>
+</xsl:stylesheet>
+
+
+// Main Stylesheet
+
+<xsl:stylesheet version="1.00"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:lx="http://www.oregon.gov/OSP/CJIS/xml/xpath">
+<!-- Declare the Virtual Tables -->
+  <xsl:import href="../Common_Library/Table.Loaders.xslt"/>
+  <xsl:template match='/'>
+<!-- Load the Virtual Tables -->
+    <xsl:call_template name="LoadTableABC"/>
+    <xsl:call_template name="LoadTableEyeColor"/>
+<!-- Query the Virtual Tables -->
+    <xsl:value_of select="PERSON REFERENCE GROUP: lx:getTableKeyValue('TableABC',./Person/GroupCode)"\>
+    <xsl:text>
+</xsl:text>
+    <xsl:value_of select="PERSON EYE COLOR: lx:getTableKeyValue('EyeColor',./Person/EyeColorCode)"\>
+    <xsl:text>
+</xsl:text>
+  </xsl:template>
+</xsl:stylesheet>

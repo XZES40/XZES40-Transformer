@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    THIS IS A TEST STYLESHEET THAT CAN BE IMPORTED
+    IT CREATES TEMPLATES THAT CAN SUPPLY KEY-VALUE PAIRS TO TABLE NAMES
+-->
+<xsl:stylesheet version="1.00"
+     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+     xmlns:lx="http://www.oregon.gov/OSP/CJIS/xml/xpath">
+
+  <xsl:template name="PurgeAllTables">
+    <xsl:value-of select="lx:initTableDB()"/>
+  </xsl:template>
+
+  <xsl:template name="LoadTableABC">
+    <xsl:value-of select="lx:dropTableName('TableABC')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableABC','A','A-Description')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableABC','B','B-Description')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableABC','C','C-Description')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableABC','U','Unknown Description')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableABC','T','Test Situation')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableABC','X','Xtra Bogus Testing')"/>
+  </xsl:template>
+
+  <xsl:template name="LoadColorTable">
+    <xsl:value-of select="lx:dropTableName('TableColor')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','BRN','BROWN')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','brn','Brown')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','GLD','GOLD, Yellow')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','GRA','GRAY, Silver, Platinum')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','YEL','YELLOW')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','yel','Yellow')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','BLU','BLUE')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','blu','Blue')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','BLK','BLACK')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','blk','Black')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','sil','Silver, Platinum')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','WHI','WHITE')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','whi','White')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','UNK','UNKNOWN')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','unk','Unknown')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','RED','RED')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','red','Red')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','GRN','GREEN')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','grn','Green')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','MUL','Multiple Color')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','MUL/COL','Multiple Color')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','MulCol','Multiple Color')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','Mixed','Multiple Color - Mixed')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor',' ',' ')"/>
+    <xsl:value-of select="lx:setTableKeyValue('TableColor','UNK','UnKnOwN')"/>
+  </xsl:template>
+
+</xsl:stylesheet>
