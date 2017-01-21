@@ -1,0 +1,23 @@
+The "gedit" program and the "Gnome-SystemMonitor" program emit lots
+of Gtk-WARNINGs that can be ignored.  The Gnome-SystemMonitor becomes
+useless. The "gedit" program is still usable.  Our Capstone installation
+does not have the Gnome-SystemMonitor installed. 
+
+The following warnings can be ignored when using the gedit program
+without having the full GNOME architecture and full XDM display manager
+installed.  The XFCE uses lightdm as a lightweight XDM display manager.
+You can have only one display manager installed unless you are handling
+multiple displays on your system (hardware and system dependencies).
+
+Ignore these errors.
+
+(gedit:1612) Gtk-WARNING **; Calling Inhibit failed:
+GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown:
+The name org.gnome.SessionManager was not provided by
+any .service files.
+
+Installing the org.gnome.SessionManager does not resolve this issue.
+
+I have seen some experimental proxies for faking the interfaces
+for org.gnome.SessionManager for other graphical platforms (i.e. XFCE).
+

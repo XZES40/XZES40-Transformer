@@ -1,0 +1,30 @@
+OSU Capstone Project / Debian
+
+The /data/* directories are associated with the "staff" group
+and should be granted full "staff" access, recommending a umask 002
+instead of default umask 022 permissions.
+
+The /usr/local/* directories in Debian are associated with the "staff"
+group and should be granted full "staff" access, recommending a
+umask 002 instead of default umask 022 permissions.
+
+Permissions compatibility with "staff"
+
+The Debian project is moving toward /usr/local/ directory trees having
+"staff" group permissions.
+
+Group passwords are kept in file /etc/gshadow and administered by the
+"gpasswd" program.
+
+You can temporarily change your group membership by invoking the
+"newgrp groupname" command.
+
+Default is to require a group password, but no passwords are valid.
+If an empty or null password is assigned by the "gpasswd" program,
+you will still be prompted for a password.
+
+As /root you can edit the /etc/gshadow file and add your login account
+to the list of group users.  This allows you to perform the "newgrp"
+command without specifying a password - even if the group password is
+locked.
+

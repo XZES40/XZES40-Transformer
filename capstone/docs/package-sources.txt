@@ -1,0 +1,25 @@
+
+Subversion - Apache Xerces-C
+
+  /data/svn/xerces/c/trunk/
+
+Subversion - Apache Xalan-C
+
+  /data/svn/xalan/c/trunk/
+
+TarBall - Apache Xerces-C 
+
+  /data/pkgs/xerces-c-3.1.4.tar.bz2 -> /data/src/xerces-c-3.1.4/
+
+TarBall - Apache Xalan-C
+
+  /data/pgs/xalan-c-1.11.src.tar.gz -> /data/src/xalan-c-1.11
+
+TarBall - icu4c-57
+
+  /data/pkgs/icu4c-57_1-src.tgz -> /data/icu/
+
+  /data/pkgs/icu4c-57_1-data.zip -> /data/icu/
+
+  /data/pkgs/icu4c-57_1-docs.zip -> /data/icu/
+

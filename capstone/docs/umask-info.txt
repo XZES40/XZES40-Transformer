@@ -1,0 +1,30 @@
+The OSU/ASF Capstone Project is to use group "staff" and umask 002.
+
+I have performed numerous system tests for propogating UMASK with
+limited success.  The best workaround is to edit the .bashrc files
+and supply the umask command therein.
+
+DEBIAN PLATFORM -- Apply the umask edits to the following files.
+
+   /root/.bashrc   -- allows sudo scripts to work with umask 002
+   $HOME/.bashrc   -- allows user scripts to work with umask 002
+
+DEBIAN - UMASK ISSUES -- Retain the Defaults -- The following do not work.
+Configurations of UMASK that DO NOT WORK -- Retain the Defaults
+
+-- for login authentication
+
+   /etc/login.defs
+     UMASK 002
+
+-- for login authentication using pam to unlock the umask feature
+
+   /etc/pam.d/common-session
+     session optional     pam_umask.so
+
+-- standard bourne shell (sh) profile - ignored when using xfce
+
+   /etc/profile
+     umask 002
+
+
