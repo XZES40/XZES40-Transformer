@@ -1,0 +1,28 @@
+#
+# Travis Continuous Integration
+#
+# Tasks:
+# - runs transformer ci script
+#
+# Future tasks:
+# - Build and test other software in the project.
+#
+script:
+- scripts/ci/transformer.sh
+language: cpp
+compiler: clang++
+dist: trusty
+sudo: false
+addons:
+    apt:
+        packages:
+        - build-essential
+        - libxalan-c-dev
+        - libxalan-c-doc
+        - libxalan-c111
+        - xalan
+        - libxerces-c-dev
+        - libxerces-c-doc
+        - libxerces-c-samples
+        - libxerces-c3.1
+        - clang
