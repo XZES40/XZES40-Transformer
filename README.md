@@ -2,6 +2,10 @@
 
 *This project contains the Code, Code Documentation, Packaging, Tests, Examples, etc related to the Oregon State University + Apache Software Foundation Computer Science 2017 Capstone project.*
 
+## Build status
+
+- Linux: [![Build Status](https://travis-ci.org/XZES40/XZES40-Transformer.svg?branch=master)](https://travis-ci.org/XZES40/XZES40-Transformer)
+
 ## About the project
 
 This project's purpose is to create an XML/XSLT transformation server which is
