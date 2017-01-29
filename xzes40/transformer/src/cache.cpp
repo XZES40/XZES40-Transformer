@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright 2017, the Oregon State University Capstone Project 'XZES40'
-// with the Apache Foundation
+// with the Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -57,15 +57,15 @@ xzes::Document* xzes::Cache::set( xzes::Document* object )
 // int Cache::del( Document* )
 //
 // Deletes an object from the cache.
-// Returns EXIT_SUCCESS if the object was delete successfully.
-// Returns EXIT_SUCCESS if the object was not in the cache (still does
+// Returns SUCCESS if the object was delete successfully.
+// Returns SUCCESS if the object was not in the cache (still does
 // not exist in cache).
-// Returns EXIT_FAILURE if the object is in the cache but was not
+// Returns FAILURE if the object is in the cache but was not
 // deleted.
 // --------------------------------------------------------------------
 int xzes::Cache::del( xzes::Document* object )
 {
     // TODO: Write ths function
-    int status = EXIT_SUCCESS;
+    int status = SUCCESS;
     return status;
 }

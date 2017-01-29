@@ -1,6 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Copyright 2017, the Oregon State University Capstone Project 'XZES40'
-// with the Apache Foundation
+// with the Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,40 +23,48 @@
 
 #include <lib.hpp>
 
-// xalan library for compile xls
-#include <xalanc/XalanTransformer/XalanTransformerDefinitions.hpp>
-// xercesc libary for parse xml
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xalanc/XalanTransformer/XercesDOMWrapperParsedSource.hpp>
-
 #if !defined document
 #define document
+
+#define XML_DOC_TYPE 1
+#define XSL_DOC_TYPE 2
 
 namespace xzes
 {
     class Document
     {
         private:
-            // content also store the compiled xls file,
-            // but it is binary files, not DOM object.
-            dom_t contents;
+            dom_t   xml;
+            style_t xsl;
+
             id_t  uid;
             uri_t uri;
 
-        public:
-            // constructor
-            Document( xzes::uri_t , int);
+            int doc_type;
+
+        protected:
             int set_uri( uri_t );
-            int set_contents( dom_t );
-            int set_id( id_t );
-            uri_t get_uri( );
-            dom_t get_contents( );
-            id_t  get_id( );
-        
-            int parse_xml( xzes::uri_t );
-            int compile_xls( xzes::uri_t );
-        
-        
+            int set_id( );
+            int set_type( int );
+
+            int set_xml_content( dom_t );
+            int set_xsl_content( style_t );
+
+            id_t _hash_uri( );
+            int _compile_xsl( );
+            int _compile_xml( );
+
+        public:
+            Document( uri_t , int );
+            Document( );
+
+            uri_t   get_uri( );
+            id_t    get_id( );
+
+            dom_t   get_xml_content( );
+            style_t get_xsl_content( );
+
+            int compile( );
     };
 }
 

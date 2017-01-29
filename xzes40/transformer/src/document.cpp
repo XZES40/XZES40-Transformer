@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright 2017, the Oregon State University Capstone Project 'XZES40'
-// with the Apache Foundation
+// with the Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,11 @@
 #include <lib.hpp>
 #include <document.hpp>
 
+// Xerces and Xalan
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
+XALAN_USING_XALAN(  XalanTransformer  );
+XALAN_USING_XERCES( XMLPlatformUtils  );
+
 // ----------------------------------------------------------------------------
 // class Document
 // 
@@ -40,38 +45,42 @@
 // Functions include:
 // - set_id( )
 // - set_uri( )
-// - set_contents( )
+// - set_content( )
 //
 // **NOTE** The majority of the Caching happens in this Document class.
-// The set_contents( ) method uses the Cache to store and reference the Xerces
+// The set_content( ) method uses the Cache to store and reference the Xerces
 // object.
 // ----------------------------------------------------------------------------
 // int Document( std::string file_path);
 //
 // Intializes a document by setting the uri, path, and contents.
 // ----------------------------------------------------------------------------
-xzes::Document::Document( xzes::uri_t file_path , int doc_type)
+xzes::Document::Document( xzes::uri_t file_path , int type)
 {
-    // set the file path to uri
-    set_uri(file_path);
-    // hash the file path
-    std:: string s = file_path;
-    std::hash<std::string> hash_fn;
-    size_t hash = hash_fn(s);
-    // and set the id
-    set_id(hash);
-    
-    // we need konw which document it is
-    // 1 means this is xml file, parse it and set the contents
-    if(doc_type == 1)
-    {
-        parse_xml(file_path);
-    }
-    // 2 means this is xls file, compile it and set the contents
-    else if (doc_type == 2)
-    {
-        compile_xls(file_path);
-    }
+    // Set the file path to uri
+    set_uri( file_path );
+
+    // Set the Document ID
+    set_id( );
+
+    // Set the document flag typ
+    set_type( type );
+
+    // Compile the document now that you know the type
+    compile( );
+}
+
+// ----------------------------------------------------------------------------
+// Empty Document constructor
+// ----------------------------------------------------------------------------
+xzes::Document::Document( )
+{
+    xzes::uri_t blank_uri;
+    blank_uri.uri = "";
+
+    set_uri( blank_uri );
+    set_id( );
+    set_type( XML_DOC_TYPE );
 }
 
 // ----------------------------------------------------------------------------
@@ -80,8 +89,9 @@ xzes::Document::Document( xzes::uri_t file_path , int doc_type)
 int xzes::Document::set_uri( xzes::uri_t file_path )
 {
     uri = file_path ;
+
     //return status for debug
-    int status = EXIT_SUCCESS;
+    int status = SUCCESS;
     return status;
 }
 
@@ -94,25 +104,27 @@ int xzes::Document::set_uri( xzes::uri_t file_path )
 // ----------------------------------------------------------------------------
 xzes::uri_t xzes::Document::get_uri( )
 {
-    xzes::uri_t file_path = uri;
-    return file_path;
+    return uri;
 }
 
 // ----------------------------------------------------------------------------
 // int set_id( );
+//
 // Set the Unique ID of a Document.
 // ----------------------------------------------------------------------------
-int xzes::Document::set_id( xzes::id_t id )
+int xzes::Document::set_id( )
 {
-    uid = id ;
-    //return status for debug
-    int status = EXIT_SUCCESS;
-    return status;
+    // Set the uid to the output of hash_uri
+    uid = _hash_uri( );
 
+    //return status for debug
+    int status = SUCCESS;
+    return status;
 }
 
 // ----------------------------------------------------------------------------
 // id_t get_id( );
+//
 // Return the unique ID of a Document.
 // ----------------------------------------------------------------------------
 xzes::id_t xzes::Document::get_id( )
@@ -122,83 +134,160 @@ xzes::id_t xzes::Document::get_id( )
 }
 
 // ----------------------------------------------------------------------------
-// int set_contents( );
+// int set_xml_content( );
+//
 // Set the DOM contents of a Document.
 // ----------------------------------------------------------------------------
-int xzes::Document::set_contents( xzes::dom_t content )
+int xzes::Document::set_xml_content( xzes::dom_t content )
 {
-    //TODO: should add more thing about the cache
-    contents = content ;
     //return status for debug
-    int status = EXIT_SUCCESS;
-    return status;
+    int status = SUCCESS;
 
+    xml = content;
+
+    return status;
 }
 
 // ----------------------------------------------------------------------------
-// int get_contents( );
+// int set_xsl_content( );
+//
+// Set the DOM contents of a Document.
+// ----------------------------------------------------------------------------
+int xzes::Document::set_xsl_content( xzes::style_t content )
+{
+    //return status for debug
+    int status = SUCCESS;
+
+    xsl = content;
+
+    return status;
+}
+
+// ----------------------------------------------------------------------------
+// xzes::dom_t get_xml_content( );
+//
 // Return the DOM contents of a Document.
 // ----------------------------------------------------------------------------
-xzes::dom_t xzes::Document::get_contents( )
+xzes::dom_t xzes::Document::get_xml_content( )
 {
-    xzes::dom_t doc = contents;
-    return doc;
+    return xml;
+}
+
+// ----------------------------------------------------------------------------
+// xzes::style_t get_xsl_content( );
+//
+// Return the Stylesheet contents of a Document.
+// ----------------------------------------------------------------------------
+xzes::style_t xzes::Document::get_xsl_content( )
+{
+    return xsl;
 }
 
 
 // ----------------------------------------------------------------------------
-// int parse_xml;
-// parse the xml file to dom document, and then store it back to document class
+// int compile( );
+//
+// Compile either xml or xsl document depending ont he doc_type.
 // ----------------------------------------------------------------------------
-int xzes::Document::parse_xml( xzes::uri_t uri )
+int xzes::Document::compile( )
 {
-    //Initialized DOMparser
-    xercesc_3_1::XercesDOMParser theParser;
-    
-    // Turn on validation and namespace support.
-    theParser.setDoValidation(true);
-    theParser.setDoNamespaces(true);
-    
-    // Parse the document
-    theParser.parse(uri);
-    DOMDocument *theDOM = theParser.getDocument();
-    theDOM->normalize();
-    
-    XercesDOMSupport theDOMSupport;
-    XercesParserLiaison theParserLiaison;
-    
-    // create a XercesDOMWrapperParsedSource for future using
-    const XercesDOMWrapperParsedSource parsedSource(
-                                                    theDOM,
-                                                    theParserLiaison,
-                                                    theDOMSupport,
-                                                    XalanDOMString(uri.getSystemId()));
-    
-    // store the paresed file to class
-    set_contents(parsedSource);
-    
-    //maybe we should terminate DOMparser?
-    //but I didn't find that function :(
-    
-    //return status for debug
-    int status = EXIT_SUCCESS;
+    int status;
+
+    if (doc_type == XML_DOC_TYPE)
+        status = _compile_xml( );
+    else if (doc_type == XSL_DOC_TYPE)
+        status = _compile_xsl( );
+    else
+        status = FAILURE;
+
     return status;
 }
 
 // ----------------------------------------------------------------------------
-// int compile_xls( dom_t content );
+// int _compile_xml( );
+//
+// parse the xml file to dom document, and then store it back to document class
+// ----------------------------------------------------------------------------
+int xzes::Document::_compile_xml( )
+{
+    // return status for error handling
+    int status = SUCCESS;
+
+    //Initialize function
+    XMLPlatformUtils::Initialize();
+    XalanTransformer::initialize();
+
+    //create a xalantransformer
+    XalanTransformer the_xalan_transformer;
+
+    // Create the dom_t object
+    dom_t output_xml_doc;
+
+    the_xalan_transformer.parseSource( uri.uri.c_str() , output_xml_doc.obj );
+
+    // store the paresed file to class
+    set_xml_content( output_xml_doc );
+
+    //Terminate xalan
+    XalanTransformer::terminate( );
+    XMLPlatformUtils::Terminate( );
+    XalanTransformer::ICUCleanUp( );
+
+    return status;
+}
+
+// ----------------------------------------------------------------------------
+// int _compile_xsl( );
+//
 // compile the stylesheet for future reuse, and store it back to document class
 // ----------------------------------------------------------------------------
-int xzes::Document::compile_xls( xzes::uri_t uri )
+int xzes::Document::_compile_xsl( )
 {
-    //Using xalan to complie stylesheet to binary file
-    XalanCompiledStylesheet* compiledStylesheet = 0;
-    compiledStylesheet = theXalanTransformer.compileStylesheet(uri);
-    
-    //after compiled stylesheet, store it back to our class
-    Document::set_contents(*compiledStylesheet);
-    
+    int status = SUCCESS;
+
+    // Initialize the Xalan Transformer
+    XalanTransformer the_xalan_transformer;
+
+    xzes::style_t output_stylesheet;
+
+    //Using xalan to compile stylesheet to binary file
+    the_xalan_transformer.compileStylesheet( uri.uri.c_str(), output_stylesheet.obj );
+
+    //after compiled stylesheet, store it in our class
+    Document::set_xsl_content( output_stylesheet );
+
+    //Terminate xalan
+    XalanTransformer::terminate( );
+    XMLPlatformUtils::Terminate( );
+    XalanTransformer::ICUCleanUp( );
+
     //return status for debug
-    int status = EXIT_SUCCESS;
+    return status;
+}
+
+// ----------------------------------------------------------------------------
+// id_t _hash_uri( )
+//
+// Hashes the uri member of the class into an id_t
+// ----------------------------------------------------------------------------
+xzes::id_t xzes::Document::_hash_uri( )
+{
+    id_t output_id;
+    output_id.id = xzes::_hash( uri.uri );
+
+    return output_id;
+}
+
+// ----------------------------------------------------------------------------
+// int set_type( int )
+//
+// Sets the document type.
+// ----------------------------------------------------------------------------
+int xzes::Document::set_type( int t )
+{
+    int status = SUCCESS;
+
+    doc_type = t;
+
     return status;
 }

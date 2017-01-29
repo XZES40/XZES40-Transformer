@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright 2017, the Oregon State University Capstone Project 'XZES40'
-// with the Apache Foundation
+// with the Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ int main( int argc , char * argv[] )
 		// Print usage
         std::cout << USAGE;
 		// Set exit status code
-		status = EXIT_FAILURE;
+		status = FAILURE;
 	}
 	else
 	{

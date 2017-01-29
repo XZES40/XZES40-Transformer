@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright 2017, the Oregon State University Capstone Project 'XZES40'
-// with the Apache Foundation
+// with the Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,21 +29,24 @@ XALAN_USING_XALAN(XSLTInputSource);
 XALAN_USING_XALAN(XSLTResultTarget);
 
 int main( int argc, char * argv[] ){
-	//Initialize function	
-	XMLPlatformUtils::Initialize();
-	XalanTransformer::initialize();
-	//create a xalantransformer
-	XalanTransformer theXalanTransformer;
-	//perform each transformation	
-	XSLTInputSource xmlIn("simple.xml");
-	XSLTInputSource xslIn("simple.xsl");
-	XSLTResultTarget xmlOut("simple-out.xml");
-	int theResult =
-		    theXalanTransformer.transform(xmlIn,xslIn,xmlOut);
-	//terminate xalan
-	XMLPlatformUtils::Terminate();
-	XalanTransformer::ICUCleanUp();
+    //Initialize function    
+    XMLPlatformUtils::Initialize();
+    XalanTransformer::initialize();
 
-	return theResult;
-		
+    //create a xalantransformer
+    XalanTransformer theXalanTransformer;
+
+    //perform each transformation    
+    XSLTInputSource xmlIn("simple.xml");
+    XSLTInputSource xslIn("simple.xsl");
+    XSLTResultTarget xmlOut("simple-out.xml");
+
+    int theResult =
+            theXalanTransformer.transform(xmlIn,xslIn,xmlOut);
+
+    //terminate xalan
+    XMLPlatformUtils::Terminate();
+    XalanTransformer::ICUCleanUp();
+
+    return theResult;
 }
