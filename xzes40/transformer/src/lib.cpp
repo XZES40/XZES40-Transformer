@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright 2017, the Oregon State University Capstone Project 'XZES40'
-// with the Apache Foundation
+// with the Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <iostream>
+#include <sstream>
 #include <getopt.h>
 
 #include <lib.hpp>
@@ -109,4 +111,30 @@ bool xzes::_file_exists( std::string file_path )
     {
         return true;
     }
+}
+
+
+// ----------------------------------------------------------------------------
+// stding _hash( string )
+//
+// Takes an input string and returns a hash of that string.
+// Thanks to:
+//   http://stackoverflow.com/questions/2535284/how-can-i-hash-a-string-to-an-int-using-c
+// This is hopefully a temporary measure and will eventually become a wrapper
+// for a *real* hash function.
+// ----------------------------------------------------------------------------
+std::string xzes::_hash( std::string input )
+{
+    int hash   = 0;
+    int offset = 'a' - 1;
+
+    for( std::string::const_iterator it=input.begin(); it!=input.end(); ++it)
+    {
+        hash = hash << 1 | (*it - offset);
+    }
+
+    std::ostringstream ret;
+    ret << hash;
+
+    return ret.str();
 }

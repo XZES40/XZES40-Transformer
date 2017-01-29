@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright 2017, the Oregon State University Capstone Project 'XZES40'
-// with the Apache Foundation
+// with the Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,8 +25,18 @@
 
 #include <string>
 
+// Include Xerces and Xalan libraries.
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
+
+// Set Xerces and Xalan namespace for methods and classes.
+XALAN_USING_XALAN( XalanParsedSource       );
+XALAN_USING_XALAN( XalanCompiledStylesheet );
+
 #if !defined lib
 #define lib
+
+#define SUCCESS 1
+#define FAILURE 0
 
 namespace xzes
 {
@@ -37,7 +47,6 @@ namespace xzes
     // ------------------------------------------------------------------------
     typedef struct
     {
-        // TODO decide on actual type. Not int.
         std::string uri;
     } uri_t;
 
@@ -66,25 +75,34 @@ namespace xzes
     // ------------------------------------------------------------------------
     typedef struct
     {
-        // TODO decide on actual type. Not int.
-        int member;
+        std::string id;
     } id_t;
 
     // ------------------------------------------------------------------------
-    // typedef dom_t
+    // typedef dom_t 
     //
-    // A simple abstraction over the Xerces/Xalan DOM objects.
+    // A simple abstraction over the Xerces DOM object.
     // ------------------------------------------------------------------------
     typedef struct
     {
-        // TODO decide on actual type. Not int.
-        int dom;
-        //maybe string?
-        //string dom;
+        // Xerces DOM object
+        const XalanParsedSource *obj;
     } dom_t;
+
+    // ------------------------------------------------------------------------
+    // typedef style_t 
+    //
+    // A simple abstraction over the Xerces StyleSheet object.
+    // ------------------------------------------------------------------------
+    typedef struct
+    {
+        // Xerces DOM object
+        const XalanCompiledStylesheet *obj;
+    } style_t;
 
     cli_arguments_t* parse_args( int*, char*** );
     bool _file_exists( std::string );
+    std::string _hash( std::string );
 }
 
 #endif
