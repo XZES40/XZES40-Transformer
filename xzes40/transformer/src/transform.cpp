@@ -30,6 +30,7 @@
 #include <cstdlib>
 #include <iostream>
 
+#include <document.hpp>
 #include <transform.hpp>
 #include <lib.hpp>
 
@@ -38,6 +39,8 @@ XALAN_USING_XERCES(XMLPlatformUtils);
 XALAN_USING_XALAN(XalanTransformer);
 XALAN_USING_XALAN(XSLTInputSource);
 XALAN_USING_XALAN(XSLTResultTarget);
+XALAN_USING_XALAN(XalanParsedSource);
+XALAN_USING_XALAN(XalanCompiledStylesheet);
 
 int xzes::transform_documents( xzes::cli_arguments_t *args )
 {
@@ -48,12 +51,17 @@ int xzes::transform_documents( xzes::cli_arguments_t *args )
     //create a xalantransformer
     XalanTransformer theXalanTransformer;
 
-    int theResult = theXalanTransformer.transform( args->xml.uri.c_str(),
-                                                   args->xsl.uri.c_str(),
-                                                   std::cout);
+    // Allocate objects on the heap so they can be cached in the non-prototype version.
+    // XSLTInputSource  *xml = cache.get(args.xml);
+    Document xml(args->xml);
+    Document xsl(args->xsl);
+    // XSLTInputSource  *xml = new XSLTInputSource("foo.xml");
+    // XSLTInputSource  *xsl = new XSLTInputSource("foo.xsl");
+    // XSLTResultTarget *out = new XSLTResultTarget("foo.out");
+
+    int theResult = theXalanTransformer.transform( *xml.get_content().obj , *xsl.get_content().obj , std::cout );
 
     //terminate xalan
-    XalanTransformer::terminate();
     XMLPlatformUtils::Terminate();
     XalanTransformer::ICUCleanUp();
 

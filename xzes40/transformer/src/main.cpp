@@ -69,7 +69,7 @@ int main( int argc , char * argv[] )
 	else
 	{
 		// Pass args to transform
-    	status = xzes::transform_documents( args );
+        status = xzes::transform_documents( args );
 	}
 
     return status;

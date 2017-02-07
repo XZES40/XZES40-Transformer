@@ -29,7 +29,7 @@
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 // Set Xerces and Xalan namespace for methods and classes.
-XALAN_USING_XALAN( XalanParsedSource       );
+XALAN_USING_XALAN( XSLTInputSource       );
 XALAN_USING_XALAN( XalanCompiledStylesheet );
 
 #if !defined lib
@@ -83,22 +83,9 @@ namespace xzes
     //
     // A simple abstraction over the Xerces DOM object.
     // ------------------------------------------------------------------------
-    typedef struct
-    {
-        // Xerces DOM object
-        const XalanParsedSource *obj;
-    } dom_t;
-
-    // ------------------------------------------------------------------------
-    // typedef style_t 
-    //
-    // A simple abstraction over the Xerces StyleSheet object.
-    // ------------------------------------------------------------------------
-    typedef struct
-    {
-        // Xerces DOM object
-        const XalanCompiledStylesheet *obj;
-    } style_t;
+    typedef struct {
+        const XSLTInputSource* obj;
+    } doc_t;
 
     cli_arguments_t* parse_args( int*, char*** );
     bool _file_exists( std::string );

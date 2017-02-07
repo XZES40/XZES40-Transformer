@@ -55,16 +55,13 @@ XALAN_USING_XERCES( XMLPlatformUtils  );
 //
 // Intializes a document by setting the uri, path, and contents.
 // ----------------------------------------------------------------------------
-xzes::Document::Document( xzes::uri_t file_path , int type)
+xzes::Document::Document( xzes::uri_t file_path )
 {
     // Set the file path to uri
     set_uri( file_path );
 
     // Set the Document ID
     set_id( );
-
-    // Set the document flag typ
-    set_type( type );
 
     // Compile the document now that you know the type
     compile( );
@@ -80,7 +77,6 @@ xzes::Document::Document( )
 
     set_uri( blank_uri );
     set_id( );
-    set_type( XML_DOC_TYPE );
 }
 
 // ----------------------------------------------------------------------------
@@ -134,134 +130,46 @@ xzes::id_t xzes::Document::get_id( )
 }
 
 // ----------------------------------------------------------------------------
-// int set_xml_content( );
+// int set_content( );
 //
 // Set the DOM contents of a Document.
 // ----------------------------------------------------------------------------
-int xzes::Document::set_xml_content( xzes::dom_t content )
+int xzes::Document::set_content( xzes::doc_t content )
 {
     //return status for debug
     int status = SUCCESS;
 
-    xml = content;
+    doc = content;
 
     return status;
 }
 
 // ----------------------------------------------------------------------------
-// int set_xsl_content( );
+// doc_t get_content( );
 //
-// Set the DOM contents of a Document.
+// Get the DOM contents of a Document.
 // ----------------------------------------------------------------------------
-int xzes::Document::set_xsl_content( xzes::style_t content )
+xzes::doc_t xzes::Document::get_content( )
 {
-    //return status for debug
-    int status = SUCCESS;
-
-    xsl = content;
-
-    return status;
+    return  doc;
 }
-
-// ----------------------------------------------------------------------------
-// xzes::dom_t get_xml_content( );
-//
-// Return the DOM contents of a Document.
-// ----------------------------------------------------------------------------
-xzes::dom_t xzes::Document::get_xml_content( )
-{
-    return xml;
-}
-
-// ----------------------------------------------------------------------------
-// xzes::style_t get_xsl_content( );
-//
-// Return the Stylesheet contents of a Document.
-// ----------------------------------------------------------------------------
-xzes::style_t xzes::Document::get_xsl_content( )
-{
-    return xsl;
-}
-
 
 // ----------------------------------------------------------------------------
 // int compile( );
 //
-// Compile either xml or xsl document depending ont he doc_type.
+// Compile document.
 // ----------------------------------------------------------------------------
 int xzes::Document::compile( )
-{
-    int status;
-
-    if (doc_type == XML_DOC_TYPE)
-        status = _compile_xml( );
-    else if (doc_type == XSL_DOC_TYPE)
-        status = _compile_xsl( );
-    else
-        status = FAILURE;
-
-    return status;
-}
-
-// ----------------------------------------------------------------------------
-// int _compile_xml( );
-//
-// parse the xml file to dom document, and then store it back to document class
-// ----------------------------------------------------------------------------
-int xzes::Document::_compile_xml( )
 {
     // return status for error handling
     int status = SUCCESS;
 
-    //Initialize function
-    XMLPlatformUtils::Initialize();
-    XalanTransformer::initialize();
-
-    //create a xalantransformer
-    XalanTransformer the_xalan_transformer;
-
-    // Create the dom_t object
-    dom_t output_xml_doc;
-
-    the_xalan_transformer.parseSource( uri.uri.c_str() , output_xml_doc.obj );
+    doc_t output_document;
+    output_document.obj = new XSLTInputSource( uri.uri.c_str() );
 
     // store the paresed file to class
-    set_xml_content( output_xml_doc );
+    set_content( output_document );
 
-    //Terminate xalan
-    XalanTransformer::terminate( );
-    XMLPlatformUtils::Terminate( );
-    XalanTransformer::ICUCleanUp( );
-
-    return status;
-}
-
-// ----------------------------------------------------------------------------
-// int _compile_xsl( );
-//
-// compile the stylesheet for future reuse, and store it back to document class
-// ----------------------------------------------------------------------------
-int xzes::Document::_compile_xsl( )
-{
-    int status = SUCCESS;
-
-    // Initialize the Xalan Transformer
-    XalanTransformer the_xalan_transformer;
-
-    xzes::style_t output_stylesheet;
-
-    //Using xalan to compile stylesheet to binary file
-    the_xalan_transformer.compileStylesheet( uri.uri.c_str(), output_stylesheet.obj );
-
-    //after compiled stylesheet, store it in our class
-    Document::set_xsl_content( output_stylesheet );
-
-    //Terminate xalan
-    XalanTransformer::terminate( );
-    XMLPlatformUtils::Terminate( );
-    XalanTransformer::ICUCleanUp( );
-
-    //return status for debug
     return status;
 }
 
@@ -278,16 +186,3 @@ xzes::id_t xzes::Document::_hash_uri( )
     return output_id;
 }
 
-// ----------------------------------------------------------------------------
-// int set_type( int )
-//
-// Sets the document type.
-// ----------------------------------------------------------------------------
-int xzes::Document::set_type( int t )
-{
-    int status = SUCCESS;
-
-    doc_type = t;
-
-    return status;
-}
