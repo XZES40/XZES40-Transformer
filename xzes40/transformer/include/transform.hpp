@@ -26,5 +26,5 @@
 #include <lib.hpp>
 
 namespace xzes {
-   int transform_documents( cli_arguments_t* ); 
+    int transform_documents( xzes::cli_arguments_t* );
 }
