@@ -45,9 +45,15 @@ def parse_args(a):
     Return "argv[1],argv[2]"
     """
     if len(a) == 3:
-        return "{},{}".format(a[1], a[2])
+        return "{},{},{}".format(uid(a), a[1], a[2])
     else:
         return ""
+
+def uid(a):
+    """
+    Returns a unique id.
+    """
+    return 1
 
 if __name__ == '__main__':
     main()

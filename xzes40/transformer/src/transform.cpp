@@ -23,9 +23,9 @@
 // All class declarations are documented in lib/transform.hpp.
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 #include <xalanc/Include/PlatformDefinitions.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
-#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 #include <cstdlib>
 #include <iostream>
@@ -35,19 +35,10 @@
 #include <lib.hpp>
 
 //define namespace
-XALAN_USING_XERCES(XMLPlatformUtils);
 XALAN_USING_XALAN(XalanTransformer);
-XALAN_USING_XALAN(XSLTInputSource);
-XALAN_USING_XALAN(XSLTResultTarget);
-XALAN_USING_XALAN(XalanParsedSource);
-XALAN_USING_XALAN(XalanCompiledStylesheet);
 
-int xzes::transform_documents( xzes::cli_arguments_t *args )
+int xzes::transform_documents( xzes::job_t *args )
 {
-    //Initialize function
-    XMLPlatformUtils::Initialize();
-    XalanTransformer::initialize();
-
     //create a xalantransformer
     XalanTransformer theXalanTransformer;
 
@@ -55,15 +46,10 @@ int xzes::transform_documents( xzes::cli_arguments_t *args )
     // XSLTInputSource  *xml = cache.get(args.xml);
     Document xml(args->xml);
     Document xsl(args->xsl);
-    // XSLTInputSource  *xml = new XSLTInputSource("foo.xml");
-    // XSLTInputSource  *xsl = new XSLTInputSource("foo.xsl");
-    // XSLTResultTarget *out = new XSLTResultTarget("foo.out");
 
-    int theResult = theXalanTransformer.transform( *xml.get_content().obj , *xsl.get_content().obj , std::cout );
-
-    //terminate xalan
-    XMLPlatformUtils::Terminate();
-    XalanTransformer::ICUCleanUp();
+    int theResult = theXalanTransformer.transform( *xml.get_content().obj ,
+                                                   *xsl.get_content().obj ,
+                                                    std::cout );
 
     return theResult;
 }

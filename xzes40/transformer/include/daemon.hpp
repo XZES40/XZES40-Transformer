@@ -27,5 +27,5 @@ namespace xzes {
     int setup_connection();
     void signal_handler( int );
     int daemon( int );
-    int dispatch_transform( cli_arguments_t * );
+    int dispatch_transform( job_t * );
 }

@@ -24,6 +24,7 @@
 // - https://github.com/troydhanson/network/blob/master/unixdomain/srv.c
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <vector>
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/socket.h>
@@ -31,9 +32,19 @@
 #include <stdlib.h>
 #include <csignal>
 
+#include <xalanc/Include/PlatformDefinitions.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+
 #include <lib.hpp>
 #include <transform.hpp>
 #include <daemon.hpp>
+
+XALAN_USING_XERCES(XMLPlatformUtils);
+XALAN_USING_XALAN(XSLTInputSource);
+XALAN_USING_XALAN(XSLTResultTarget);
+XALAN_USING_XALAN(XalanParsedSource);
+XALAN_USING_XALAN(XalanCompiledStylesheet);
+XALAN_USING_XALAN(XalanTransformer);
 
 #define BUFFER_SIZE 1024
 
@@ -58,6 +69,10 @@ int xzes::daemon(int fd)
     char buf[BUFFER_SIZE];
     int cl, rc;
 
+    //Initialize Xalan stuff
+    XMLPlatformUtils::Initialize();
+    XalanTransformer::initialize();
+
     for (;;) {
         if ( (cl = accept(fd, NULL, NULL)) == -1) {
             perror("XZES40:: Accept error in transformer daemon.");
@@ -67,12 +82,11 @@ int xzes::daemon(int fd)
         while ( (rc = read(cl, buf, sizeof(buf))) > 0) {
             if (xzes::valid_request(buf))
             {
+                // TODO MULTI THREAD
+                // TODO FIX THE SEGFAULT
                 printf("XZES40:: Read input `%s`.\n", buf);
-                xzes::cli_arguments_t *args = xzes::parse_request( buf );
-                if (xzes::dispatch_transform( args ))
-                    printf("XZES40:: Processed jobs successfully.\n");
-                else
-                    printf("XZES40:: Failed jobs.\n");
+                xzes::job_t *job = xzes::parse_request( buf );
+                xzes::transform_documents(job);
             }
         }
         if (rc == -1) {
@@ -84,15 +98,10 @@ int xzes::daemon(int fd)
         }
     }
 
+    // Teardown Xalan stuff
+    XMLPlatformUtils::Terminate();
+    XalanTransformer::ICUCleanUp();
 }
-
-int xzes::dispatch_transform( xzes::cli_arguments_t *args )
-{
-    int status = SUCCESS;
-
-    return status;
-}
-
 
 // ------------------------------------------------------------------------
 // Handles signals.

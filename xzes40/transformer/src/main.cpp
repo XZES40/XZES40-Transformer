@@ -49,8 +49,8 @@ int main( int argc , char * argv[] )
 {
 	int status;
 
-    // Parse CLI arguments into struct `cli_arguments_t`
-    xzes::cli_arguments_t* args = xzes::parse_args( &argc , &argv );
+    // Parse CLI arguments into struct `job_t`
+    xzes::job_t* args = xzes::parse_args( &argc , &argv );
 
 	// User input files that do not exist.
     if( args->xml.uri == "\0" || args->xsl.uri == "\0" ||

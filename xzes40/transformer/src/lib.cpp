@@ -27,32 +27,65 @@
 #include <sstream>
 #include <getopt.h>
 #include <string>
+#include <vector>
+#include <sstream>
 
 #include <lib.hpp>
 
 // ----------------------------------------------------------------------------
-// cli_arguments parse_args( int argc, char* argv[] )
+// job_t * parse_args( int argc, char* argv[] )
 //
-// Parses argv into a cli_arguments_t struct
+// Parses argv into a job_t struct
 // Assigns an argument to "NUL" ("\0") if the file does not exist.
 // ----------------------------------------------------------------------------
-xzes::cli_arguments_t* xzes::parse_request( char* input )
+xzes::job_t* xzes::parse_request( char* input )
 {
-	xzes::cli_arguments_t *out = new xzes::cli_arguments_t;
-    
+	xzes::job_t *out = new xzes::job_t;
+
+    std::string tmp (input);
+
+    std::vector<std::string> tmpv = xzes::split(input,',');
+
+    out->jid     = tmpv[0];
+    out->xml.uri = tmpv[1];
+    out->xsl.uri = tmpv[2];
+
+    printf("(%s,%s,%s)\n",out->jid.c_str(),
+                          out->xml.uri.c_str(),
+                          out->xml.uri.c_str());
+
     return out;
 }
 
+std::vector<std::string> xzes::split( std::string s, char c)
+{
+    std::vector<std::string> v;
+
+   std::string::size_type i = 0;
+   std::string::size_type j = s.find(c);
+
+   while (j != std::string::npos) {
+      v.push_back(s.substr(i, j-i));
+      i = ++j;
+      j = s.find(c, j);
+
+      if (j == std::string::npos)
+         v.push_back(s.substr(i, s.length()));
+   }
+
+    return v;
+}
+
 // ----------------------------------------------------------------------------
-// cli_arguments parse_args( int argc, char* argv[] )
+// job_t * parse_args( int argc, char* argv[] )
 //
-// Parses argv into a cli_arguments_t struct
+// Parses argv into a job_t struct
 // Assigns an argument to "NUL" ("\0") if the file does not exist.
 // ----------------------------------------------------------------------------
-xzes::cli_arguments_t* xzes::parse_args( int *argc , char* *argv[ ] )
+xzes::job_t* xzes::parse_args( int *argc , char* *argv[ ] )
 {
 	int c;
-	xzes::cli_arguments_t *args = new xzes::cli_arguments_t;
+	xzes::job_t *args = new xzes::job_t;
 	while ( true )
 	{
 		static struct option long_options[] =
