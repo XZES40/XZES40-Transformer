@@ -88,8 +88,11 @@ namespace xzes
     } doc_t;
 
     cli_arguments_t* parse_args( int*, char*** );
+    cli_arguments_t* parse_request( char* );
     bool _file_exists( std::string );
     std::string _hash( std::string );
+    int setup_connection();
+    int valid_request(char *);
 }
 
 #endif

@@ -19,22 +19,18 @@
 // Filename: xzes40.cpp
 // Description: Main entrypoint for the XZES40 Transformer application
 ///////////////////////////////////////////////////////////////////////////////
-
-// #include <xalanc/Include/PlatformDefinitions.hpp>
-// #include <xercesc/util/PlatformUtils.hpp>
-
-// #include <xalanc/XalanTransformer/XalanTransformer.hpp>
+//
+// NOTICE: THIS FILE HAS BEEN DEPRECATED IN FAVOR OF 'main.py'
+// IT REMAINS HERE FOR POSTERITY BUT IS NOT MAINTAINED AND SHOULD NOT BE LOOKED
+// AT AS A SOURCE OF TRUTH.
+//
+///////////////////////////////////////////////////////////////////////////////
 
 #include <cstdlib>
 #include <iostream>
 
 #include <lib.hpp>
 #include <transform.hpp>
-
-// XALAN_USING_XERCES(XMLPlatformUtils);
-// XALAN_USING_XALAN(XalanTransformer);
-// XALAN_USING_XALAN(XSLTInputSource);
-// XALAN_USING_XALAN(XSLTResultTarget);
 
 std::string USAGE = "\
 Usage: \n\

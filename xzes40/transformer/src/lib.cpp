@@ -26,8 +26,22 @@
 #include <iostream>
 #include <sstream>
 #include <getopt.h>
+#include <string>
 
 #include <lib.hpp>
+
+// ----------------------------------------------------------------------------
+// cli_arguments parse_args( int argc, char* argv[] )
+//
+// Parses argv into a cli_arguments_t struct
+// Assigns an argument to "NUL" ("\0") if the file does not exist.
+// ----------------------------------------------------------------------------
+xzes::cli_arguments_t* xzes::parse_request( char* input )
+{
+	xzes::cli_arguments_t *out = new xzes::cli_arguments_t;
+    
+    return out;
+}
 
 // ----------------------------------------------------------------------------
 // cli_arguments parse_args( int argc, char* argv[] )
@@ -115,7 +129,7 @@ bool xzes::_file_exists( std::string file_path )
 
 
 // ----------------------------------------------------------------------------
-// stding _hash( string )
+// string _hash( string )
 //
 // Takes an input string and returns a hash of that string.
 // Thanks to:
@@ -137,4 +151,18 @@ std::string xzes::_hash( std::string input )
     ret << hash;
 
     return ret.str();
+}
+
+// ----------------------------------------------------------------------------
+// Returns if a request sent via unix socket is valid.
+// ----------------------------------------------------------------------------
+int xzes::valid_request(char * b)
+{
+    std::string tmp (b);
+    printf("%lu\n", tmp.find(","));
+    if ( tmp.find(",") )
+        printf("Found `,` in input\n");
+    else
+        printf("Could not find `,` in input\n");
+    return SUCCESS;
 }
