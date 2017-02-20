@@ -23,8 +23,9 @@
 // All class definitions are documented in src/cache.cpp
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <lib.hpp>
+#include "lib.hpp"
 #include <document.hpp>
+#include <keylist.hpp>
 
 #if !defined cache
 #define cache
@@ -33,11 +34,16 @@ namespace xzes
 {
     class Cache {
         private:
+        	KeyListEntry *theList;
 
         public:
-            Document* get( Document* );
-            Document* set( Document* );
-            int del( Document* );
+        	Cache();
+            doc_t* get( Document );
+            int set( Document *);
+            int del( Document *);
+            int print_name();
+            int	print_id();
+
     };
 }
 

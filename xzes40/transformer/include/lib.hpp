@@ -82,7 +82,8 @@ namespace xzes
     // ------------------------------------------------------------------------
     typedef struct
     {
-        std::string id;
+        //std::string id;
+        int id;
     } id_t;
 
     // ------------------------------------------------------------------------
@@ -97,10 +98,10 @@ namespace xzes
     job_t* parse_args( int*, char*** );
     job_t* parse_request( char* );
     bool _file_exists( std::string );
-    std::string _hash( std::string );
     int setup_connection();
     int valid_request(char *);
     std::vector<std::string> split(std::string, char);
+    int _hash( const char* );
 }
 
 #endif

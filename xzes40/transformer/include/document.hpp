@@ -34,8 +34,7 @@ namespace xzes
     class Document
     {
         private:
-            doc_t   doc;
-
+            doc_t *doc;
             id_t  uid;
             uri_t uri;
 
@@ -54,9 +53,8 @@ namespace xzes
             uri_t   get_uri( );
             id_t    get_id( );
 
-            doc_t   get_content( );
-
-
+            doc_t*   get_content( );
+        
             int compile( );
     };
 }

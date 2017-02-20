@@ -62,9 +62,8 @@ xzes::Document::Document( xzes::uri_t file_path )
 
     // Set the Document ID
     set_id( );
-
     // Compile the document now that you know the type
-    compile( );
+    //compile( );
 }
 
 // ----------------------------------------------------------------------------
@@ -139,7 +138,7 @@ int xzes::Document::set_content( xzes::doc_t content )
     //return status for debug
     int status = SUCCESS;
 
-    doc = content;
+    *doc = content;
 
     return status;
 }
@@ -149,9 +148,9 @@ int xzes::Document::set_content( xzes::doc_t content )
 //
 // Get the DOM contents of a Document.
 // ----------------------------------------------------------------------------
-xzes::doc_t xzes::Document::get_content( )
+xzes::doc_t* xzes::Document::get_content( )
 {
-    return  doc;
+    return doc;
 }
 
 // ----------------------------------------------------------------------------
@@ -181,7 +180,8 @@ int xzes::Document::compile( )
 xzes::id_t xzes::Document::_hash_uri( )
 {
     id_t output_id;
-    output_id.id = xzes::_hash( uri.uri );
+
+    output_id.id = xzes::_hash(uri.uri.c_str());
 
     return output_id;
 }
