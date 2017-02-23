@@ -16,15 +16,16 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-// Filename: transform.hpp
-// Description: Delcaration of custom types, classes, and functions used in
-// XZES40 Transformer transformation functionality.
+// Filename: daemon.hpp
+// Description: Function declarations form the Daemon.
 //
-// All class declarations are documented in lib/transform.hpp.
+// All function definitions are documented in src/daemon.cpp
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <lib.hpp>
 
 namespace xzes {
-    int transform_documents( xzes::job_t* );
+    int setup_connection();
+    void signal_handler( int );
+    int daemon( int );
+    int dispatch_transform( job_t * );
 }

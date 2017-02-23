@@ -16,26 +16,26 @@ XALAN_USING_XALAN(XalanParsedSource);
 XALAN_USING_XALAN(XalanCompiledStylesheet);
 
 int main( int argc, char * argv[] ){
-	//Initialize function	
-	XMLPlatformUtils::Initialize();
-	XalanTransformer::initialize();
+    //Initialize function
+    XMLPlatformUtils::Initialize();
+    XalanTransformer::initialize();
 
-	//create a xalantransformer
-	XalanTransformer theXalanTransformer;
+    //create a xalantransformer
+    XalanTransformer theXalanTransformer;
 
-	// Allocate objects on the heap so they can be cached in the non-prototype version.
-	// XSLTInputSource  *xml = cache.get(args.xml);
-	// Document xml(args.xml, XML_DOC_TYPE);
-	XSLTInputSource  *xml = new XSLTInputSource("foo.xml");
-	XSLTInputSource  *xsl = new XSLTInputSource("foo.xsl");
-	XSLTResultTarget *out = new XSLTResultTarget("foo.out");
+    // Allocate objects on the heap so they can be cached in the non-prototype version.
+    // XSLTInputSource  *xml = cache.get(args.xml);
+    // Document xml(args.xml, XML_DOC_TYPE);
+    XSLTInputSource  *xml = new XSLTInputSource("foo.xml");
+    XSLTInputSource  *xsl = new XSLTInputSource("foo.xsl");
+    XSLTResultTarget *out = new XSLTResultTarget("foo.out");
 
-	int theResult = theXalanTransformer.transform(*xml,*xsl,*out);
+    int theResult = theXalanTransformer.transform(*xml,*xsl,*out);
 
-	//terminate xalan
-	XMLPlatformUtils::Terminate();
-	XalanTransformer::ICUCleanUp();
+    //terminate xalan
+    XMLPlatformUtils::Terminate();
+    XalanTransformer::ICUCleanUp();
 
-	return theResult;
+    return theResult;
 
 }

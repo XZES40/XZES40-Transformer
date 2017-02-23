@@ -23,6 +23,7 @@
 // All class definitions are documented in src/lib.cpp
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <vector>
 #include <string>
 
 // Include Xerces and Xalan libraries.
@@ -51,21 +52,27 @@ namespace xzes
     } uri_t;
 
     // ------------------------------------------------------------------------
-    // typedef struct cli_arguments
+    // typedef struct job_t
     //
     // Parses input of the following format:
     //   `<binary> <input xml> <input xsl> <out xml>`
     // into a struct of the following format:
-    //   string cli_argument.xml -> <input xml>
-    //   string cli_argument.xsl -> <input xsl>
-    //   string cli_argument.out -> <input out>
+    //   string job.xml.uri -> <input xml>
+    //   string job.xsl.uri -> <input xsl>
+    //   string job.out.uri -> <output file destination>
+    // As well as stores metadata about the job being processed (where the job
+    // is the transformation of the above files.
+    //   thread_t tid -> id of processing thread
+    //   string jid -> unique ID of the request (like a service ticket ID)
     // ------------------------------------------------------------------------
     typedef struct
     {
         uri_t xml; // XML file location
         uri_t xsl; // Stylesheet file location
         uri_t out; // Output file location
-    } cli_arguments_t ;
+        pthread_t tid; // thread id of the job
+        std::string jid; // uniqe job id
+    } job_t ;
 
     // ------------------------------------------------------------------------
     // typedef id_t 
@@ -87,9 +94,13 @@ namespace xzes
         const XSLTInputSource* obj;
     } doc_t;
 
-    cli_arguments_t* parse_args( int*, char*** );
+    job_t* parse_args( int*, char*** );
+    job_t* parse_request( char* );
     bool _file_exists( std::string );
     std::string _hash( std::string );
+    int setup_connection();
+    int valid_request(char *);
+    std::vector<std::string> split(std::string, char);
 }
 
 #endif

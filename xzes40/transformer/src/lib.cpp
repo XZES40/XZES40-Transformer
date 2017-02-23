@@ -26,37 +26,84 @@
 #include <iostream>
 #include <sstream>
 #include <getopt.h>
+#include <string>
+#include <vector>
+#include <sstream>
 
 #include <lib.hpp>
 
 // ----------------------------------------------------------------------------
-// cli_arguments parse_args( int argc, char* argv[] )
+// job_t * parse_args( int argc, char* argv[] )
 //
-// Parses argv into a cli_arguments_t struct
+// Parses argv into a job_t struct
 // Assigns an argument to "NUL" ("\0") if the file does not exist.
 // ----------------------------------------------------------------------------
-xzes::cli_arguments_t* xzes::parse_args( int *argc , char* *argv[ ] )
+xzes::job_t* xzes::parse_request( char* input )
 {
-	int c;
-	xzes::cli_arguments_t *args = new xzes::cli_arguments_t;
-	while ( true )
-	{
-		static struct option long_options[] =
-		{
-			  { "xml", required_argument, 0, 'm' },
-			  { "xsl", required_argument, 0, 's' },
-			  { "out", required_argument, 0, 'o' },
-		};
+    xzes::job_t *out = new xzes::job_t;
 
-		int i = 0;
-		c = getopt_long ( *argc, *argv, "mso", long_options, &i );
+    std::string tmp (input);
 
-		if ( c == -1 )
-			break;
+    std::vector<std::string> tmpv = xzes::split(input,',');
 
-		switch( c )
-		{
-			case 'm':
+    out->jid     = tmpv[0];
+    out->xml.uri = tmpv[1];
+    out->xsl.uri = tmpv[2];
+
+    // printf("(%s,%s,%s)\n",out->jid.c_str(),
+    //                      out->xml.uri.c_str(),
+    //                      out->xml.uri.c_str());
+
+    return out;
+}
+
+std::vector<std::string> xzes::split( std::string s, char c)
+{
+    std::vector<std::string> v;
+
+    std::string::size_type i = 0;
+    std::string::size_type j = s.find(c);
+
+    while (j != std::string::npos) {
+        v.push_back(s.substr(i, j-i));
+        i = ++j;
+        j = s.find(c, j);
+
+        if (j == std::string::npos)
+            v.push_back(s.substr(i, s.length()));
+    }
+
+    return v;
+}
+
+// ----------------------------------------------------------------------------
+// job_t * parse_args( int argc, char* argv[] )
+//
+// Parses argv into a job_t struct
+// Assigns an argument to "NUL" ("\0") if the file does not exist.
+// ----------------------------------------------------------------------------
+xzes::job_t* xzes::parse_args( int *argc , char* *argv[ ] )
+{
+    int c;
+    xzes::job_t *args = new xzes::job_t;
+    while ( true )
+    {
+        static struct option long_options[] =
+        {
+            { "xml", required_argument, 0, 'm' },
+            { "xsl", required_argument, 0, 's' },
+            { "out", required_argument, 0, 'o' },
+        };
+
+        int i = 0;
+        c = getopt_long ( *argc, *argv, "mso", long_options, &i );
+
+        if ( c == -1 )
+            break;
+
+        switch( c )
+        {
+            case 'm':
                 if ( xzes::_file_exists( optarg ) )
                 {
                     args->xml.uri = optarg;
@@ -65,9 +112,9 @@ xzes::cli_arguments_t* xzes::parse_args( int *argc , char* *argv[ ] )
                 {
                     args->xml.uri = "\0";
                 }
-				break;
+                break;
 
-			case 's':
+            case 's':
                 if ( xzes::_file_exists( optarg ) )
                 {
                     args->xsl.uri = optarg;
@@ -76,9 +123,9 @@ xzes::cli_arguments_t* xzes::parse_args( int *argc , char* *argv[ ] )
                 {
                     args->xsl.uri = "\0";
                 }
-				break;
+                break;
 
-			case 'o':
+            case 'o':
                 if ( xzes::_file_exists( optarg ) )
                 {
                     args->out.uri = optarg;
@@ -87,9 +134,9 @@ xzes::cli_arguments_t* xzes::parse_args( int *argc , char* *argv[ ] )
                 {
                     args->out.uri = "\0";
                 }
-				break;
-		}
-	}
+                break;
+        }
+    }
     return args;
 }
 
@@ -115,7 +162,7 @@ bool xzes::_file_exists( std::string file_path )
 
 
 // ----------------------------------------------------------------------------
-// stding _hash( string )
+// string _hash( string )
 //
 // Takes an input string and returns a hash of that string.
 // Thanks to:
@@ -137,4 +184,21 @@ std::string xzes::_hash( std::string input )
     ret << hash;
 
     return ret.str();
+}
+
+// ----------------------------------------------------------------------------
+// Returns if a request sent via unix socket is valid.
+//
+// TODO: A nieve implementation, should be improved.
+// ----------------------------------------------------------------------------
+int xzes::valid_request(char * b)
+{
+    std::string tmp (b);
+    // printf("%lu\n", tmp.find(","));
+    if ( tmp.find(",") )
+        // printf("Found `,` in input\n");
+        return SUCCESS;
+    else
+        // printf("Could not find `,` in input\n");
+        return FAILURE;
 }

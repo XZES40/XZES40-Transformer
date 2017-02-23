@@ -19,22 +19,18 @@
 // Filename: xzes40.cpp
 // Description: Main entrypoint for the XZES40 Transformer application
 ///////////////////////////////////////////////////////////////////////////////
-
-// #include <xalanc/Include/PlatformDefinitions.hpp>
-// #include <xercesc/util/PlatformUtils.hpp>
-
-// #include <xalanc/XalanTransformer/XalanTransformer.hpp>
+//
+// NOTICE: THIS FILE HAS BEEN DEPRECATED IN FAVOR OF 'main.py'
+// IT REMAINS HERE FOR POSTERITY BUT IS NOT MAINTAINED AND SHOULD NOT BE LOOKED
+// AT AS A SOURCE OF TRUTH.
+//
+///////////////////////////////////////////////////////////////////////////////
 
 #include <cstdlib>
 #include <iostream>
 
 #include <lib.hpp>
 #include <transform.hpp>
-
-// XALAN_USING_XERCES(XMLPlatformUtils);
-// XALAN_USING_XALAN(XalanTransformer);
-// XALAN_USING_XALAN(XSLTInputSource);
-// XALAN_USING_XALAN(XSLTResultTarget);
 
 std::string USAGE = "\
 Usage: \n\
@@ -53,8 +49,8 @@ int main( int argc , char * argv[] )
 {
 	int status;
 
-    // Parse CLI arguments into struct `cli_arguments_t`
-    xzes::cli_arguments_t* args = xzes::parse_args( &argc , &argv );
+    // Parse CLI arguments into struct `job_t`
+    xzes::job_t* args = xzes::parse_args( &argc , &argv );
 
 	// User input files that do not exist.
     if( args->xml.uri == "\0" || args->xsl.uri == "\0" ||

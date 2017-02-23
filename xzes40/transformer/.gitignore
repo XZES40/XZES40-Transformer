@@ -1,3 +1,5 @@
 build/*
 .*.swp
 .*.swo
+examples/daemon
+examples/client

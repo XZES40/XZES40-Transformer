@@ -55,7 +55,7 @@ namespace xzes
             id_t    get_id( );
 
             doc_t   get_content( );
-        
+
 
             int compile( );
     };
