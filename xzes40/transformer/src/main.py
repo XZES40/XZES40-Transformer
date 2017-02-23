@@ -33,7 +33,7 @@ def main():
 
     x = parse_args(sys.argv)
     if "" != x:
-        print("XZES:: Sent request:", x)
+        # print("XZES:: Sent request:", x)
         s.send(x.encode('utf-8'))
     else:
         print("\nPlease pass an XML and XSL file in the following format:")

@@ -19,14 +19,37 @@ Now that you've built the project you can *use* it.
 How fancy.
 
 ```
-(transformer/)$ ./build/main
-Usage: 
-  a.out --xml=input.xml --xsl=style.xslt [--out=output file]
-(transformer/)$ ./build/main --xml=./some-file.xml --xsl=./some-style.xslt --out=./output-file.xml
-[... output is written to ./output-file.xml ...]
-(transformer/)$ ./build/main --xml=./some-file.xml --xsl=./some-style.xslt
-[... output is written to stdout ...]
+user@host:transformer/$ ./build/daemon &    # This runs the daemon in a background process
+[2] 14876
+user@host:transformer/$ ./build/main.py `pwd`/examples/simple.xml `pwd`/examples/simple.xsl
+<?xml version="1.0" encoding="UTF-8"?><out>Hello</out>
 ```
+
+## Development
+
+To develop the application you will need
+
+- A Debian Linux host (probably a virtual machine).
+- The C++ dependencies are listed in the `vagrant` directory in the `setup.sh` script.
+- Python2 to use `main.py` (demo above).
+
+### Using Vagrant
+
+Vagrant us a convenient tool for using a portable Virtual Machine.
+
+```
+(transformer/)$ cd vagrant
+(transformer/vagrant)$ vagrant up
+Bringing machine 'default' up with 'virtualbox' provider...
+==> default: Checking if box 'debian/jessie64' is up to date..
+[...]
+==> default: Vanilla Debian box. See https://atlas.hashicorp.com/debian/ for help and bug reports
+(transformer/vagrant)$ vagrant ssh
+[...[
+vagrant@jessie:~$ cd xzes40/transformer/xzes40/transformer
+```
+
+See the file `vagant/README.md` for more information about the Vagrant development environment.
 
 ## Structure
 

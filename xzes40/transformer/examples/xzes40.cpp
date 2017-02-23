@@ -42,7 +42,7 @@ int main( int argc, char * argv[] ){
     XSLTResultTarget xmlOut("simple-out.xml");
 
     int theResult =
-            theXalanTransformer.transform(xmlIn,xslIn,xmlOut);
+        theXalanTransformer.transform(xmlIn,xslIn,xmlOut);
 
     //terminate xalan
     XMLPlatformUtils::Terminate();

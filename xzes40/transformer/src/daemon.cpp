@@ -84,7 +84,7 @@ int xzes::daemon(int fd)
             {
                 // TODO MULTI THREAD
                 // TODO FIX THE SEGFAULT
-                printf("XZES40:: Read input `%s`.\n", buf);
+                //printf("XZES40:: Read input `%s`.\n", buf);
                 xzes::job_t *job = xzes::parse_request( buf );
                 xzes::transform_documents(job);
             }
@@ -93,7 +93,7 @@ int xzes::daemon(int fd)
             perror("XZES40:: Read error.\n");
             exit(EXIT_FAILURE);
         } else if (rc == 0) {
-            printf("XZES40:: Recieved EOF. Exiting.\n");
+            // printf("XZES40:: Recieved EOF. Exiting.\n");
             close(cl);
         }
     }
@@ -109,7 +109,7 @@ int xzes::daemon(int fd)
 // ------------------------------------------------------------------------
 void xzes::signal_handler(int signum)
 {
-    printf("Recieved signal (%d).", signum);
+    // printf("Recieved signal (%d).", signum);
 
     if (signum == SIGINT)
         remove(socket_path);

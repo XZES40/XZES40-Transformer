@@ -40,7 +40,7 @@
 // ----------------------------------------------------------------------------
 xzes::job_t* xzes::parse_request( char* input )
 {
-	xzes::job_t *out = new xzes::job_t;
+    xzes::job_t *out = new xzes::job_t;
 
     std::string tmp (input);
 
@@ -50,9 +50,9 @@ xzes::job_t* xzes::parse_request( char* input )
     out->xml.uri = tmpv[1];
     out->xsl.uri = tmpv[2];
 
-    printf("(%s,%s,%s)\n",out->jid.c_str(),
-                          out->xml.uri.c_str(),
-                          out->xml.uri.c_str());
+    // printf("(%s,%s,%s)\n",out->jid.c_str(),
+    //                      out->xml.uri.c_str(),
+    //                      out->xml.uri.c_str());
 
     return out;
 }
@@ -61,17 +61,17 @@ std::vector<std::string> xzes::split( std::string s, char c)
 {
     std::vector<std::string> v;
 
-   std::string::size_type i = 0;
-   std::string::size_type j = s.find(c);
+    std::string::size_type i = 0;
+    std::string::size_type j = s.find(c);
 
-   while (j != std::string::npos) {
-      v.push_back(s.substr(i, j-i));
-      i = ++j;
-      j = s.find(c, j);
+    while (j != std::string::npos) {
+        v.push_back(s.substr(i, j-i));
+        i = ++j;
+        j = s.find(c, j);
 
-      if (j == std::string::npos)
-         v.push_back(s.substr(i, s.length()));
-   }
+        if (j == std::string::npos)
+            v.push_back(s.substr(i, s.length()));
+    }
 
     return v;
 }
@@ -84,26 +84,26 @@ std::vector<std::string> xzes::split( std::string s, char c)
 // ----------------------------------------------------------------------------
 xzes::job_t* xzes::parse_args( int *argc , char* *argv[ ] )
 {
-	int c;
-	xzes::job_t *args = new xzes::job_t;
-	while ( true )
-	{
-		static struct option long_options[] =
-		{
-			  { "xml", required_argument, 0, 'm' },
-			  { "xsl", required_argument, 0, 's' },
-			  { "out", required_argument, 0, 'o' },
-		};
+    int c;
+    xzes::job_t *args = new xzes::job_t;
+    while ( true )
+    {
+        static struct option long_options[] =
+        {
+            { "xml", required_argument, 0, 'm' },
+            { "xsl", required_argument, 0, 's' },
+            { "out", required_argument, 0, 'o' },
+        };
 
-		int i = 0;
-		c = getopt_long ( *argc, *argv, "mso", long_options, &i );
+        int i = 0;
+        c = getopt_long ( *argc, *argv, "mso", long_options, &i );
 
-		if ( c == -1 )
-			break;
+        if ( c == -1 )
+            break;
 
-		switch( c )
-		{
-			case 'm':
+        switch( c )
+        {
+            case 'm':
                 if ( xzes::_file_exists( optarg ) )
                 {
                     args->xml.uri = optarg;
@@ -112,9 +112,9 @@ xzes::job_t* xzes::parse_args( int *argc , char* *argv[ ] )
                 {
                     args->xml.uri = "\0";
                 }
-				break;
+                break;
 
-			case 's':
+            case 's':
                 if ( xzes::_file_exists( optarg ) )
                 {
                     args->xsl.uri = optarg;
@@ -123,9 +123,9 @@ xzes::job_t* xzes::parse_args( int *argc , char* *argv[ ] )
                 {
                     args->xsl.uri = "\0";
                 }
-				break;
+                break;
 
-			case 'o':
+            case 'o':
                 if ( xzes::_file_exists( optarg ) )
                 {
                     args->out.uri = optarg;
@@ -134,9 +134,9 @@ xzes::job_t* xzes::parse_args( int *argc , char* *argv[ ] )
                 {
                     args->out.uri = "\0";
                 }
-				break;
-		}
-	}
+                break;
+        }
+    }
     return args;
 }
 
@@ -188,14 +188,17 @@ std::string xzes::_hash( std::string input )
 
 // ----------------------------------------------------------------------------
 // Returns if a request sent via unix socket is valid.
+//
+// TODO: A nieve implementation, should be improved.
 // ----------------------------------------------------------------------------
 int xzes::valid_request(char * b)
 {
     std::string tmp (b);
-    printf("%lu\n", tmp.find(","));
+    // printf("%lu\n", tmp.find(","));
     if ( tmp.find(",") )
-        printf("Found `,` in input\n");
+        // printf("Found `,` in input\n");
+        return SUCCESS;
     else
-        printf("Could not find `,` in input\n");
-    return SUCCESS;
+        // printf("Could not find `,` in input\n");
+        return FAILURE;
 }
