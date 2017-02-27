@@ -22,6 +22,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <lib.hpp>
+#include <cstdlib>
+#include <functional>
+#include <cache.hpp>
+
+// Xerces and Xalan
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
+XALAN_USING_XALAN(  XalanTransformer  );
+XALAN_USING_XERCES( XMLPlatformUtils  );
 
 #if !defined document
 #define document
@@ -34,7 +42,7 @@ namespace xzes
     class Document
     {
         private:
-            doc_t *doc;
+            doc_t* doc;
             id_t  uid;
             uri_t uri;
 
@@ -42,7 +50,7 @@ namespace xzes
             int set_uri( uri_t );
             int set_id( );
 
-            int set_content( doc_t );
+            int set_content( doc_t* );
 
             id_t _hash_uri( );
 

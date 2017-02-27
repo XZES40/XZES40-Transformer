@@ -38,9 +38,8 @@
 #include <keylist.hpp>
 #include <cache.hpp>
 
-using namespace xzes;
-using namespace std;
-XALAN_USING_XALAN(XSLTInputSource);
+XALAN_USING_XERCES(XMLPlatformUtils);
+XALAN_USING_XALAN(XalanTransformer);
 
 std::string USAGE = "\
 Usage: \n\

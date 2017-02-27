@@ -21,18 +21,13 @@
 // and classes used in XZES40 Document handling pipeline.
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <cstdlib>
-#include <string>
-#include <functional>
-#include <iostream>
+#include <xalanc/Include/PlatformDefinitions.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
-#include <lib.hpp>
 #include <document.hpp>
 
-// Xerces and Xalan
-#include <xalanc/XalanTransformer/XalanTransformer.hpp>
-XALAN_USING_XALAN(  XalanTransformer  );
-XALAN_USING_XERCES( XMLPlatformUtils  );
+XALAN_USING_XALAN(XSLTInputSource);
 
 // ----------------------------------------------------------------------------
 // class Document
@@ -57,13 +52,25 @@ XALAN_USING_XERCES( XMLPlatformUtils  );
 // ----------------------------------------------------------------------------
 xzes::Document::Document( xzes::uri_t file_path )
 {
+    Cache::Cache storeList;
+
     // Set the file path to uri
     set_uri( file_path );
 
     // Set the Document ID
     set_id( );
+
+    // TODO GET MOVE THIS LINE INTO THE `if` stmt
+    xzes::doc_t *tmp = new xzes::doc_t;
+
     // Compile the document now that you know the type
-    //compile( );
+    if(!storeList.search(uid)){
+        xzes::doc_t *tmp = new xzes::doc_t;
+        tmp->obj = new XSLTInputSource( uri.uri.c_str( ));
+        storeList.set( uid , tmp , uri );
+    }
+    set_content( storeList.get( uid ));
+
 }
 
 // ----------------------------------------------------------------------------
@@ -133,12 +140,12 @@ xzes::id_t xzes::Document::get_id( )
 //
 // Set the DOM contents of a Document.
 // ----------------------------------------------------------------------------
-int xzes::Document::set_content( xzes::doc_t content )
+int xzes::Document::set_content( xzes::doc_t* content )
 {
     //return status for debug
     int status = SUCCESS;
 
-    *doc = content;
+    doc = content;
 
     return status;
 }
@@ -163,8 +170,8 @@ int xzes::Document::compile( )
     // return status for error handling
     int status = SUCCESS;
 
-    doc_t output_document;
-    output_document.obj = new XSLTInputSource( uri.uri.c_str() );
+    doc_t* output_document;
+    output_document->obj = new XSLTInputSource( uri.uri.c_str() );
 
     // store the paresed file to class
     set_content( output_document );
@@ -185,4 +192,5 @@ xzes::id_t xzes::Document::_hash_uri( )
 
     return output_id;
 }
+
 

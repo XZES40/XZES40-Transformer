@@ -37,6 +37,8 @@
 //define namespace
 XALAN_USING_XALAN(XalanTransformer);
 
+#include <transform.hpp>
+
 int xzes::transform_documents( xzes::job_t *args )
 {
     //create a xalantransformer

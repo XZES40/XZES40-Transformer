@@ -23,9 +23,9 @@
 // All class definitions are documented in src/cache.cpp
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "lib.hpp"
-#include <document.hpp>
+#include <lib.hpp>
 #include <keylist.hpp>
+#include <cstdlib>
 
 #if !defined cache
 #define cache
@@ -38,9 +38,10 @@ namespace xzes
 
         public:
         	Cache();
-            doc_t* get( Document );
-            int set( Document *);
-            int del( Document *);
+            bool search(id_t);
+            doc_t* get( id_t );
+            int set( id_t,doc_t*,uri_t );
+            int del( id_t );
             int print_name();
             int	print_id();
 

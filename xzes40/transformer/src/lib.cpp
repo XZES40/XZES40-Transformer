@@ -21,15 +21,6 @@
 // and classes used in XZES40 Transformer
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <iostream>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <getopt.h>
-#include <string>
-#include <vector>
-#include <sstream>
-
 #include <lib.hpp>
 
 // ----------------------------------------------------------------------------

@@ -23,7 +23,23 @@
 // All class declarations are documented in lib/transform.hpp.
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <document.hpp>
 #include <lib.hpp>
+#include <cstdlib>
+#include <iostream>
+
+
+#include <xalanc/Include/PlatformDefinitions.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
+
+//define namespace
+XALAN_USING_XERCES(XMLPlatformUtils);
+XALAN_USING_XALAN(XalanTransformer);
+XALAN_USING_XALAN(XSLTInputSource);
+XALAN_USING_XALAN(XSLTResultTarget);
+XALAN_USING_XALAN(XalanParsedSource);
+XALAN_USING_XALAN(XalanCompiledStylesheet);
 
 namespace xzes {
     int transform_documents( xzes::job_t* );

@@ -27,7 +27,7 @@
 
 #include <malloc.h>
 #include <string.h>
-using namespace xzes;
+
 #if defined(__cplusplus)
 extern "C"
 {
@@ -337,8 +337,7 @@ NewKeySubList(KeyListEntry * node)
 
  */
 
-void * SetKeyEntryDataAndDestroy(KeyListEntry * theNode,
-      doc_t* theData, KeyEntDestroyType * theDestroy)
+void * SetKeyEntryDataAndDestroy(KeyListEntry * theNode, void * theData, KeyEntDestroyType * theDestroy)
 {
 	if (theNode == NULL)
 		return NULL;
@@ -356,7 +355,7 @@ void * SetKeyEntryDataAndDestroy(KeyListEntry * theNode,
 
 	theNode->k_data = theData;
 	theNode->k_destroy = theDestroy;
-	return 0;
+	return theData;
 }
 
 /* ================================================================
@@ -396,7 +395,7 @@ void * NewKeyEntryData(KeyListEntry *node, const size_t nmemb, const size_t bufs
 	if (bufsz && nmemb)
 	{
 		node->k_size = (bufsz * nmemb);
-		node->k_data = (doc_t*) calloc(nmemb, bufsz);
+		node->k_data = calloc(nmemb, bufsz);
 		if (node->k_data == NULL)
 			node->k_size = 0;
 	}
@@ -411,11 +410,10 @@ void * NewKeyEntryData(KeyListEntry *node, const size_t nmemb, const size_t bufs
  * Return a pointer to the key list node data element.
  */
 
-doc_t* GetKeyEntryData(KeyListEntry * node)
+void * GetKeyEntryData(KeyListEntry * node)
 {
 	if (node == NULL)
 		return NULL;
-	//printf("%p\n\n", node->k_data->obj);
 	return node->k_data;
 }
 
@@ -462,9 +460,10 @@ DropKeyListEntry(KeyListEntry * node)
 	rtn = node->next;
 
     CallKeyEntryDestroy(node);
+
 	if (node->k_name)
 		free(node->k_name);
-	printf("hahah");
+
 	if (node->k_data)
 		free(node->k_data);
 
@@ -797,6 +796,126 @@ KeyListEntry * KeyListReverseOrder(KeyListEntry * theList)
 
 	return P2;
 }
+
+/* ============================================================================
+ * Test The List Library
+ */
+
+#ifdef MAKE_LIST_TEST_EXE
+
+#include <stdio.h>
+
+void * fcn_test(KeyListEntry * node, int ii, void * args[])
+{
+	int i;
+	printf("Function: Node %s\n", node->k_name);
+	for (i = 0; i < ii; i++)
+		printf("   argAdrs=%x   arg[%d] = %s\n", &args, i, (char *) args[i]);
+	return NULL;
+}
+
+int dstr_test(KeyListEntry * node)
+{
+	printf("Destroy: Node %s, DataSize %d\n",
+		node->k_name, node->k_size);
+	return 0;
+}
+
+int main(int argc, char *argv[])
+{
+	int i;
+	char *KeyName[] = {"First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", NULL};
+    KeyListEntry * MyList = NULL;
+	KeyListEntry * listPtr = NULL;
+
+	listPtr = NewKeyListEntry();
+	MyList = listPtr;
+	listPtr->k_name = strdup(KeyName[0]);
+
+	for (i = 1; i<7 ;i++)
+	{
+		listPtr->next = NewKeyListEntry();
+		listPtr = listPtr->next;
+		listPtr->k_name = strdup(KeyName[i]);
+		if (i > 2)
+			SetKeyEntryFunction(listPtr, & fcn_test);
+		NewKeyEntryData(listPtr, i, 10);
+		SetKeyEntryDestroy(listPtr, & dstr_test);
+	}
+
+	listPtr = MyList->next;
+	for (i = 0; i<3; i++)
+	{
+		listPtr->k_list = NewKeyListEntry();
+		listPtr = listPtr->k_list;
+		listPtr->k_name = calloc(1,30);
+		strcpy(listPtr->k_name, "  Supplemental: ");
+		strcat(listPtr->k_name, KeyName[i]);
+	}
+
+	listPtr = MyList->next->next->next;
+	for (i = 0; i<3; i++)
+	{
+		listPtr->k_list = NewKeyListEntry();
+		listPtr = listPtr->k_list;
+		listPtr->k_name = calloc(1,30);
+		strcpy(listPtr->k_name, "  Supplemental: ");
+		strcat(listPtr->k_name, KeyName[i]);
+	}
+
+	for (listPtr = MyList; listPtr; listPtr = listPtr->next)
+	{
+		char * args[2] = {"arg1-text","arg2-text"};
+		KeyListEntry * supplKey;
+
+		printf("ArgumentArray = %x\n", &args);
+		printf("List Entry: %s\n", listPtr->k_name);
+		CallKeyEntryFunction(listPtr, 2, args);
+		printf("  k_argc = %d, k_argbuf = %x\n", listPtr->k_argc, listPtr->k_argbuf);
+		for (supplKey = listPtr->k_list; supplKey; supplKey = supplKey->k_list)
+			printf("%s\n", supplKey->k_name);
+	}
+
+	printf("\n -- Now to drop second entry \n");
+
+	MyList->next = DropKeyListEntry(MyList->next);
+
+	for (listPtr = MyList; listPtr; listPtr = listPtr->next)
+	{
+		KeyListEntry * supplKey;
+		printf("List Entry: %s\n", listPtr->k_name);
+		for (supplKey = listPtr->k_list; supplKey; supplKey = supplKey->k_list)
+			printf("%s\n", supplKey->k_name);
+	}
+
+
+	printf("\n -- Now to drop first entry \n");
+
+	MyList = DropKeyListEntry(MyList);
+
+	for (listPtr = MyList; listPtr; listPtr = listPtr->next)
+	{
+		KeyListEntry * supplKey;
+		printf("List Entry: %s\n", listPtr->k_name);
+		for (supplKey = listPtr->k_list; supplKey; supplKey = supplKey->k_list)
+			printf("%s\n", supplKey->k_name);
+	}
+
+	printf("\n -- Now to drop entire list \n");
+
+	FreeKeyList(&MyList);
+
+	if (!MyList)
+	{
+		printf("SUCCESS\n");
+	}
+	else
+	{
+		printf("FAILURE\n");
+	}
+}
+#endif /* MAKE_LIST_TEST_EXE */
+
 
 
 #if defined(__cplusplus)
