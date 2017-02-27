@@ -60,17 +60,13 @@ xzes::Document::Document( xzes::uri_t file_path )
     // Set the Document ID
     set_id( );
 
-    // TODO GET MOVE THIS LINE INTO THE `if` stmt
-    xzes::doc_t *tmp = new xzes::doc_t;
-
     // Compile the document now that you know the type
     if(!storeList.search(uid)){
-        xzes::doc_t *tmp = new xzes::doc_t;
-        tmp->obj = new XSLTInputSource( uri.uri.c_str( ));
-        storeList.set( uid , tmp , uri );
+        compile();
+        storeList.set( uid , doc , uri );
+    } else {
+        set_content( storeList.get( uid ));
     }
-    set_content( storeList.get( uid ));
-
 }
 
 // ----------------------------------------------------------------------------
@@ -169,9 +165,9 @@ int xzes::Document::compile( )
 {
     // return status for error handling
     int status = SUCCESS;
-
-    doc_t* output_document;
-    output_document->obj = new XSLTInputSource( uri.uri.c_str() );
+    
+    doc_t* output_document = new xzes::doc_t;
+    output_document->obj   = new XSLTInputSource( uri.uri.c_str() );
 
     // store the paresed file to class
     set_content( output_document );
