@@ -41,12 +41,30 @@
 XALAN_USING_XERCES(XMLPlatformUtils);
 XALAN_USING_XALAN(XalanTransformer);
 
-std::string USAGE = "\
-Usage: \n\
-  a.out --xml=input.xml --xsl=style.xslt [--out=output file] \n\
-";
-
 int main(){
-	return 0;
-} 
+	XMLPlatformUtils::Initialize();
+	XalanTransformer::initialize();
+	uri_t xml1, xsl1;
+	xml1.uri = "./examples/simple.xml";
+	xsl1.uri = "./examples/simple.xsl";
 
+	Document xmlDoc1 (xml1);
+	Document xslDoc1 (xsl1);
+
+	uri_t xml2, xsl2;
+	xml2.uri = "./examples/simple.xml";
+	xsl2.uri = "./examples/simple.xsl";
+
+	Document xmlDoc2 (xml2);
+	Document xslDoc2 (xsl2);
+
+	XalanTransformer theXalanTransformer;
+
+	int theResult = theXalanTransformer.transform(*xmlDoc2.get_content()->obj,
+												  *xslDoc2.get_content()->obj,
+												  std::cout);
+	XMLPlatformUtils::Terminate();
+	XalanTransformer::ICUCleanUp();
+
+	return theResult;
+}

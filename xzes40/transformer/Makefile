@@ -15,6 +15,7 @@ BUILD_DIR   = build
 LIBRARY_DIR = lib
 INCLUDE_DIR = include
 SRC_DIR     = src
+TEST_DIR    = test
 
 LIBRARIES = -I./include -lxalan-c -lxerces-c
 
@@ -41,6 +42,9 @@ main.py: $(SRC_DIR)/main.py
 	if [ ! -f `pwd`/$(BUILD_DIR)/main.py ]; \
 		then ln -s `pwd`/$(SRC_DIR)/main.py `pwd`/$(BUILD_DIR)/main.py; \
 	fi
+
+test: $(OBJS)
+	$(CPP_C) -o $(BUILD_DIR)/cache $(TEST_DIR)/cache.cpp $(CPP_FLAGS) $(LIBRARIES)
 
 all: main daemon main.py
 

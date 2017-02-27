@@ -23,7 +23,7 @@
  *		keylist.c		Is the source file for this (keylist) library.
  */
 
-#include "keylist.h"
+#include "keylist.hpp"
 
 #include <malloc.h>
 #include <string.h>
@@ -323,7 +323,7 @@ NewKeySubList(KeyListEntry * node)
 	if (node->k_list)
 		return NULL;	/* Sub List Already Started */
 
-	node->k_list = calloc(1, sizeof(KeyListEntry));
+	node->k_list = (struct key_list_entry *) calloc(1, sizeof(KeyListEntry));
 	return node->k_list;
 }
 
@@ -582,7 +582,7 @@ int KeyNodeNameCompare (const KeyListEntry * aNode, const KeyListEntry *bNode)
 {
 	if (!aNode || !bNode)
 		return 0;
-	return (strcmp((unsigned char *) aNode->k_name, (unsigned char *) bNode->k_name));
+	return (strcmp((char *) aNode->k_name, (char *) bNode->k_name));
 }
 
 /*================================================================

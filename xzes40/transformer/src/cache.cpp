@@ -175,5 +175,3 @@ int xzes::Cache::print_id()
 	}
 	return 0;
 }
-
-

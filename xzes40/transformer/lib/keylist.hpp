@@ -13,10 +13,11 @@
  * Updated: 7/17/2009
  * Added KeyList sorting utilities using helper callback comparison.
  */
-
+#include <lib.hpp>
+#include <string.h>
 #ifndef OR_KEY_LIST_LIB_H
 #define OR_KEY_LIST_LIB_H
-
+using namespace xzes;
 /* This is a general purpose library for list management.  The lists are 
  * single-link lists of type KeyListEntry.  Sublists are also supported and
  * are treated as the head of a supplemental linked list.  The routines
@@ -30,58 +31,58 @@
  * next = pointer to next node of KeyListEntry type.
  *
  * k_name = character string that can be used for anything suchas a name.
- *			It is initiallized via strdup() using malloc() memory management
- *			when a string value is assigned.
+ *      It is initiallized via strdup() using malloc() memory management
+ *      when a string value is assigned.
  *
  * k_id = an arbitrary integer that can be used for anything suchas node ID.
  *
  * k_size = integer that is commonly used to indicate the amount of data 
- *			referenced by the k_data pointer.
+ *      referenced by the k_data pointer.
  *
  * k_data = pointer to an arbitrary data buffer, usually initialized to zeros
- *			and allocated by calloc() memory management.  An application may
- *			use this pointer for anything, suchas a pointer to a C++ class.
+ *      and allocated by calloc() memory management.  An application may
+ *      use this pointer for anything, suchas a pointer to a C++ class.
  *
- *			If k_data points to data that should not be deallocated using the
- *			free() function, the application should register a k_destroy
- *			function that is called before free() deallocation is attempted.
+ *      If k_data points to data that should not be deallocated using the
+ *      free() function, the application should register a k_destroy
+ *      function that is called before free() deallocation is attempted.
  *
  * k_destroy = a 'C' namespace function to cleanup a KeyListEntry node of
- *			unwanted references before k_data is deallocated.  The k_destroy
- *			function must conform to the KeyEntDestroyType definition.
- *			The k_destroy function acts on the content of a KeyListEntry node
- *			before any node data is deallocated or freed.
+ *      unwanted references before k_data is deallocated.  The k_destroy
+ *      function must conform to the KeyEntDestroyType definition.
+ *      The k_destroy function acts on the content of a KeyListEntry node
+ *      before any node data is deallocated or freed.
  *
- *			If k_data remains not NULL, then free() is attempted when the
- *			KeyListEntry node is deallocated.
+ *      If k_data remains not NULL, then free() is attempted when the
+ *      KeyListEntry node is deallocated.
  *
- *			The k_destroy function can be called with CallKeyEntryDestroy(node).
+ *      The k_destroy function can be called with CallKeyEntryDestroy(node).
  *
  * k_function = a 'C' namespace function is any arbitrary function that can
- *			be registered to the KeyListEntry node.  This function must
- *			conform to the KeyEntFunction type definition. It returns a pointer
- *			of type void that can be cast as required.  It can be programmed
- *			to return application-specific data found in or linked to k_data.
+ *      be registered to the KeyListEntry node.  This function must
+ *      conform to the KeyEntFunction type definition. It returns a pointer
+ *      of type void that can be cast as required.  It can be programmed
+ *      to return application-specific data found in or linked to k_data.
  *
- *			The k_function function can be called by the application via
- *			CallKeyEntryFunction(KeyListEntry * node, int argc, void * args[]).
+ *      The k_function function can be called by the application via
+ *      CallKeyEntryFunction(KeyListEntry * node, int argc, void * args[]).
  *
  * k_argc = an integer helper for k_function to cache the argument count.
- *			The CallKeyEntryFunction stores the argc here for use upon return.
+ *      The CallKeyEntryFunction stores the argc here for use upon return.
  *
  * k_argbuf = a 'C' pointer to an array of arguments (void * args[]).
- *			Allocation is not released. It is a helper for k_function in which
- *			to return multiple values.  The CallKeyEntryFunction stores the
- *			pointer to the argument array for use upon return.  The k_argbuf
- *			array IS NOT AUTOMATICALLY DEALLOCATED.
+ *      Allocation is not released. It is a helper for k_function in which
+ *      to return multiple values.  The CallKeyEntryFunction stores the
+ *      pointer to the argument array for use upon return.  The k_argbuf
+ *      array IS NOT AUTOMATICALLY DEALLOCATED.
  *
- *			Memory allocation requirements should be handled by the k_destroy
- *			function.  Otherwise such deallocation is ignored when the node
- *			is dropped.
+ *      Memory allocation requirements should be handled by the k_destroy
+ *      function.  Otherwise such deallocation is ignored when the node
+ *      is dropped.
  *
  * k_list = pointer to a sublist of KeyListEntry type.  The k_list is treated
- *			as the head of a new KeyListEntry list.  When the node containing
- *			this k_list element is dropped, the entire sublist tree is freed.
+ *      as the head of a new KeyListEntry list.  When the node containing
+ *      this k_list element is dropped, the entire sublist tree is freed.
  *
  *- - - - - - - - - - -
  * Creating a List - and initialize an empty node:
@@ -115,16 +116,16 @@ extern "C"
 typedef struct key_list_entry
 {
   struct key_list_entry * next;
-  char * k_name;			// malloc() string content
-  int    k_id;				// arbitrary integer value
-  size_t k_size;			// size of k_data
-  void * k_data;			// malloc() arbitrary data
+  char * k_name;      // malloc() string content
+  int    k_id;        // arbitrary integer value
+  size_t k_size;      // size of k_data
+  void * k_data;      // malloc() arbitrary data
   void * (* k_function)(struct key_list_entry * theNode,
-		int f_argc, void * f_args[]);
-  int    k_argc;			// Copy of f_argc.
-  void ** k_argbuf;			// Pointer to f_args[];
+    int f_argc, void * f_args[]);
+  int    k_argc;      // Copy of f_argc.
+  void ** k_argbuf;     // Pointer to f_args[];
   int (* k_destroy)(struct key_list_entry * theNode);
-  struct key_list_entry * k_list;	// supplemental Key List
+  struct key_list_entry * k_list; // supplemental Key List
 }
 KeyListEntry;
 
@@ -341,9 +342,9 @@ FindLastKeyListEntry(KeyListEntry * theList);
  * Result = pointer to the head of the sorted list returned in ascending order.
  *
  * The helper comparison function returns an integer value.
- *		Positive (A > B)
- *		Zero     (A = B)
- *		Negative (A < B)
+ *    Positive (A > B)
+ *    Zero     (A = B)
+ *    Negative (A < B)
  * where A and B are KeyListEntry nodes.
  *
  * The link order of nodes with identical key-value content is preserved.

@@ -31,3 +31,5 @@
 # Project
 .vagrant/
 build/*
+
+.DS_Store
