@@ -1,0 +1,72 @@
+///////////////////////////////////////////////////////////////////////////////
+// Copyright 2017, the Oregon State University Capstone Project 'XZES40'
+// with the Apache Software Foundation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+// Filename: xzes40.cpp
+// Description: Main entrypoint for the XZES40 Transformer application
+///////////////////////////////////////////////////////////////////////////////
+//
+// NOTICE: THIS FILE HAS BEEN DEPRECATED IN FAVOR OF 'main.py'
+// IT REMAINS HERE FOR POSTERITY BUT IS NOT MAINTAINED AND SHOULD NOT BE LOOKED
+// AT AS A SOURCE OF TRUTH.
+//
+///////////////////////////////////////////////////////////////////////////////
+
+#include <cstdlib>
+#include <iostream>
+
+#include <lib.hpp>
+#include <transform.hpp>
+
+std::string USAGE = "\
+Usage: \n\
+  a.out --xml=input.xml --xsl=style.xslt [--out=output file] \n\
+";
+
+// ----------------------------------------------------------------------------
+// int main ( int argc , char* argv[] )
+//
+// Performs the following operations:
+// 1. Parses user input (xml, xslt, and output file locations).
+// 2. Passes cli arguments to 'transform' function. 
+// 3. Exits with an appropriate status code.
+// ----------------------------------------------------------------------------
+int main( int argc , char * argv[] )
+{
+	int status;
+
+    // Parse CLI arguments into struct `job_t`
+    xzes::job_t* args = xzes::parse_args( &argc , &argv );
+
+	// User input files that do not exist.
+    if( args->xml.uri == "\0" || args->xsl.uri == "\0" ||
+	// User supplied empty xml or xsl arguments.
+        args->xml.uri == ""   || args->xsl.uri == "" )
+	{
+		// Print usage
+        std::cout << USAGE;
+		// Set exit status code
+		status = FAILURE;
+	}
+	else
+	{
+		// Pass args to transform
+        status = xzes::transform_documents( args );
+	}
+
+    return status;
+}

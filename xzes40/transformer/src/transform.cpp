@@ -49,8 +49,8 @@ int xzes::transform_documents( xzes::job_t *args )
     Document xml(args->xml);
     Document xsl(args->xsl);
 
-    int theResult = theXalanTransformer.transform( *xml.get_content().obj ,
-                                                   *xsl.get_content().obj ,
+    int theResult = theXalanTransformer.transform( *xml.get_content()->obj ,
+                                                   *xsl.get_content()->obj ,
                                                     std::cout );
 
     return theResult;

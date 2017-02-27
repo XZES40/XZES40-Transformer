@@ -25,7 +25,7 @@ SRC  = $(patsubst %,$(SRC_DIR)/%,$(_SRC))
 _DEPS = keylist.hpp cache.hpp lib.hpp document.hpp transform.hpp 
 DEPS  = $(patsubst %,$(INCLUDE_DIR)/%,$(_DEPS))
 
-_OBJS = keylist.o cache.o lib.o document.o transform.o main.o 
+_OBJS = keylist.o cache.o lib.o document.o transform.o
 OBJS  = $(patsubst %,$(BUILD_DIR)/%,$(_OBJS))
 
 
@@ -33,23 +33,23 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CPP_C) -c -o $@ $< $(CFLAGS) $(LIBRARIES)
 
 main: $(OBJS)
-	$(CPP_C) -o $(BUILD_DIR)/main src/main.cpp $(OBJS) $(CPP_FLAGS) $(LIBRARIES)
+	$(CPP_C) -o $(BUILD_DIR)/main   $(SRC_DIR)/main.cpp   $(OBJS) $(CPP_FLAGS) $(LIBRARIES)
 
 daemon: $(OBJS)
-	$(CPP_C) -o $(BUILD_DIR)/daemon src/daemon.cpp $(OBJS) $(CPP_FLAGS) $(LIBRARIES)
+	$(CPP_C) -o $(BUILD_DIR)/daemon $(SRC_DIR)/daemon.cpp $(OBJS) $(CPP_FLAGS) $(LIBRARIES)
+
+test: $(OBJS)
+	$(CPP_C) -o $(BUILD_DIR)/cache  $(TEST_DIR)/cache.cpp $(OBJS) $(CPP_FLAGS) $(LIBRARIES)
 
 main.py: $(SRC_DIR)/main.py
 	if [ ! -f `pwd`/$(BUILD_DIR)/main.py ]; \
 		then ln -s `pwd`/$(SRC_DIR)/main.py `pwd`/$(BUILD_DIR)/main.py; \
 	fi
 
-test: $(OBJS)
-	$(CPP_C) -o $(BUILD_DIR)/cache $(TEST_DIR)/cache.cpp $(CPP_FLAGS) $(LIBRARIES)
-
-all: main daemon main.py
+all: main daemon test main.py
 
 .DEFAULT_GOAL := all
 
 .PHONY: clean
 clean:
-	rm -f $(BUILD_DIR)/*.o $(BUILD_DIR)/main $(BUILD_DIR)/daemon $(BUILD_DIR)/main.py
+	rm -f $(BUILD_DIR)/*.o $(BUILD_DIR)/main $(BUILD_DIR)/daemon $(BUILD_DIR)/cache $(BUILD_DIR)/main.py
