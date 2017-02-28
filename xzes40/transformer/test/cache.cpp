@@ -16,42 +16,55 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-// Filename: transform.hpp
-// Description: Implementation of custom types, classes, and functions used in
-// XZES40 Transformer transformation functionality.
+// Filename: xzes40.cpp
+// Description: Main entrypoint for the XZES40 Transformer application
+///////////////////////////////////////////////////////////////////////////////
 //
-// All class declarations are documented in lib/transform.hpp.
+// NOTICE: THIS FILE HAS BEEN DEPRECATED IN FAVOR OF 'main.py'
+// IT REMAINS HERE FOR POSTERITY BUT IS NOT MAINTAINED AND SHOULD NOT BE LOOKED
+// AT AS A SOURCE OF TRUTH.
+//
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 #include <xalanc/Include/PlatformDefinitions.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 #include <cstdlib>
 #include <iostream>
 
-#include <document.hpp>
-#include <transform.hpp>
 #include <lib.hpp>
+#include <document.hpp>
+#include <keylist.hpp>
+#include <cache.hpp>
 
-//define namespace
+XALAN_USING_XERCES(XMLPlatformUtils);
 XALAN_USING_XALAN(XalanTransformer);
 
-#include <transform.hpp>
+int main(){
+	XMLPlatformUtils::Initialize();
+	XalanTransformer::initialize();
+	uri_t xml1, xsl1;
+	xml1.uri = "./examples/simple.xml";
+	xsl1.uri = "./examples/simple.xsl";
 
-int xzes::transform_documents( xzes::job_t *args )
-{
-    //create a xalantransformer
-    XalanTransformer theXalanTransformer;
+	Document xmlDoc1 (xml1);
+	Document xslDoc1 (xsl1);
 
-    // Allocate objects on the heap so they can be cached in the non-prototype version.
-    // XSLTInputSource  *xml = cache.get(args.xml);
-    Document xml(args->xml);
-    Document xsl(args->xsl);
+	uri_t xml2, xsl2;
+	xml2.uri = "./examples/simple.xml";
+	xsl2.uri = "./examples/simple.xsl";
 
-    int theResult = theXalanTransformer.transform( *xml.get_content()->obj ,
-                                                   *xsl.get_content()->obj ,
-                                                    std::cout );
+	Document xmlDoc2 (xml2);
+	Document xslDoc2 (xsl2);
 
-    return theResult;
+	XalanTransformer theXalanTransformer;
+
+	int theResult = theXalanTransformer.transform(*xmlDoc2.get_content()->obj,
+												  *xslDoc2.get_content()->obj,
+												  std::cout);
+	XMLPlatformUtils::Terminate();
+	XalanTransformer::ICUCleanUp();
+
+	return theResult;
 }

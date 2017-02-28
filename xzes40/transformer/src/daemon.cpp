@@ -83,7 +83,6 @@ int xzes::daemon(int fd)
             if (xzes::valid_request(buf))
             {
                 // TODO MULTI THREAD
-                // TODO FIX THE SEGFAULT
                 //printf("XZES40:: Read input `%s`.\n", buf);
                 xzes::job_t *job = xzes::parse_request( buf );
                 xzes::transform_documents(job);

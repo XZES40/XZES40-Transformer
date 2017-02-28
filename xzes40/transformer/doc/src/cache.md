@@ -2,44 +2,43 @@
 
 The caching component of XZES40 Transformer is designed to create an easily usable Caching API for the Transformer and Document components.
 
-The underlying implementation of the Caching system may be done using [Redis][redis], a database, or an in-memory cache managed by a daemon.
-Either way, the excessable API should be simple to use and maintain so that changes to the caching system do not require refactoring of the Transformer and Document components.
+The cache is using the XercessC keyList to manager the cache. The data structure of the keyList is link list. Although link list is little slowly than hash map, it provide by XercessC Library, so we decided to use it as our cache.
 
-The current (rough) interface looks like this:
+The current interface looks like this:
 
-```
-#include <cache.hpp>
-#include <document.hpp>
 #include <lib.hpp>
+#include <keylist.hpp>
+#include <cstdlib>
 
-void f( Document d )
-{
-    Cache c = Cache( );  // Cache is setup *completely* setup in this step.
+	class Cache {
+        private:
+        	KeyListEntry *theList;
 
-    // Check if the Document `d` is in the cache
-    if ( c.get( d.id ) == FAILURE )
-        cout << d.uri << " is not in the cache" << endl;
+        public:
+        	Cache();
+            bool search(id_t);
+            doc_t* get( id_t );
+            int set( id_t,doc_t*,uri_t );
+            int print_name();
+            int	print_id();
 
-    // Put Document `d` in the cache.
-    if ( c.put( d.id, d ) )
-        cout << d.uri << " was put in the cache successfully." << endl;
+    };
 
-    // Remove Document `d` from the cache.
-    if ( c.del( d.id, d ) )
-        cout << d.uri << " was removed from the cache successfully." << endl;
-}
-```
 
 To clarify:
+- `Cache()` which is the default constructor.
+- `bool search(id_t)` will search the content inside of cache, return true if there is file exist.
+- `doc_t* (id_t)` return the content from the cache.
+- `int set(id_t,doc_t*,uri_t)` Set the content to cache. id_t is id, uri_t is name, doc_t is content.
+- `int print_name()` is a debug tools for printing all content from the cache.
+- `int print_id()` is a debug tools for printing all id from the cache.
 
-- `Cache::get( string id )` returns class `Document` (or a failure).
-- `Cache::put( string key, Document value )` returns a `bool` (success or failure).
-- `Cache::del( string key )` returns a `bool` (success or failure).
+#Usage
+To using cache, user also need document file, because `Document` will parse the file and hash the id for cache. 
+The data flow is blow:
+1.`Document` set the uri, and hash the id for 1 document.
+2.`Document` check if there is file exist in the cache.
+3. if true, run cache.get and document.set_content for `Document` class.
+4. if false, run document.complie(), and cache_set() for `Cache` storing.
+5. Done
 
-## Non-caching documents
-
-When an ID of `NULL` is passed to `get`, the Cache returns a placeholder Document.
-This is almost exclusively used for outputting a document to stdout or a new file.
-The owner of the document must *manually* cache the document for it to be stored in the future.
-
-[redis]: https://redis.io/

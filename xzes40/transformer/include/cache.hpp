@@ -24,7 +24,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <lib.hpp>
-#include <document.hpp>
+#include <keylist.hpp>
+#include <cstdlib>
 
 #if !defined cache
 #define cache
@@ -33,11 +34,17 @@ namespace xzes
 {
     class Cache {
         private:
+        	KeyListEntry *theList;
 
         public:
-            Document* get( Document* );
-            Document* set( Document* );
-            int del( Document* );
+        	Cache();
+            bool search(id_t);
+            doc_t* get( id_t );
+            int set( id_t,doc_t*,uri_t );
+            //int del( id_t );
+            int print_name();
+            int	print_id();
+
     };
 }
 

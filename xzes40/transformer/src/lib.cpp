@@ -21,15 +21,6 @@
 // and classes used in XZES40 Transformer
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <iostream>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <getopt.h>
-#include <string>
-#include <vector>
-#include <sstream>
-
 #include <lib.hpp>
 
 // ----------------------------------------------------------------------------
@@ -170,8 +161,18 @@ bool xzes::_file_exists( std::string file_path )
 // This is hopefully a temporary measure and will eventually become a wrapper
 // for a *real* hash function.
 // ----------------------------------------------------------------------------
-std::string xzes::_hash( std::string input )
+int xzes::_hash( const char* s )
 {
+    unsigned int seed = 0;
+    unsigned int hash = seed;
+    while (*s)
+    {
+        hash = hash * 101  +  *s++;
+    }
+    return hash;
+
+
+    /*
     int hash   = 0;
     int offset = 'a' - 1;
 
@@ -184,6 +185,7 @@ std::string xzes::_hash( std::string input )
     ret << hash;
 
     return ret.str();
+    */
 }
 
 // ----------------------------------------------------------------------------

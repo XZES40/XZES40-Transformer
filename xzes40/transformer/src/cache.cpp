@@ -22,10 +22,39 @@
 // and classes used in XZES40 Transformer cacheing pipeline.
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <cstdlib>
-
 #include <cache.hpp>
-#include <lib.hpp>
+
+// --------------------------------------------------------------------
+// xzes::Cache::Cache()
+//
+// Default constructor
+// --------------------------------------------------------------------
+xzes::Cache::Cache()
+{
+	theList = NewKeyListEntry();
+	theList->next = NULL;
+}
+// --------------------------------------------------------------------
+// xzes::Cache::search(uid)
+//
+// search node in the keyList
+// return 0 means found, 1 means NOT found.
+// --------------------------------------------------------------------
+
+
+bool xzes::Cache::search( xzes::id_t uid ){
+	int objid = uid.id;
+	KeyListEntry *head = theList;
+	while (head != NULL){
+		int keyid = GetKeyEntryIdValue(head);
+		if (keyid == objid){
+			return SUCCESS;
+		}
+		head = head->next;
+	}
+	return FAILURE;
+}
+
 
 // --------------------------------------------------------------------
 // Document* Cache::get( Document* )
@@ -34,10 +63,19 @@
 // Returns the object if it is in the cache.
 // Returns NULL if it does not exist in the cache.
 // --------------------------------------------------------------------
-xzes::Document* xzes::Cache::get( xzes::Document* object )
-{
-    // TODO: Write this function
-    return object;
+doc_t* xzes::Cache::get( xzes::id_t uid)
+{	
+	int objid = uid.id;
+	KeyListEntry *head = theList;
+	while (head != NULL){
+		int keyid = GetKeyEntryIdValue(head);
+		if (keyid == objid){
+			return (doc_t*)GetKeyEntryData(head);
+		}
+		head = head->next;
+	}
+	printf("Get FAILURE!!");
+    return NULL;
 }
 
 // --------------------------------------------------------------------
@@ -47,12 +85,27 @@ xzes::Document* xzes::Cache::get( xzes::Document* object )
 // Returns the object if successful.
 // Returns NULL if not successful.
 // --------------------------------------------------------------------
-xzes::Document* xzes::Cache::set( xzes::Document* object )
+int xzes::Cache::set( xzes::id_t uid, xzes::doc_t *doc, xzes::uri_t uri)
 {
-    // TODO: Write this function
-    return object;
-}
+	int status = SUCCESS;
+	//Find the last node;
+	KeyListEntry *last = FindLastKeyListEntry(theList);
+	//Create empty node for next last node
+	last->next = NewKeyListEntry();
+	//Point to next last node
+	last = last->next;
+	//Set the name of the object
+	SetKeyEntryName(last,uri.uri.c_str());
+	//Set the id of the object
+	SetKeyEntryIdValue(last,uid.id);
+	//Set the content of the object
+	SetKeyEntryDataAndDestroy(last, doc, NULL);
+	//Set the next last node is null
+	last->next = NULL;
 
+    return status;
+}
+/*
 // --------------------------------------------------------------------
 // int Cache::del( Document* )
 //
@@ -63,9 +116,62 @@ xzes::Document* xzes::Cache::set( xzes::Document* object )
 // Returns FAILURE if the object is in the cache but was not
 // deleted.
 // --------------------------------------------------------------------
-int xzes::Cache::del( xzes::Document* object )
+int xzes::Cache::del( xzes::id_t uid )
 {
-    // TODO: Write ths function
-    int status = SUCCESS;
+	int status = FAILURE;
+    int objid = uid.id;
+	KeyListEntry *head = theList;
+	KeyListEntry *temp ; 
+	while (head != NULL){
+		int keyid = GetKeyEntryIdValue(head);
+		if (keyid == objid){
+			printf("keyid %d, objid %d \n",keyid,objid);	
+			printf("head: %p \n", head);
+			temp = head->next;
+			printf("temp: %p \n", temp);
+			head->next = DropKeyListEntry(temp);
+			printf("Drop is work \n");	
+			return status;
+		}
+		head = head->next;
+	}
     return status;
+}
+*/
+
+// --------------------------------------------------------------------
+// int Cache::print_name()
+//
+// print all name of Keylist.
+// Debug using
+// --------------------------------------------------------------------
+int xzes::Cache::print_name()
+{
+	KeyListEntry *itr = theList;
+	int i = 1;
+	while (itr != NULL){
+		printf("Name%d: %s \n", i ,GetKeyEntryName(itr));
+		itr = itr->next;
+		i++;
+	}
+	return 0;
+}
+
+
+// --------------------------------------------------------------------
+// int Cache::print_id()
+//
+// print all id of Keylist.
+// Debug using
+// --------------------------------------------------------------------
+int xzes::Cache::print_id()
+{
+	KeyListEntry *itr = theList;
+	int i = 1;
+	while (itr != NULL){
+		printf("ID%d: %d \n", i ,GetKeyEntryIdValue(itr));
+		itr = itr->next;
+		i++;
+	}
+	return 0;
 }
