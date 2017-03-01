@@ -105,39 +105,6 @@ int xzes::Cache::set( xzes::id_t uid, xzes::doc_t *doc, xzes::uri_t uri)
 
     return status;
 }
-/*
-// --------------------------------------------------------------------
-// int Cache::del( Document* )
-//
-// Deletes an object from the cache.
-// Returns SUCCESS if the object was delete successfully.
-// Returns SUCCESS if the object was not in the cache (still does
-// not exist in cache).
-// Returns FAILURE if the object is in the cache but was not
-// deleted.
-// --------------------------------------------------------------------
-int xzes::Cache::del( xzes::id_t uid )
-{
-	int status = FAILURE;
-    int objid = uid.id;
-	KeyListEntry *head = theList;
-	KeyListEntry *temp ; 
-	while (head != NULL){
-		int keyid = GetKeyEntryIdValue(head);
-		if (keyid == objid){
-			printf("keyid %d, objid %d \n",keyid,objid);	
-			printf("head: %p \n", head);
-			temp = head->next;
-			printf("temp: %p \n", temp);
-			head->next = DropKeyListEntry(temp);
-			printf("Drop is work \n");	
-			return status;
-		}
-		head = head->next;
-	}
-    return status;
-}
-*/
 
 // --------------------------------------------------------------------
 // int Cache::print_name()

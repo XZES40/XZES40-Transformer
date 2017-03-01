@@ -29,6 +29,7 @@
 #include <cstdlib>
 #include <iostream>
 
+#include <parse.hpp>
 #include <lib.hpp>
 #include <transform.hpp>
 
@@ -47,7 +48,8 @@ Usage: \n\
 // ----------------------------------------------------------------------------
 int main( int argc , char * argv[] )
 {
-	int status;
+	int* status = new int;
+	*status = 0;
 
     // Parse CLI arguments into struct `job_t`
     xzes::job_t* args = xzes::parse_args( &argc , &argv );
@@ -65,8 +67,8 @@ int main( int argc , char * argv[] )
 	else
 	{
 		// Pass args to transform
-        status = xzes::transform_documents( args );
+        status = (int*)xzes::transform_documents( args );
 	}
 
-    return status;
+    return *status;
 }

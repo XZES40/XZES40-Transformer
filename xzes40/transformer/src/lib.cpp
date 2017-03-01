@@ -22,13 +22,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <lib.hpp>
+#include <parse.hpp>
 
-// ----------------------------------------------------------------------------
-// job_t * parse_args( int argc, char* argv[] )
+// ---------------------------------------------------------------------------- 
+// std::vector<std::string> xzes::split( std::string s, char c)
 //
-// Parses argv into a job_t struct
-// Assigns an argument to "NUL" ("\0") if the file does not exist.
+// This is help function for the parse_request.
 // ----------------------------------------------------------------------------
+/*
 xzes::job_t* xzes::parse_request( char* input )
 {
     xzes::job_t *out = new xzes::job_t;
@@ -48,6 +49,7 @@ xzes::job_t* xzes::parse_request( char* input )
 
     return out;
 }
+*/
 
 std::vector<std::string> xzes::split( std::string s, char c)
 {
@@ -67,71 +69,6 @@ std::vector<std::string> xzes::split( std::string s, char c)
 
     return v;
 }
-
-// ----------------------------------------------------------------------------
-// job_t * parse_args( int argc, char* argv[] )
-//
-// Parses argv into a job_t struct
-// Assigns an argument to "NUL" ("\0") if the file does not exist.
-// ----------------------------------------------------------------------------
-xzes::job_t* xzes::parse_args( int *argc , char* *argv[ ] )
-{
-    int c;
-    xzes::job_t *args = new xzes::job_t;
-    while ( true )
-    {
-        static struct option long_options[] =
-        {
-            { "xml", required_argument, 0, 'm' },
-            { "xsl", required_argument, 0, 's' },
-            { "out", required_argument, 0, 'o' },
-        };
-
-        int i = 0;
-        c = getopt_long ( *argc, *argv, "mso", long_options, &i );
-
-        if ( c == -1 )
-            break;
-
-        switch( c )
-        {
-            case 'm':
-                if ( xzes::_file_exists( optarg ) )
-                {
-                    args->xml.uri = optarg;
-                }
-                else
-                {
-                    args->xml.uri = "\0";
-                }
-                break;
-
-            case 's':
-                if ( xzes::_file_exists( optarg ) )
-                {
-                    args->xsl.uri = optarg;
-                }
-                else
-                {
-                    args->xsl.uri = "\0";
-                }
-                break;
-
-            case 'o':
-                if ( xzes::_file_exists( optarg ) )
-                {
-                    args->out.uri = optarg;
-                }
-                else
-                {
-                    args->out.uri = "\0";
-                }
-                break;
-        }
-    }
-    return args;
-}
-
 // ----------------------------------------------------------------------------
 // bool xzes::_file_exists( string file_path )
 //
@@ -172,21 +109,6 @@ int xzes::_hash( const char* s )
     }
     return hash;
 
-
-    /*
-    int hash   = 0;
-    int offset = 'a' - 1;
-
-    for( std::string::const_iterator it=input.begin(); it!=input.end(); ++it)
-    {
-        hash = hash << 1 | (*it - offset);
-    }
-
-    std::ostringstream ret;
-    ret << hash;
-
-    return ret.str();
-    */
 }
 
 // ----------------------------------------------------------------------------

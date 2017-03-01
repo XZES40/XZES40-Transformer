@@ -25,7 +25,7 @@
 
 #include <lib.hpp>
 #include <keylist.hpp>
-#include <cstdlib>
+//#include <cstdlib>
 
 #if !defined cache
 #define cache

@@ -28,6 +28,8 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <cache.hpp>
+#include <parse.hpp>
 
 #include <xalanc/Include/PlatformDefinitions.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -42,5 +44,7 @@ XALAN_USING_XALAN(XalanParsedSource);
 XALAN_USING_XALAN(XalanCompiledStylesheet);
 
 namespace xzes {
-    int transform_documents( xzes::job_t* );
+	// Accepts void* which gets cast to a job_t*;
+	// Also returns void* which can be cast to int* for threading;
+    void* transform_documents( void* );
 }

@@ -36,12 +36,16 @@
 #include <unistd.h>
 #include <vector>
 
+#include <pthread.h>
+
 #include <xalanc/Include/PlatformDefinitions.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
 #include <lib.hpp>
 #include <transform.hpp>
 #include <daemon.hpp>
+
+#define BUFFER_SIZE 1024
 
 XALAN_USING_XERCES(XMLPlatformUtils);
 XALAN_USING_XALAN(XSLTInputSource);
@@ -54,6 +58,9 @@ XALAN_USING_XALAN(XalanTransformer);
 
 #define BUFFER_SIZE 1024
 #define PORT 40404
+
+pthread_mutex_t mutexsum;
+pthread_t callThd;
 
 int main(int argc, char* argv[]) {
     int conn, ret;
@@ -69,23 +76,53 @@ int main(int argc, char* argv[]) {
     return ret;
 }
 
+// ------------------------------------------------------------------------
 // Eventloop for receiving requests and dispatching jobs
-int xzes::daemon(int master) {
+// Keep running as daemon.
+// As the infinite loop.
+// ------------------------------------------------------------------------
+int xzes::daemon(int fd)
+{
 
     fd_set readfds;
 
     printf("Starting daemon on localhost:%d\n", PORT);
 
+    int rc;
+	pthread_attr_t attr;
+	void * status;
+
+	//Create cache for file
+	Cache::Cache *storeList = new Cache();
+
+	//Initialize pthread mutex
+	pthread_mutex_init(&mutexsum, NULL);
+
     XMLPlatformUtils::Initialize();
     XalanTransformer::initialize();
 
+    /* Create threads to be joinable*/
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+
     while (true) {
-        xzes::job_t *j = xzes::recv_request(master, &readfds);
+        xzes::job_t *j = xzes::recv_request(fd, &readfds);
 		if (j != NULL)
         {
 
             puts("pre-transform");
-            xzes::transform_documents(j);
+                pthread_t thread;
+                j->theList = storeList;
+                rc = pthread_create(&thread, &attr, xzes::transform_documents, (void *)j);
+				if (rc){
+					printf("ERROR; return code from pthread_create is %d\n", rc);
+					exit(-1);
+				}
+				pthread_attr_destroy(&attr);
+				// wait on other thread
+				pthread_join(callThd, &status);
+				pthread_mutex_destroy(&mutexsum);
+				pthread_exit(NULL);
             puts("post-transform");
 
         } else {
@@ -96,12 +133,13 @@ int xzes::daemon(int master) {
     XalanTransformer::ICUCleanUp();
     XMLPlatformUtils::Terminate();
 
-    return 0;
+    return *((int*)(&status));;
 }
 
 // Recieves a request,
 // parses request into job_t
-xzes::job_t* xzes::recv_request(int conn, fd_set* ) {
+xzes::job_t* xzes::recv_request(int conn, fd_set* )
+{
 
 	char buf[BUFFER_SIZE];
 	fd_set readfds;
