@@ -11,6 +11,9 @@ apt install -y curl \
                libxerces-c-doc \
                libxerces-c-samples \
                libxerces-c3.1 \
-               clang
+               clang \
+               apache2 \
+               libapache2-mod-fcgid \
+               pyhton-fcgi
 
 ln -s /xzes40 /home/vagrant/xzes40
