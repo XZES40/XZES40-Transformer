@@ -29,14 +29,9 @@ import cgitb; cgitb.enable() # for troubleshooting
 
 XZES_SAVE_PATH = "/tmp/xzes"
 
-response = """
-<html>
-<head>
-</head>
-<body>
+response = """<p>
 {}
-<body>
-</html>
+</p>
 """
 
 def main(r):
@@ -74,13 +69,13 @@ def main(r):
 
     try:
         s.send(job)
-    except e:
-        print(r.format("Error requesting job: {}".format(e)))
+    except:
+        print(r.format("Error requesting job"))
         return 1
 
     try:
         print(r.format(job))
-    except e:
+    except:
         print(r.format("Error.\nI have no idea why..."))
 
 
