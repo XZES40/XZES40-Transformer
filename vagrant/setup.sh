@@ -13,7 +13,11 @@ apt install -y curl \
                libxerces-c3.1 \
                clang \
                apache2 \
-               libapache2-mod-fcgid \
-               pyhton-fcgi
 
 ln -s /xzes40 /home/vagrant/xzes40
+
+# Configure the webserver
+cp /xzes40/xzes40/cgi-glue/xzes40-cgi.conf /etc/apache2/sites-avaliable
+ln -s /etc/apache2/sites-avaliable /etc/apache2/sites-enabled
+a2enmod cgi
+systemctl restart apache
