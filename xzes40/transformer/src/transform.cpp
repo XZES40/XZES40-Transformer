@@ -54,10 +54,15 @@ int xzes::transform_documents( xzes::job_t *args )
     std::string outName = "yooo.xml";
     XSLTResultTarget *out = new XSLTResultTarget(outName.c_str());
 
+    printf("%s\n", outName.c_str());
 
+    // This needs to be changed to write the output to:
+    //      { env['XZES_SAVE_DIR'] }/{ args->jid }.xml
+    // Once written the daemon needs to return the response:
+    //      (args->jid, output_file_name, errors)
     int theResult = theXalanTransformer.transform( *xml.get_content()->obj ,
                                                    *xsl.get_content()->obj ,
-                                                    *out );
+                                                   *out );
 
     return theResult;
 }
