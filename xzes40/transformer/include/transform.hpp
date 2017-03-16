@@ -27,7 +27,7 @@
 #include <lib.hpp>
 #include <cstdlib>
 #include <iostream>
-
+#include <string>
 
 #include <xalanc/Include/PlatformDefinitions.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

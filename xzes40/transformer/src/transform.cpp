@@ -44,14 +44,20 @@ int xzes::transform_documents( xzes::job_t *args )
     //create a xalantransformer
     XalanTransformer theXalanTransformer;
 
-    // Allocate objects on the heap so they can be cached in the non-prototype version.
-    // XSLTInputSource  *xml = cache.get(args.xml);
+    //Allocate objects on the heap so they can be cached in the non-prototype version.
+    //XSLTInputSource  *xml = cache.get(args.xml);
     Document xml(args->xml);
     Document xsl(args->xsl);
 
+    //The outName is the varb of output name
+    //TODO -- create random output name
+    std::string outName = "yooo.xml";
+    XSLTResultTarget *out = new XSLTResultTarget(outName.c_str());
+
+
     int theResult = theXalanTransformer.transform( *xml.get_content()->obj ,
                                                    *xsl.get_content()->obj ,
-                                                    std::cout );
+                                                    *out );
 
     return theResult;
 }
