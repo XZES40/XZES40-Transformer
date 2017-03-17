@@ -85,6 +85,8 @@ int xzes::daemon(int fd)
                 // TODO MULTI THREAD
                 //printf("XZES40:: Read input `%s`.\n", buf);
                 xzes::job_t *job = xzes::parse_request( buf );
+                job->error = "";
+                job->socket_fd = cl;
                 xzes::transform_documents(job);
             }
         }

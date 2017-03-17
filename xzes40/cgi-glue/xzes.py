@@ -62,8 +62,13 @@ def main(r):
         print(r.format("Error saving POST files.\nPermissions error?"))
         return 1
 
+    job_id   = str(hash(xml+xsl))
+    out_path = os.path.join(XZES_SAVE_PATH, job_id + '.xml')
     try:
-        job = "{},{},{}".format(hash(xml+xsl), xml_path, xsl_path).encode("utf-8")
+        job = "{},{},{},{}".format(job_id  ,
+                                   xml_path,
+                                   xsl_path,
+                                   out_path).encode("utf-8")
     except:
         print(r.format("Error generating job request.\n*shrug*"))
 
