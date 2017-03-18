@@ -41,20 +41,33 @@ XALAN_USING_XALAN(XalanTransformer);
 
 int xzes::transform_documents( xzes::job_t *args )
 {
+
+    printf("%s, %s, %s\n", args->xml.uri.c_str(),
+                           args->xsl.uri.c_str(),
+                           args->out.uri.c_str());
+
     //create a xalantransformer
     XalanTransformer theXalanTransformer;
+
+    puts("tranformer setup");
 
     //Allocate objects on the heap so they can be cached in the non-prototype version.
     //XSLTInputSource  *xml = cache.get(args.xml);
     Document xml(args->xml);
     Document xsl(args->xsl);
 
+    puts("setup documents");
+
     std::string outName = args->out.uri;
     XSLTResultTarget *out = new XSLTResultTarget( outName.c_str() );
+
+    puts("about to transform");
 
     int theResult = theXalanTransformer.transform( *xml.get_content()->obj ,
                                                    *xsl.get_content()->obj ,
                                                    *out );
+
+    puts("after transform");
 
     return theResult;
 }

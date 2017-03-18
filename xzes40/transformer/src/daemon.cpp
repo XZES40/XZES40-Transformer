@@ -59,9 +59,7 @@ int main(int argc, char* argv[]) {
     int conn, ret;
 
     conn = master_connection(40404);
-    puts("WTF");
     if (conn > 0) {
-        puts("Able to do stuff");
         ret = xzes::daemon(conn);
     } else {
         perror("XZES:: Unable to start daemon.\n");
@@ -74,16 +72,24 @@ int main(int argc, char* argv[]) {
 // Eventloop for receiving requests and dispatching jobs
 int xzes::daemon(int master) {
 
-    fd_set* readfds = NULL;
+    fd_set readfds;
 
     printf("Starting daemon on localhost:%d\n", PORT);
 
     while (true) {
-        xzes::job_t *j = xzes::recv_request(master, readfds);
+        xzes::job_t *j = xzes::recv_request(master, &readfds);
 		if (j != NULL)
-			puts("do the transform");
-		else
+        {
+            XMLPlatformUtils::Initialize();
+            XalanTransformer::initialize();
+
+            xzes::transform_documents(j);
+
+            XalanTransformer::ICUCleanUp();
+            XMLPlatformUtils::Terminate();
+        } else {
 			puts("don't do the transform");
+        }
     }
 
     return 0;
@@ -94,44 +100,60 @@ int xzes::daemon(int master) {
 xzes::job_t* xzes::recv_request(int conn, fd_set* ) {
 
 	char buf[BUFFER_SIZE];
-	fd_set *readfds = NULL;
+	fd_set readfds;
 	int activity;
 	int addrlen;
     struct sockaddr_in address;
 	int new_socket;
 	xzes::job_t *tmp = NULL;
 
-	FD_ZERO(readfds);
-	FD_SET(conn, readfds);
+    puts("FD_ZERO, FD_SET");
+
+	FD_ZERO(&readfds);
+	FD_SET(conn, &readfds);
+
+    puts("post FD_ZERO, FD_SET");
 
 	// TODO: Debug this section, pretty sure conn+1 should be something else.
 	// `conn` should be "the highest file descriptor name.
 	// Reference the second 'much thanks' link for more info.
 
-    activity = select( conn + 1 , readfds , NULL , NULL , NULL);
+    activity = select( conn + 1 , &readfds , NULL , NULL , NULL);
     
     if ((activity < 0) && (errno!=EINTR)) 
     {
     	puts("select error");
     }
 
+
     //type of socket created
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons( PORT );
 
-	if (FD_ISSET(conn, readfds)) 
+    puts("FD_ISSET");
+
+	if (FD_ISSET(conn, &readfds)) 
 	{
-		if ((new_socket = accept(conn, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0)
+        new_socket = accept(conn, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+
+        puts("new socket");
+
+		if ( new_socket < 0 )
 		{
 			perror("accept");
 			exit(EXIT_FAILURE);
 		} else {
 			if (read(new_socket, buf, sizeof(buf)) > 0 && xzes::valid_request( buf ))
 			{
-				xzes::job_t *tmp = parse_request( buf );
+
+                puts("setting job");
+
+				tmp = parse_request( buf );
 				tmp->error = "";
 				tmp->socket_fd = new_socket;
+
+                puts("set job");
 			}
 		}
 	}
@@ -182,4 +204,5 @@ int xzes::master_connection(int port) {
     //accept the incoming connection
     puts("Waiting for connections ...");
 
+    return master_socket;
 }

@@ -26,10 +26,8 @@ import sys
 import os
 
 def main():
-    socket_path = "/tmp/xzes40daemon.socket"
-
-    s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    s.connect(socket_path)
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect(("localhost", 40404))
 
     x = parse_args(sys.argv)
     if "" != x:
