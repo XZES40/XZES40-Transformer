@@ -24,8 +24,7 @@
 
 
 namespace xzes {
-    int setup_connection();
-    void signal_handler( int );
     int daemon( int );
-    int dispatch_transform( job_t * );
+    int master_connection( int );
+    job_t* recv_request( int , fd_set* );
 }
