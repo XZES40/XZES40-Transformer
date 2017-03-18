@@ -29,7 +29,7 @@ import cgitb; cgitb.enable() # for troubleshooting
 
 XZES_SAVE_PATH = "/tmp/xzes"
 
-response = """Content-Type: application/xml; charset=utf-8\n\n{}"""
+response = """Content-Type: text/plain; charset=utf-8\n\n\n{}"""
 error = """<?xml version="1.0" encoding="UTF-8"?><error>{}</error>"""
 
 def main(r, e):
