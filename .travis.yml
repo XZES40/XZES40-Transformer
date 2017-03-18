@@ -26,3 +26,4 @@ addons:
         - libxerces-c-samples
         - libxerces-c3.1
         - clang
+        - apache2

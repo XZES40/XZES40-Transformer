@@ -29,6 +29,8 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <arpa/inet.h>
+#include <string.h>
 
 #include <document.hpp>
 #include <transform.hpp>
@@ -41,17 +43,43 @@ XALAN_USING_XALAN(XalanTransformer);
 
 int xzes::transform_documents( xzes::job_t *args )
 {
+
+    printf("%s, %s, %s\n", args->xml.uri.c_str(),
+                           args->xsl.uri.c_str(),
+                           args->out.uri.c_str());
+
     //create a xalantransformer
     XalanTransformer theXalanTransformer;
 
-    // Allocate objects on the heap so they can be cached in the non-prototype version.
-    // XSLTInputSource  *xml = cache.get(args.xml);
+    puts("tranformer setup");
+
+    //Allocate objects on the heap so they can be cached in the non-prototype version.
+    //XSLTInputSource  *xml = cache.get(args.xml);
     Document xml(args->xml);
     Document xsl(args->xsl);
 
+    puts("setup documents");
+
+    std::string outName = args->out.uri;
+    XSLTResultTarget *out = new XSLTResultTarget( outName.c_str() );
+
+    puts("about to transform");
+
     int theResult = theXalanTransformer.transform( *xml.get_content()->obj ,
                                                    *xsl.get_content()->obj ,
-                                                    std::cout );
+                                                   *out );
+
+    puts("after transform");
+
+    if (theResult < 0)
+        args->error = "Transformation failed";
+
+    char ret[2048];
+    sprintf(ret, "%s,%s,%s", args->jid.c_str(),
+                             outName.c_str(),
+                             args->error.c_str());
+
+    send(args->socket_fd, ret, strlen(ret), 0);
 
     return theResult;
 }

@@ -40,6 +40,7 @@ xzes::job_t* xzes::parse_request( char* input )
     out->jid     = tmpv[0];
     out->xml.uri = tmpv[1];
     out->xsl.uri = tmpv[2];
+    out->out.uri = tmpv[3];
 
     // printf("(%s,%s,%s)\n",out->jid.c_str(),
     //                      out->xml.uri.c_str(),

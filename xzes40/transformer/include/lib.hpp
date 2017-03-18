@@ -77,6 +77,8 @@ namespace xzes
         uri_t out; // Output file location
         pthread_t tid; // thread id of the job
         std::string jid; // uniqe job id
+        std::string error; // any error messages returned from the transform
+        int socket_fd; // socket used to communicate with calling script
     } job_t ;
 
     // ------------------------------------------------------------------------
