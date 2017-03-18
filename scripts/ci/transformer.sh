@@ -7,6 +7,8 @@
 # - Runs tests (ish)
 #
 
+${TRAVIS_BUILD_DIR:=/xzes40}
+
 # Navigate to the transformer software directory
 cd $TRAVIS_BUILD_DIR/xzes40/transformer
 
