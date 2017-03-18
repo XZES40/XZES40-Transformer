@@ -35,14 +35,13 @@ response = """<p>
 """
 
 def main(r):
-    socket_path = "/tmp/xzes40daemon.socket"
     print("Content-Type: application/xml; charset=utf-8\n\n")
 
     try:
-        s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        s.connect(socket_path)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect(("localhost", 40404))
     except:
-        print(r.format("Error connecting to socket {}.\nPermissions error?".format(socket_path)))
+        print(r.format("Error connecting to socket.\nPermissions error?"))
 
     try:
         form = cgi.FieldStorage()
@@ -65,12 +64,13 @@ def main(r):
     job_id   = str(hash(xml+xsl))
     out_path = os.path.join(XZES_SAVE_PATH, job_id + '.xml')
     try:
-        job = "{},{},{},{}".format(job_id  ,
-                                   xml_path,
-                                   xsl_path,
-                                   out_path).encode("utf-8")
+        job = "{},{},{},{},{}".format(job_id  ,
+                                      xml_path,
+                                      xsl_path,
+                                      out_path, "").encode("utf-8")
     except:
         print(r.format("Error generating job request.\n*shrug*"))
+        return 1
 
     try:
         s.send(job)
@@ -78,10 +78,14 @@ def main(r):
         print(r.format("Error requesting job"))
         return 1
 
-    try:
-        print(r.format(job))
-    except:
-        print(r.format("Error.\nI have no idea why..."))
+    data = s.recv(2048)
+    split = data.split(',')
+    if data[2] != "":
+        with open(split[1], 'r') as f:
+           print(''.join(f.readlines()))
+    else:
+            print(data[2])
+    s.close()
 
 
 def save_file(contents, ext=''):

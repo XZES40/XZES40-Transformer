@@ -43,7 +43,7 @@ def parse_args(a):
     Return "argv[1],argv[2]"
     """
     if len(a) == 4:
-        return "{},{},{},{}".format(uid(a), a[1], a[2], a[3])
+        return "{},{},{},{},{}".format(uid(a), a[1], a[2], a[3], "")
     else:
         return ""
 

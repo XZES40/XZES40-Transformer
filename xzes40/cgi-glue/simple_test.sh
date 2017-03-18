@@ -1,11 +1,5 @@
 #!/bin/bash
 
-if [ ! -S /tmp/xzes40daemon.socket ]; then
-    /home/vagrant/xzes40/xzes40/transformer/build/daemon &
-fi
-
-sudo chown www-data:www-data /tmp/xzes40daemon.socket
-
 curl \
   --include \
   --request POST \

@@ -29,6 +29,8 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <arpa/inet.h>
+#include <string.h>
 
 #include <document.hpp>
 #include <transform.hpp>
@@ -68,6 +70,15 @@ int xzes::transform_documents( xzes::job_t *args )
                                                    *out );
 
     puts("after transform");
+
+    char ret[2048];
+    sprintf(ret, "%s,%s,%s", args->jid.c_str(),
+                             outName.c_str(),
+                             args->error.c_str());
+    if (theResult < 0)
+        args->error = "Transformation failed"
+
+    send(args->socket_fd, ret, strlen(ret), 0);
 
     return theResult;
 }
