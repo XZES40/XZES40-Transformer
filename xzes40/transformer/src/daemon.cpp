@@ -76,21 +76,25 @@ int xzes::daemon(int master) {
 
     printf("Starting daemon on localhost:%d\n", PORT);
 
+    XMLPlatformUtils::Initialize();
+    XalanTransformer::initialize();
+
     while (true) {
         xzes::job_t *j = xzes::recv_request(master, &readfds);
 		if (j != NULL)
         {
-            XMLPlatformUtils::Initialize();
-            XalanTransformer::initialize();
 
+            puts("pre-transform");
             xzes::transform_documents(j);
+            puts("post-transform");
 
-            XalanTransformer::ICUCleanUp();
-            XMLPlatformUtils::Terminate();
         } else {
 			puts("don't do the transform");
         }
     }
+
+    XalanTransformer::ICUCleanUp();
+    XMLPlatformUtils::Terminate();
 
     return 0;
 }
