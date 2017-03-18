@@ -29,26 +29,22 @@ import cgitb; cgitb.enable() # for troubleshooting
 
 XZES_SAVE_PATH = "/tmp/xzes"
 
-response = """<p>
-{}
-</p>
-"""
+response = """Content-Type: application/xml; charset=utf-8\n\n{}"""
+error = """<?xml version="1.0" encoding="UTF-8"?><error>{}</error>"""
 
-def main(r):
-    print("Content-Type: application/xml; charset=utf-8\n\n")
-
+def main(r, e):
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect(("localhost", 40404))
     except:
-        print(r.format("Error connecting to socket.\nPermissions error?"))
+        print(r.format(e.format("Error connecting to socket.\nPermissions error?")))
 
     try:
         form = cgi.FieldStorage()
         xml = ''.join(form['xml'].file.readlines())
         xsl = ''.join(form['xsl'].file.readlines())
     except:
-        print(r.format("Error parsing form.\nDid you send the right form?"))
+        print(r.format(e.format("Error parsing form.\nDid you send the right form?")))
         return 1
 
     if not os.path.exists(XZES_SAVE_PATH):
@@ -58,7 +54,7 @@ def main(r):
         xml_path = save_file(xml, '.xml')
         xsl_path = save_file(xsl, '.xsl')
     except:
-        print(r.format("Error saving POST files.\nPermissions error?"))
+        print(r.format(e.format("Error saving POST files.\nPermissions error?")))
         return 1
 
     job_id   = str(hash(xml+xsl))
@@ -69,22 +65,27 @@ def main(r):
                                       xsl_path,
                                       out_path, "").encode("utf-8")
     except:
-        print(r.format("Error generating job request.\n*shrug*"))
+        print(r.format(e.format("Error generating job request.\n*shrug*")))
         return 1
 
     try:
         s.send(job)
     except:
-        print(r.format("Error requesting job"))
+        print(r.format(e.format("Error requesting job")))
         return 1
 
     data = s.recv(2048)
-    split = data.split(',')
-    if data[2] != "":
-        with open(split[1], 'r') as f:
-           print(''.join(f.readlines()))
-    else:
-            print(data[2])
+
+    try:
+        split = data.split(',')
+        if data[2] != "":
+            with open(split[1], 'r') as f:
+               print(r.format(''.join(f.readlines())))
+        else:
+            print(r.format(e.format(data[2])))
+    except:
+        print(r.format(e.format("Something went wrong!")))
+
     s.close()
 
 
@@ -101,5 +102,5 @@ def save_file(contents, ext=''):
     return fpath
 
 if __name__ == '__main__':
-    main(response)
+    main(response, error)
 

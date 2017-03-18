@@ -71,12 +71,13 @@ int xzes::transform_documents( xzes::job_t *args )
 
     puts("after transform");
 
+    if (theResult < 0)
+        args->error = "Transformation failed";
+
     char ret[2048];
     sprintf(ret, "%s,%s,%s", args->jid.c_str(),
                              outName.c_str(),
                              args->error.c_str());
-    if (theResult < 0)
-        args->error = "Transformation failed"
 
     send(args->socket_fd, ret, strlen(ret), 0);
 
