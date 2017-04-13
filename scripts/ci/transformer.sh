@@ -16,10 +16,10 @@ cd $TRAVIS_BUILD_DIR/xzes40/transformer
 make
 
 # Test that the CGI script works
-$TRAVIS_BUILD_DIR/scripts/ci/cgi.sh
+# $TRAVIS_BUILD_DIR/scripts/ci/cgi.sh
 
 # Start the daemon
-$TRAVIS_BUILD_DIR/xzes40/transformer/build/daemon &
+# $TRAVIS_BUILD_DIR/xzes40/transformer/build/daemon &
 
 # Run the cgi test script
-$TRAVIS_BUILD_DIR/xzes40/cgi-glue/simple_test.sh
+# $TRAVIS_BUILD_DIR/xzes40/cgi-glue/simple_test.sh

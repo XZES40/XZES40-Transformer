@@ -1,0 +1,11 @@
+[Unit]
+Description=The XZES40 daemon for transforming XML documents.
+After=apache2.service network.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/xzes-daemon.pid
+ExecStart=/usr/local/bin/xzes-daemon
+
+[Install]
+WantedBy=default.target

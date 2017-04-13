@@ -20,6 +20,4 @@ apt install -y curl \
 ln -sf /xzes40 /home/vagrant/xzes40
 
 # Configure the webserver
-/xzes40/scripts/ci/cgi.sh
-/xzes40/scripts/ci/frontend.sh
-/xzes40/scripts/ci/start_daemon.sh
+/xzes40/scripts/setup.sh
