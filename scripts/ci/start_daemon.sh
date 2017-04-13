@@ -9,4 +9,4 @@ cd $TRAVIS_BUILD_DIR/xzes40/transformer
 make
 
 # Start the daemon
-$TRAVIS_BUILD_DIR/xzes40/transformer/build/daemon &
+$TRAVIS_BUILD_DIR/xzes40/transformer/build/xzesd &

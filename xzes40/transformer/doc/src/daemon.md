@@ -1,5 +1,7 @@
 # Application Daemon
 
+**NOTE** In production the daemon is called `xzesd` and is stored on disk at `/usr/local/bin/xzesd`.
+
 In order to preserve state in the in-memory cache, XZES has a long-running daemon.
 
 Here is roughly how that daemon works and how it recieves jobs.

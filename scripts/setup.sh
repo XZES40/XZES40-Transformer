@@ -20,7 +20,7 @@ mkdir --parents $XZES40_BIN
 # Build the daemon and copy it to the bin
 cd $XZES40_SRC/xzes40/transformer/
 make
-ln -sf $XZES40_SRC/xzes40/transformer/build/daemon $XZES40_BIN/xzes-daemon
+ln -sf $XZES40_SRC/xzes40/transformer/build/xzesd $XZES40_BIN/xzesd
 
 # Copy the cgi script to the correct location
 mkdir -p /var/www/cgi-bin/

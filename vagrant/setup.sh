@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # if $TRAVIS_BUILD_DIR is unset, set it (for local vagrant stuff)
-${TRAVIS_BUILD_DIR:=/xzes}
+# ${TRAVIS_BUILD_DIR:=/xzes}
 
 apt update -y
 apt install -y curl \
