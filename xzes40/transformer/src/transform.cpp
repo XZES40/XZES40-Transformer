@@ -53,11 +53,13 @@ void* xzes::transform_documents( void* input )
 
     //catch the cache
     Cache::Cache* cacheList = args->theList;
+    //pass the mutex
+    pthread_mutex_t mutex = args->lock_var;
 
     // Allocate objects on the heap so they can be cached in the non-prototype version.
     // XSLTInputSource  *xml = cache.get(args.xml);
-    Document xml(args->xml, cacheList);
-    Document xsl(args->xsl, cacheList);
+    Document xml(args->xml, cacheList, mutex);
+    Document xsl(args->xsl, cacheList, mutex);
 
     puts("setup documents");
 

@@ -58,7 +58,7 @@ namespace xzes
             id_t _hash_uri( );
 
         public:
-            Document( uri_t ,Cache::Cache*);
+            Document( uri_t ,Cache::Cache*, pthread_mutex_t);
             Document( );
 
             uri_t   get_uri( );

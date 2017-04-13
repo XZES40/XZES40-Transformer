@@ -46,7 +46,7 @@ XALAN_USING_XALAN(XSLTInputSource);
 //
 // Intializes a document by setting the uri, path, and contents.
 // ----------------------------------------------------------------------------
-xzes::Document::Document( xzes::uri_t file_path, Cache *storeList)
+xzes::Document::Document( xzes::uri_t file_path, Cache *storeList, pthread_mutex_t mutex)
 {
     //Cache::Cache storeList;
 
@@ -57,12 +57,16 @@ xzes::Document::Document( xzes::uri_t file_path, Cache *storeList)
     set_id( );
 
     // Compile the document now that you know the type
+    // lock the thread
+    pthread_mutex_lock(&mutex);
     if(!storeList->search(uid)){
         compile();
         storeList->set( uid , doc , uri );
     } else {
         set_content( storeList->get( uid ));
     }
+    // unlock the thread
+    pthread_mutex_unlock(&mutex);
 }
 
 // ----------------------------------------------------------------------------

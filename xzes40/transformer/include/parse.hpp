@@ -67,6 +67,7 @@ namespace xzes
         int socket_fd; // socket used to communicate with calling script
         int tid;
         xzes::Cache *theList;
+        pthread_mutex_t lock_var;
     } job_t ;
 
     job_t* parse_request( char* );

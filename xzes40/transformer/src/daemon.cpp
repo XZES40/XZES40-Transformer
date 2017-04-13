@@ -45,8 +45,6 @@
 #include <transform.hpp>
 #include <daemon.hpp>
 
-#define BUFFER_SIZE 1024
-
 XALAN_USING_XERCES(XMLPlatformUtils);
 XALAN_USING_XALAN(XSLTInputSource);
 XALAN_USING_XALAN(XSLTResultTarget);
@@ -54,12 +52,12 @@ XALAN_USING_XALAN(XalanParsedSource);
 XALAN_USING_XALAN(XalanCompiledStylesheet);
 XALAN_USING_XALAN(XalanTransformer);
 
-#define TRUE 1;
-
+#define TRUE 1
 #define BUFFER_SIZE 1024
 #define PORT 40404
+#define MAXTHREAD 5
 
-pthread_mutex_t mutexsum;
+pthread_mutex_t mutex;
 pthread_t callThd;
 
 int main(int argc, char* argv[]) {
@@ -96,7 +94,7 @@ int xzes::daemon(int fd)
 	Cache::Cache *storeList = new Cache();
 
 	//Initialize pthread mutex
-	pthread_mutex_init(&mutexsum, NULL);
+	pthread_mutex_init(&mutex, NULL);
 
     XMLPlatformUtils::Initialize();
     XalanTransformer::initialize();
@@ -106,28 +104,33 @@ int xzes::daemon(int fd)
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
     while (true) {
-        xzes::job_t *j = xzes::recv_request(fd, &readfds);
-		if (j != NULL)
-        {
+    	for (int i = 0; i <=MAXTHREAD ; i++){
+        	xzes::job_t *j = xzes::recv_request(fd, &readfds);
+			if (j != NULL)
+        	{
 
-            puts("pre-transform");
-                pthread_t thread;
-                j->theList = storeList;
-                rc = pthread_create(&thread, &attr, xzes::transform_documents, (void *)j);
-				if (rc){
-					printf("ERROR; return code from pthread_create is %d\n", rc);
-					exit(-1);
-				}
-				pthread_attr_destroy(&attr);
-				// wait on other thread
-				pthread_join(callThd, &status);
-				pthread_mutex_destroy(&mutexsum);
-				pthread_exit(NULL);
-            puts("post-transform");
+            	puts("pre-transform");
+                	pthread_t thread[MAXTHREAD];
+                	j->theList = storeList;
+                	j->lock_var = mutex;
+                	rc = pthread_create(&thread[i], &attr, xzes::transform_documents, (void *)j);
+					if (rc){
+						printf("ERROR; return code from pthread_create is %d\n", rc);
+						exit(-1);
+					}
+					pthread_attr_destroy(&attr);
+					// wait on other thread
+					pthread_join(callThd, &status);
+					pthread_mutex_destroy(&mutex);
+					pthread_exit(NULL);
+					//Make j as null, so other thread will not transform
+					j = NULL;
+            	puts("post-transform");
 
-        } else {
-			puts("don't do the transform");
-        }
+        	} else {
+				puts("don't do the transform");
+        	}
+    	}
     }
 
     XalanTransformer::ICUCleanUp();
