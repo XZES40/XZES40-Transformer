@@ -15,6 +15,8 @@
  */
 #include <lib.hpp>
 #include <string.h>
+#include <malloc.h>
+
 #ifndef OR_KEY_LIST_LIB_H
 #define OR_KEY_LIST_LIB_H
 using namespace xzes;

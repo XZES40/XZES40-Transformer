@@ -22,12 +22,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <lib.hpp>
-#include <cstdlib>
-#include <functional>
+//#include <cstdlib>
+//#include <functional>
 #include <cache.hpp>
 
 // Xerces and Xalan
-#include <xalanc/XalanTransformer/XalanTransformer.hpp>
+//#include <xalanc/Include/PlatformDefinitions.hpp>
+//#include <xercesc/util/PlatformUtils.hpp>
+//#include <xalanc/XalanTransformer/XalanTransformer.hpp>
+
 XALAN_USING_XALAN(  XalanTransformer  );
 XALAN_USING_XERCES( XMLPlatformUtils  );
 
@@ -55,7 +58,7 @@ namespace xzes
             id_t _hash_uri( );
 
         public:
-            Document( uri_t );
+            Document( uri_t ,Cache::Cache*, pthread_mutex_t);
             Document( );
 
             uri_t   get_uri( );

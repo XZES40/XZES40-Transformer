@@ -30,9 +30,14 @@
 #include <iostream>
 #include <sstream>
 #include <getopt.h>
-
+#include <functional>
+#include <cstdlib>
+#include <pthread.h>
+#include <fstream>
 // Include Xerces and Xalan libraries.
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 // Set Xerces and Xalan namespace for methods and classes.
 XALAN_USING_XALAN( XSLTInputSource       );
@@ -57,31 +62,6 @@ namespace xzes
     } uri_t;
 
     // ------------------------------------------------------------------------
-    // typedef struct job_t
-    //
-    // Parses input of the following format:
-    //   `<binary> <input xml> <input xsl> <out xml>`
-    // into a struct of the following format:
-    //   string job.xml.uri -> <input xml>
-    //   string job.xsl.uri -> <input xsl>
-    //   string job.out.uri -> <output file destination>
-    // As well as stores metadata about the job being processed (where the job
-    // is the transformation of the above files.
-    //   thread_t tid -> id of processing thread
-    //   string jid -> unique ID of the request (like a service ticket ID)
-    // ------------------------------------------------------------------------
-    typedef struct
-    {
-        uri_t xml; // XML file location
-        uri_t xsl; // Stylesheet file location
-        uri_t out; // Output file location
-        pthread_t tid; // thread id of the job
-        std::string jid; // uniqe job id
-        std::string error; // any error messages returned from the transform
-        int socket_fd; // socket used to communicate with calling script
-    } job_t ;
-
-    // ------------------------------------------------------------------------
     // typedef id_t 
     //
     // API for obscuring how we implement the ID/specific has we are dealing
@@ -102,8 +82,6 @@ namespace xzes
         const XSLTInputSource* obj;
     } doc_t;
 
-    job_t* parse_args( int*, char*** );
-    job_t* parse_request( char* );
     bool _file_exists( std::string );
     int setup_connection();
     int valid_request(char *);

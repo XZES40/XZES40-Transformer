@@ -22,9 +22,24 @@
 // All function definitions are documented in src/daemon.cpp
 ///////////////////////////////////////////////////////////////////////////////
 
+//#include <vector>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <stdlib.h>
+#include <csignal>
+
+//#include <xalanc/Include/PlatformDefinitions.hpp>
+//#include <xercesc/util/PlatformUtils.hpp>
+#include <parse.hpp>
+#include <cache.hpp>
+#include <lib.hpp>
+#include <transform.hpp>
 
 namespace xzes {
     int daemon( int );
     int master_connection( int );
     job_t* recv_request( int , fd_set* );
 }
+
