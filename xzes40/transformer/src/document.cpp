@@ -57,16 +57,16 @@ xzes::Document::Document( xzes::uri_t file_path, Cache *storeList, pthread_mutex
     set_id( );
 
     // Compile the document now that you know the type
-    // lock the thread
-    pthread_mutex_lock(&mutex);
     if(!storeList->search(uid)){
         compile();
         storeList->set( uid , doc , uri );
     } else {
+        // lock the thread
+        pthread_mutex_lock(&mutex);
         set_content( storeList->get( uid ));
+        // unlock the thread
+        pthread_mutex_unlock(&mutex);
     }
-    // unlock the thread
-    pthread_mutex_unlock(&mutex);
 }
 
 // ----------------------------------------------------------------------------
