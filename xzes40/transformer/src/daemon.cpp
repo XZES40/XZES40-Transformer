@@ -58,7 +58,7 @@ XALAN_USING_XALAN(XalanTransformer);
 #define MAXTHREAD 5
 
 pthread_mutex_t mutex;
-pthread_t callThd;
+pthread_t callThd[MAXTHREAD];
 
 int main(int argc, char* argv[]) {
     int conn, ret;
@@ -88,7 +88,9 @@ int xzes::daemon(int fd)
 
     int rc;
 	pthread_attr_t attr;
+    pthread_t thread[MAXTHREAD];
 	void * status;
+    xzes::job_t *job[MAXTHREAD], *temp = NULL;
 
 	//Create cache for file
 	Cache::Cache *storeList = new Cache();
@@ -103,34 +105,50 @@ int xzes::daemon(int fd)
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
+    for (int i = 0; i <= MAXTHREAD; i++){
+        job[i] = temp;
+        puts("create temp");
+    }
+
     while (true) {
     	for (int i = 0; i <=MAXTHREAD ; i++){
-        	xzes::job_t *j = xzes::recv_request(fd, &readfds);
-			if (j != NULL)
+            job[i] = xzes::recv_request(fd, &readfds);
+            puts("read file ");
+			if (job[i]!= NULL)
         	{
 
             	puts("pre-transform");
-                	pthread_t thread[MAXTHREAD];
-                	j->theList = storeList;
-                	j->lock_var = mutex;
-                	rc = pthread_create(&thread[i], &attr, xzes::transform_documents, (void *)j);
+                	job[i]->theList = storeList;
+                	job[i]->lock_var = mutex;
+                	rc = pthread_create(&thread[i], &attr, xzes::transform_documents, (void *)job[i]);
+                    puts("back to damon");
+                    std::cout << "back to home " << std::endl;
 					if (rc){
 						printf("ERROR; return code from pthread_create is %d\n", rc);
 						exit(-1);
 					}
-					pthread_attr_destroy(&attr);
-					// wait on other thread
-					pthread_join(callThd, &status);
-					pthread_mutex_destroy(&mutex);
-					pthread_exit(NULL);
 					//Make j as null, so other thread will not transform
-					j = NULL;
+					//need improve, maybe not work
+					job[i] = NULL;
             	puts("post-transform");
 
         	} else {
 				puts("don't do the transform");
         	}
     	}
+        puts("after the thread loop");
+        pthread_attr_destroy(&attr);
+
+        puts("after destory");
+        for (int i = 0; i <= MAXTHREAD; i++ ){
+            pthread_join(callThd[i], &status);
+        }
+        puts("after pthread join");
+
+        //pthread_exit(NULL);
+        puts("aftert pthread exit");
+        pthread_mutex_destroy(&mutex);
+        puts("after mutex desotry");
     }
 
     XalanTransformer::ICUCleanUp();

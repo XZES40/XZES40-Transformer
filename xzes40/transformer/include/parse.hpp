@@ -62,6 +62,7 @@ namespace xzes
         uri_t xml; // XML file location
         uri_t xsl; // Stylesheet file location
         uri_t out; // Output file location
+        uri_t depend; // any dependency file
         std::string jid; // uniqe job id
         std::string error; // any error messages returned from the transform
         int socket_fd; // socket used to communicate with calling script
@@ -71,8 +72,8 @@ namespace xzes
     } job_t ;
 
     job_t* parse_request( char* );
-
     job_t* parse_args( int*, char*** );
+    bool copyFile(const char *SRC, const char* DEST);
 }
 
 #endif

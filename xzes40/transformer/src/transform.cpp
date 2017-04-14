@@ -83,6 +83,5 @@ void* xzes::transform_documents( void* input )
                              args->error.c_str());
 
     send(args->socket_fd, ret, strlen(ret), 0);
-
     return (void*)status;
 }
