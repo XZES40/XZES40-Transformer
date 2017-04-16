@@ -17,15 +17,15 @@ INCLUDE_DIR = include
 SRC_DIR     = src
 TEST_DIR    = test
 
-LIBRARIES = -I./include -lxalan-c -lxerces-c
+LIBRARIES = -I./include -lxalan-c -lxerces-c -lpthread
 
-_SRC =  keylist.cpp cache.cpp lib.cpp document.cpp transform.cpp main.cpp 
+_SRC =  keylist.cpp cache.cpp lib.cpp document.cpp parse.cpp transform.cpp main.cpp 
 SRC  = $(patsubst %,$(SRC_DIR)/%,$(_SRC))
 
-_DEPS = keylist.hpp cache.hpp lib.hpp document.hpp transform.hpp 
+_DEPS = keylist.hpp cache.hpp lib.hpp document.hpp parse.hpp transform.hpp
 DEPS  = $(patsubst %,$(INCLUDE_DIR)/%,$(_DEPS))
 
-_OBJS = keylist.o cache.o lib.o document.o transform.o
+_OBJS = keylist.o cache.o lib.o document.o parse.o transform.o
 OBJS  = $(patsubst %,$(BUILD_DIR)/%,$(_OBJS))
 
 
@@ -48,7 +48,9 @@ main.py: $(SRC_DIR)/main.py
 
 all: main daemon test main.py
 
-.DEFAULT_GOAL := all
+no_test: main daemon main.py
+
+.DEFAULT_GOAL := no_test 
 
 .PHONY: clean
 clean:

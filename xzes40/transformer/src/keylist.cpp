@@ -25,9 +25,6 @@
 
 #include "keylist.hpp"
 
-#include <malloc.h>
-#include <string.h>
-
 #if defined(__cplusplus)
 extern "C"
 {

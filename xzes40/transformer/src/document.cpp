@@ -21,10 +21,6 @@
 // and classes used in XZES40 Document handling pipeline.
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <xalanc/Include/PlatformDefinitions.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xalanc/XalanTransformer/XalanTransformer.hpp>
-
 #include <document.hpp>
 
 XALAN_USING_XALAN(XSLTInputSource);
@@ -50,9 +46,9 @@ XALAN_USING_XALAN(XSLTInputSource);
 //
 // Intializes a document by setting the uri, path, and contents.
 // ----------------------------------------------------------------------------
-xzes::Document::Document( xzes::uri_t file_path )
+xzes::Document::Document( xzes::uri_t file_path, Cache *storeList, pthread_mutex_t mutex)
 {
-    Cache::Cache storeList;
+    //Cache::Cache storeList;
 
     // Set the file path to uri
     set_uri( file_path );
@@ -61,11 +57,15 @@ xzes::Document::Document( xzes::uri_t file_path )
     set_id( );
 
     // Compile the document now that you know the type
-    if(!storeList.search(uid)){
+    if(!storeList->search(uid)){
         compile();
-        storeList.set( uid , doc , uri );
+        storeList->set( uid , doc , uri );
     } else {
-        set_content( storeList.get( uid ));
+        // lock the thread
+        pthread_mutex_lock(&mutex);
+        set_content( storeList->get( uid ));
+        // unlock the thread
+        pthread_mutex_unlock(&mutex);
     }
 }
 

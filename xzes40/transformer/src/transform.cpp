@@ -34,15 +34,15 @@
 
 #include <document.hpp>
 #include <transform.hpp>
-#include <lib.hpp>
 
 //define namespace
 XALAN_USING_XALAN(XalanTransformer);
 
-#include <transform.hpp>
-
-int xzes::transform_documents( xzes::job_t *args )
+void* xzes::transform_documents( void* input )
 {
+
+	xzes::job_t* args = (job_t*) input;
+	int* status = new int;
 
     printf("%s, %s, %s\n", args->xml.uri.c_str(),
                            args->xsl.uri.c_str(),
@@ -51,12 +51,15 @@ int xzes::transform_documents( xzes::job_t *args )
     //create a xalantransformer
     XalanTransformer theXalanTransformer;
 
-    puts("tranformer setup");
+    //catch the cache
+    Cache::Cache* cacheList = args->theList;
+    //pass the mutex
+    pthread_mutex_t mutex = args->lock_var;
 
-    //Allocate objects on the heap so they can be cached in the non-prototype version.
-    //XSLTInputSource  *xml = cache.get(args.xml);
-    Document xml(args->xml);
-    Document xsl(args->xsl);
+    // Allocate objects on the heap so they can be cached in the non-prototype version.
+    // XSLTInputSource  *xml = cache.get(args.xml);
+    Document xml(args->xml, cacheList, mutex);
+    Document xsl(args->xsl, cacheList, mutex);
 
     puts("setup documents");
 
@@ -65,13 +68,13 @@ int xzes::transform_documents( xzes::job_t *args )
 
     puts("about to transform");
 
-    int theResult = theXalanTransformer.transform( *xml.get_content()->obj ,
-                                                   *xsl.get_content()->obj ,
-                                                   *out );
+    *status = theXalanTransformer.transform( *xml.get_content()->obj ,
+                                             *xsl.get_content()->obj ,
+                                             *out );
 
     puts("after transform");
 
-    if (theResult < 0)
+    if (&status < 0)
         args->error = "Transformation failed";
 
     char ret[2048];
@@ -80,6 +83,5 @@ int xzes::transform_documents( xzes::job_t *args )
                              args->error.c_str());
 
     send(args->socket_fd, ret, strlen(ret), 0);
-
-    return theResult;
+    return (void*)status;
 }

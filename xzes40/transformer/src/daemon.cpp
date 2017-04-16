@@ -36,6 +36,8 @@
 #include <unistd.h>
 #include <vector>
 
+#include <pthread.h>
+
 #include <xalanc/Include/PlatformDefinitions.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
@@ -50,10 +52,13 @@ XALAN_USING_XALAN(XalanParsedSource);
 XALAN_USING_XALAN(XalanCompiledStylesheet);
 XALAN_USING_XALAN(XalanTransformer);
 
-#define TRUE 1;
-
+#define TRUE 1
 #define BUFFER_SIZE 1024
 #define PORT 40404
+#define MAXTHREAD 5
+
+pthread_mutex_t mutex;
+pthread_t callThd[MAXTHREAD];
 
 int main(int argc, char* argv[]) {
     int conn, ret;
@@ -69,39 +74,93 @@ int main(int argc, char* argv[]) {
     return ret;
 }
 
+// ------------------------------------------------------------------------
 // Eventloop for receiving requests and dispatching jobs
-int xzes::daemon(int master) {
+// Keep running as daemon.
+// As the infinite loop.
+// ------------------------------------------------------------------------
+int xzes::daemon(int fd)
+{
 
     fd_set readfds;
 
     printf("Starting daemon on localhost:%d\n", PORT);
 
+    int rc;
+	pthread_attr_t attr;
+    pthread_t thread[MAXTHREAD];
+	void * status;
+    xzes::job_t *job[MAXTHREAD], *temp = NULL;
+
+	//Create cache for file
+	Cache::Cache *storeList = new Cache();
+
+	//Initialize pthread mutex
+	pthread_mutex_init(&mutex, NULL);
+
     XMLPlatformUtils::Initialize();
     XalanTransformer::initialize();
 
+    /* Create threads to be joinable*/
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+
+    for (int i = 0; i <= MAXTHREAD; i++){
+        job[i] = temp;
+        puts("create temp");
+    }
+
     while (true) {
-        xzes::job_t *j = xzes::recv_request(master, &readfds);
-		if (j != NULL)
-        {
+    	for (int i = 0; i <=MAXTHREAD ; i++){
+            job[i] = xzes::recv_request(fd, &readfds);
+            puts("read file ");
+			if (job[i]!= NULL)
+        	{
 
-            puts("pre-transform");
-            xzes::transform_documents(j);
-            puts("post-transform");
+            	puts("pre-transform");
+                	job[i]->theList = storeList;
+                	job[i]->lock_var = mutex;
+                	rc = pthread_create(&thread[i], &attr, xzes::transform_documents, (void *)job[i]);
+                    puts("back to damon");
+                    std::cout << "back to home " << std::endl;
+					if (rc){
+						printf("ERROR; return code from pthread_create is %d\n", rc);
+						exit(-1);
+					}
+					//Make j as null, so other thread will not transform
+					//need improve, maybe not work
+					job[i] = NULL;
+            	puts("post-transform");
 
-        } else {
-			puts("don't do the transform");
+        	} else {
+				puts("don't do the transform");
+        	}
+    	}
+        puts("after the thread loop");
+        pthread_attr_destroy(&attr);
+
+        puts("after destory");
+        for (int i = 0; i <= MAXTHREAD; i++ ){
+            pthread_join(callThd[i], &status);
         }
+        puts("after pthread join");
+
+        //pthread_exit(NULL);
+        puts("aftert pthread exit");
+        pthread_mutex_destroy(&mutex);
+        puts("after mutex desotry");
     }
 
     XalanTransformer::ICUCleanUp();
     XMLPlatformUtils::Terminate();
 
-    return 0;
+    return *((int*)(&status));;
 }
 
 // Recieves a request,
 // parses request into job_t
-xzes::job_t* xzes::recv_request(int conn, fd_set* ) {
+xzes::job_t* xzes::recv_request(int conn, fd_set* )
+{
 
 	char buf[BUFFER_SIZE];
 	fd_set readfds;
