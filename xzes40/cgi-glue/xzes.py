@@ -57,7 +57,10 @@ def main(r, e):
         print(r.format(e.format("Error saving POST files.\nPermissions error?")))
         return 1
 
-    job_id   = str(hash(xml+xsl))
+    tmp_job_id = hash(xml+xsl)
+    if tmp_job_id < 0:
+        tmp_job_id *= -1
+    job_id   = str(tmp_job_id)
     out_path = os.path.join(XZES_SAVE_PATH, job_id + '.xml')
     try:
         job = "{},{},{},{},{}".format(job_id  ,
@@ -74,19 +77,30 @@ def main(r, e):
         print(r.format(e.format("Error requesting job")))
         return 1
 
+    # Format: "job_id,Maybe /path/to/output.xml,Maybe error"
     data = s.recv(2048)
 
     try:
         split = data.split(',')
-        if data[2] != "":
-            with open(split[1], 'r') as f:
-               print(r.format(''.join(f.readlines())))
-        else:
-            print(r.format(e.format(data[2])))
     except:
-        print(r.format(e.format("Something went wrong!")))
+        print(r.format(e.format("Response from daemon was malformed")))
+        s.close()
+        return 1
 
-    s.close()
+    try:
+        if split[2] == "":
+            with open(split[1], 'r') as f:
+                print(r.format(''.join(f.readlines())))
+                s.close()
+                return 1
+        else:
+            print(r.format(e.format(split[2])))
+            s.close()
+            return 1
+    except:
+        print(r.format(e.format("Something went wrong!: [{}] [{}] [{}]".format(data, job_id, out_path))))
+        s.close()
+        return 1
 
 
 def save_file(contents, ext=''):

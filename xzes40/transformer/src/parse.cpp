@@ -41,6 +41,11 @@ xzes::job_t* xzes::parse_request( char* input )
     out->xsl.uri = tmpv[2];
     out->out.uri = tmpv[3];
 
+    // Create list for parameters tuple in job_t type
+    // Iterate over the rest of tmpv
+    // tmpv[n] => key_n
+    // tmpv[n+1] => value_n
+
     // printf("(%s,%s,%s)\n",out->jid.c_str(),
     //                      out->xml.uri.c_str(),
     //                      out->xml.uri.c_str());

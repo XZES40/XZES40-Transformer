@@ -62,7 +62,7 @@ namespace xzes
         uri_t xml; // XML file location
         uri_t xsl; // Stylesheet file location
         uri_t out; // Output file location
-        uri_t depend; // any dependency file
+        //uri_t depend; // any dependency file
         std::string jid; // uniqe job id
         std::string error; // any error messages returned from the transform
         int socket_fd; // socket used to communicate with calling script
