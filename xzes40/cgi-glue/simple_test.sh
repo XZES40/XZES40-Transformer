@@ -4,7 +4,6 @@ curl \
   --include \
   --request POST \
   --header "Content-Type: multipart/form-data" \
-  --form "xml=@/home/vagrant/xzes40/xzes40/transformer/examples/simple.xml" \
-  --form "xsl=@/home/vagrant/xzes40/xzes40/transformer/examples/simple.xsl" \
-#  --form "parameters=one,value,two,value,three,value"
-  localhost:8080/cgi-bin/xzes.py
+  --form "xml=@$1" \
+  --form "xsl=@$2" \
+  http://192.168.33.22:8080/cgi-bin/xzes.py
