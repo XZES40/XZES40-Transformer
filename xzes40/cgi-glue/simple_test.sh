@@ -1,9 +1,22 @@
 #!/bin/bash
 
-curl \
-  --include \
-  --request POST \
-  --header "Content-Type: multipart/form-data" \
-  --form "xml=@$1" \
-  --form "xsl=@$2" \
-  http://192.168.33.22:8080/cgi-bin/xzes.py
+XZES_HOST=${XZES_HOST:-192.168.33.22}
+XZES_PORT=${XZES_PORT:-8080}
+XZES_PATH=${XZES_PATH:-cgi-bin/xzes.py}
+
+if [ $# -eq 0 ];
+    then
+        echo "USAGE:"
+        printf "\t./simple_test.sh /path/to/somefile.xml /path/to/somefile.xsl"
+        echo "OPTIONALLY:"
+        printf "\tXZES_HOST=192.168.33.22 XZES_PORT=8080 XZES_PATH=cgi-bin/xzes.py ./simple_test.sh /path/to/somefile.xml /path/to/somefile.xsl"
+else
+    curl \
+      --include \
+      --request POST \
+      --header "Content-Type: multipart/form-data" \
+      --form "xml=@$1" \
+      --form "xsl=@$2" \
+      --form "parameters={\"param2\":\"'sda'\",\"param3\":\"'what'\",\"param4\":\"'shit'\",\"param5\":\"'lla'\"}" \
+      http://$XZES_HOST:$XZES_PORT/$XZES_PATH
+fi

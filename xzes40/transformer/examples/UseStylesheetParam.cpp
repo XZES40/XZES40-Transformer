@@ -93,7 +93,7 @@ main(
 
 				theXalanTransformer.setStylesheetParam(
 					XalanDOMString(argv[3]),
-					XalanDOMString(argv[4]));
+					XalanDOMString(argv[4])) ;
 
 				// Our input files...The assumption is that the executable will be run
 				// from same directory as the input files.

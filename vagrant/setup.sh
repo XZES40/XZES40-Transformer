@@ -15,7 +15,8 @@ apt install -y curl \
                libxerces-c-samples \
                libxerces-c3.1 \
                clang \
-               apache2
+               apache2 \
+			   vim
 
 ln -sf /xzes40 /home/vagrant/xzes40
 

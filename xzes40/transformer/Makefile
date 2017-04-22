@@ -9,7 +9,7 @@
 ###############################################################################
 
 CPP_C       = clang++
-CPP_FLAGS   = -Wall -g -v -std=c++11
+CPP_FLAGS   = -Wall -g -v -std=c++11 
 
 BUILD_DIR   = build
 LIBRARY_DIR = lib

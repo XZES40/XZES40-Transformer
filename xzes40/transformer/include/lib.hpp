@@ -34,6 +34,7 @@
 #include <cstdlib>
 #include <pthread.h>
 #include <fstream>
+//#include <array>
 // Include Xerces and Xalan libraries.
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 #include <xalanc/Include/PlatformDefinitions.hpp>

@@ -37,6 +37,8 @@
 
 //define namespace
 XALAN_USING_XALAN(XalanTransformer);
+XALAN_USING_XALAN(XalanDOMString);
+
 
 void* xzes::transform_documents( void* input )
 {
@@ -53,8 +55,19 @@ void* xzes::transform_documents( void* input )
 
     //catch the cache
     Cache::Cache* cacheList = args->theList;
-    //pass the mutex
+    //pass the mute
     pthread_mutex_t mutex = args->lock_var;
+
+    /*
+    //set the parameter pass
+    //XalanDOMString param[ args->parame.size() ];
+    std::string param[ args->parame.size() ];
+    //copy the data to local
+    for (int i = 0; i < args->parame.size(); i++){
+        param[i] = args->parame[i];
+    }
+    */
+
 
     // Allocate objects on the heap so they can be cached in the non-prototype version.
     // XSLTInputSource  *xml = cache.get(args.xml);
@@ -66,6 +79,17 @@ void* xzes::transform_documents( void* input )
     std::string outName = args->out.uri;
     XSLTResultTarget *out = new XSLTResultTarget( outName.c_str() );
 
+    for (int i = 0 ; i< args->parame.size() - 4; i++){
+        printf("in transform array: %s \n", args->parame[i].c_str());
+    }
+
+    puts("setup the parameter");
+    for (int i = 0 ; i < args->parame.size() - 4; i = i +2 ){
+        theXalanTransformer.setStylesheetParam(
+            XalanDOMString(args->parame[i+1].c_str() ),
+            XalanDOMString(args->parame[i].c_str() ) );
+    }
+
     puts("about to transform");
 
     *status = theXalanTransformer.transform( *xml.get_content()->obj ,
@@ -73,7 +97,7 @@ void* xzes::transform_documents( void* input )
                                              *out );
 
     puts("after transform");
-
+    puts("\n");
     if (&status < 0)
         args->error = "Transformation failed";
 

@@ -65,6 +65,7 @@ namespace xzes
         //uri_t depend; // any dependency file
         std::string jid; // uniqe job id
         std::string error; // any error messages returned from the transform
+        std::vector <std::string> parame; //a array contain the parameter.
         int socket_fd; // socket used to communicate with calling script
         int tid;
         xzes::Cache *theList;

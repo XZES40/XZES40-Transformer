@@ -107,7 +107,6 @@ int xzes::daemon(int fd)
 
     for (int i = 0; i <= MAXTHREAD; i++){
         job[i] = temp;
-        puts("create temp");
     }
 
     while (true) {
@@ -122,7 +121,6 @@ int xzes::daemon(int fd)
                 	job[i]->lock_var = mutex;
                 	rc = pthread_create(&thread[i], &attr, xzes::transform_documents, (void *)job[i]);
                     puts("back to damon");
-                    std::cout << "back to home " << std::endl;
 					if (rc){
 						printf("ERROR; return code from pthread_create is %d\n", rc);
 						exit(-1);
@@ -204,6 +202,7 @@ xzes::job_t* xzes::recv_request(int conn, fd_set* )
 
 		if ( new_socket < 0 )
 		{
+            puts("socket is small than 0");
 			perror("accept");
 			exit(EXIT_FAILURE);
 		} else {
@@ -218,6 +217,8 @@ xzes::job_t* xzes::recv_request(int conn, fd_set* )
 
                 puts("set job");
 			}
+            else
+                puts("failed with setting job");
 		}
 	}
 

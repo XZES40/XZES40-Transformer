@@ -25,6 +25,7 @@ import cgi
 import socket
 import sys
 import os
+import json
 import cgitb; cgitb.enable() # for troubleshooting
 
 XZES_SAVE_PATH = "/tmp/xzes"
@@ -38,6 +39,7 @@ def main(r, e):
         s.connect(("localhost", 40404))
     except:
         print(r.format(e.format("Error connecting to socket.\nPermissions error?")))
+        return 1
 
     try:
         form = cgi.FieldStorage()
@@ -62,14 +64,25 @@ def main(r, e):
         tmp_job_id *= -1
     job_id   = str(tmp_job_id)
     out_path = os.path.join(XZES_SAVE_PATH, job_id + '.xml')
+
     try:
-        job = "{},{},{},{},{}".format(job_id  ,
-                                      xml_path,
-                                      xsl_path,
-                                      out_path, "").encode("utf-8")
+        parameters = json.loads(form['parameters'].value)
+    except ValueError:
+        print(r.format(e.format("There was an error parsing your parameters")))
+        return 1
+
+    try:
+        job = "{},{},{},{}".format(job_id  ,
+                                   xml_path,
+                                   xsl_path,
+                                   out_path).encode("utf-8")
     except:
         print(r.format(e.format("Error generating job request.\n*shrug*")))
         return 1
+
+    if parameters:
+        for k, v in parameters.iteritems():
+            job += ",{},{}".format(k,v)
 
     try:
         s.send(job)

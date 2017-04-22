@@ -40,11 +40,14 @@ xzes::job_t* xzes::parse_request( char* input )
     out->xml.uri = tmpv[1];
     out->xsl.uri = tmpv[2];
     out->out.uri = tmpv[3];
+    std::vector<std::string> rtmpv(tmpv.rbegin(),tmpv.rend());
 
-    // Create list for parameters tuple in job_t type
-    // Iterate over the rest of tmpv
-    // tmpv[n] => key_n
-    // tmpv[n+1] => value_n
+    out->parame = rtmpv ;
+
+
+    for (int i = 0 ; i< out->parame.size() - 4; i++){
+    	printf("tmpv: %s \n", out->parame[i].c_str());
+    }
 
     // printf("(%s,%s,%s)\n",out->jid.c_str(),
     //                      out->xml.uri.c_str(),
