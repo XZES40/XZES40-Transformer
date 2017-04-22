@@ -20,7 +20,7 @@ mkdir --parents $XZES40_BIN
 # Build the daemon and copy it to the bin
 cd $XZES40_SRC/xzes40/transformer/
 make
-ln -sf $XZES40_SRC/xzes40/transformer/build/xzesd $XZES40_BIN/xzesd
+ln -sf $XZES40_SRC/xzes40/transformer/build/xzes40d $XZES40_BIN/xzes40d
 
 # Copy the cgi script to the correct location
 mkdir -p /var/www/cgi-bin/
@@ -41,6 +41,6 @@ sleep 5
 systemctl restart apache2
 
 # Copy the systemd file to the correct location and start the daemon
-systemctl enable --force $XZES40_SRC/xzes40/xzes40.service
+systemctl enable --force $XZES40_SRC/xzes40/xzes40d.service
 systemctl daemon-reload
-systemctl start xzes40.service
+systemctl start xzes40d.service

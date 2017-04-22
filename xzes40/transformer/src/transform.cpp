@@ -37,6 +37,8 @@
 
 //define namespace
 XALAN_USING_XALAN(XalanTransformer);
+XALAN_USING_XALAN(XalanDOMString);
+
 
 void* xzes::transform_documents( void* input )
 {
@@ -53,7 +55,7 @@ void* xzes::transform_documents( void* input )
 
     //catch the cache
     Cache::Cache* cacheList = args->theList;
-    //pass the mutex
+    //pass the mute
     pthread_mutex_t mutex = args->lock_var;
 
     // Allocate objects on the heap so they can be cached in the non-prototype version.
@@ -66,14 +68,25 @@ void* xzes::transform_documents( void* input )
     std::string outName = args->out.uri;
     XSLTResultTarget *out = new XSLTResultTarget( outName.c_str() );
 
+    puts("setup the parameter");
+    for (int i = 0 ; i < args->param.size(); i += 1 ){
+        printf("%s, %s\n", args->param[i].key.c_str(), args->param[i].val.c_str());
+        theXalanTransformer.setStylesheetParam(
+            XalanDOMString(args->param[i].key.c_str() ),
+            XalanDOMString(args->param[i].val.c_str() )
+        );
+    }
+
     puts("about to transform");
 
     *status = theXalanTransformer.transform( *xml.get_content()->obj ,
                                              *xsl.get_content()->obj ,
                                              *out );
 
-    puts("after transform");
+    theXalanTransformer.clearStylesheetParams();
 
+    puts("after transform");
+    puts("\n");
     if (&status < 0)
         args->error = "Transformation failed";
 

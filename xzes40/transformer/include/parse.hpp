@@ -43,6 +43,13 @@
 
 namespace xzes
 {
+    // datatype to express parameters
+    typedef struct
+    {
+        std::string key;
+        std::string val;
+    } param_t;
+
     // ------------------------------------------------------------------------
     // typedef struct job_t
     //
@@ -65,6 +72,7 @@ namespace xzes
         //uri_t depend; // any dependency file
         std::string jid; // uniqe job id
         std::string error; // any error messages returned from the transform
+        std::vector<xzes::param_t> param; //a array contain the parameter.
         int socket_fd; // socket used to communicate with calling script
         int tid;
         xzes::Cache *theList;

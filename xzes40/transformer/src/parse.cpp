@@ -41,10 +41,12 @@ xzes::job_t* xzes::parse_request( char* input )
     out->xsl.uri = tmpv[2];
     out->out.uri = tmpv[3];
 
-    // Create list for parameters tuple in job_t type
-    // Iterate over the rest of tmpv
-    // tmpv[n] => key_n
-    // tmpv[n+1] => value_n
+    // Stream ends in an empty "," for buffer cruft.
+    for (int i = 4 ; i+2 < tmpv.size(); i += 2){
+        param_t x = {tmpv[i], tmpv[i+1]};
+        printf("%s:%s\n", x.key.c_str(), x.val.c_str());
+        out->param.push_back(x);
+    }
 
     // printf("(%s,%s,%s)\n",out->jid.c_str(),
     //                      out->xml.uri.c_str(),

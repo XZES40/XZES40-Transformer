@@ -17,6 +17,6 @@ else
       --header "Content-Type: multipart/form-data" \
       --form "xml=@$1" \
       --form "xsl=@$2" \
-      --form "parameters={}" \
+      --form "parameters={\"param1\":\"val1\",\"param2\":\"sda\",\"param3\":\"what\",\"param4\":\"shit\",\"param5\":\"hah\"}" \
       http://$XZES_HOST:$XZES_PORT/$XZES_PATH
 fi

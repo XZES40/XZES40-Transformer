@@ -23,28 +23,33 @@
 ###############################################################################
 import cgi
 import socket
+import traceback
 import sys
 import os
+import json
 import cgitb; cgitb.enable() # for troubleshooting
 
 XZES_SAVE_PATH = "/tmp/xzes"
 
-response = """Content-Type: text/plain; charset=utf-8\n\n\n{}"""
-error = """<?xml version="1.0" encoding="UTF-8"?><error>{}</error>"""
+error = """Content-Type: text/plain; charsetutf-8\nStatus: 400 Bad Request\n\n{}"""
+success = """Content-Type: application/xml; charset=utf-8\nStatus: 200 OK\n\n{}"""
 
-def main(r, e):
+def main(ok, bad):
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect(("localhost", 40404))
     except:
-        print(r.format(e.format("Error connecting to socket.\nPermissions error?")))
+        print(bad.format("Error connecting to socket.\nPermissions error?"))
+        s.close()
+        return 1
 
     try:
         form = cgi.FieldStorage()
         xml = ''.join(form['xml'].file.readlines())
         xsl = ''.join(form['xsl'].file.readlines())
     except:
-        print(r.format(e.format("Error parsing form.\nDid you send the right form?")))
+        print(bad.format("Error parsing form.\nDid you send the right form?"))
+        s.close()
         return 1
 
     if not os.path.exists(XZES_SAVE_PATH):
@@ -54,27 +59,43 @@ def main(r, e):
         xml_path = save_file(xml, '.xml')
         xsl_path = save_file(xsl, '.xsl')
     except:
-        print(r.format(e.format("Error saving POST files.\nPermissions error?")))
+        print(bad.format("Error saving POST files.\nPermissions error?"))
+        s.close()
         return 1
 
-    tmp_job_id = hash(xml+xsl)
+    try:
+        parameters = json.loads(form['parameters'].value)
+    except:
+        print(bad.format("There was an error parsing your parameters"))
+        return 1
+
+    tmp_job_id = hash(xml+xsl+str(parameters))
     if tmp_job_id < 0:
         tmp_job_id *= -1
     job_id   = str(tmp_job_id)
     out_path = os.path.join(XZES_SAVE_PATH, job_id + '.xml')
+
     try:
-        job = "{},{},{},{},{}".format(job_id  ,
-                                      xml_path,
-                                      xsl_path,
-                                      out_path, "").encode("utf-8")
+        job = "{},{},{},{}".format(job_id  ,
+                                   xml_path,
+                                   xsl_path,
+                                   out_path).encode("utf-8")
     except:
-        print(r.format(e.format("Error generating job request.\n*shrug*")))
+        print(bad.format("Error generating job request.\n*shrug*"))
+        s.close()
         return 1
+
+    for k, v in parameters.iteritems():
+        job += ",{},\'{}\'".format(k,v)
+
+    # prevents weird parsing errors when tokenizing the stream.
+    job += ","
 
     try:
         s.send(job)
     except:
-        print(r.format(e.format("Error requesting job")))
+        print(bad.format("Error requesting job"))
+        s.close()
         return 1
 
     # Format: "job_id,Maybe /path/to/output.xml,Maybe error"
@@ -83,22 +104,22 @@ def main(r, e):
     try:
         split = data.split(',')
     except:
-        print(r.format(e.format("Response from daemon was malformed")))
+        print(bad.format("Response from daemon was malformed"))
         s.close()
         return 1
 
     try:
         if split[2] == "":
             with open(split[1], 'r') as f:
-                print(r.format(''.join(f.readlines())))
+                print(ok.format(''.join(f.readlines())))
                 s.close()
                 return 1
         else:
-            print(r.format(e.format(split[2])))
+            print(bad.format(split[2]))
             s.close()
             return 1
     except:
-        print(r.format(e.format("Something went wrong!: [{}] [{}] [{}]".format(data, job_id, out_path))))
+        print(bad.format("Something went wrong!"))
         s.close()
         return 1
 
@@ -116,5 +137,10 @@ def save_file(contents, ext=''):
     return fpath
 
 if __name__ == '__main__':
-    main(response, error)
+    sys.stderr = sys.stdout
+    try:
+        main(success, error)
+    except:
+        print "\n\n<PRE>"
+        traceback.print_exc()
 

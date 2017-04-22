@@ -15,9 +15,15 @@ apt install -y curl \
                libxerces-c-samples \
                libxerces-c3.1 \
                clang \
-               apache2
+               apache2 \
+			   vim
 
 ln -sf /xzes40 /home/vagrant/xzes40
 
 # Configure the webserver
 /xzes40/scripts/setup.sh
+
+# Display useful message to user
+echo "==========================================================="
+echo "Visit http://192.168.33.22:8080/xzes40/ to use the website!"
+echo "==========================================================="
