@@ -1,8 +1,8 @@
 # Document
 
-Document is a class with three main components and methods that operate on those components.
+Document is a C++ class with three main components, as well as methods which operate on those components.
 
-Documents are stored and retrieved from the Cache and operated on by the Transformer.
+Documents are stored and retrieved from the Cache and are operated on by the Transformer.
 While we could use the Xerces and Xalan object natively, this wrapper allows for a seperation of concerns.
 The Cache can worry about storing an arbitrary `class`, the Transformer worries about transforming the `Document.contents`, and the each component can be developed (mostly) seperate.
 
@@ -28,9 +28,9 @@ The Document class has a few methods:
 - `to_str()` processes the `contents` member and outputs and XML/XSLT document (useful for `output` documents).
 - `to_file()` processes the `contents` member and outputs the XML/XSLT document to a file (useful for `output` documents).
 
-## Workflow
+## Dataflow
 
-The Document class is actually the part of the project that interfaces with the Cache the most.
+The Document class is the component of the project which interfaces with the Cache the most.
 Here is why:
 
 1. For a Document to be created, it must be passed a URI (file path or HTTP address).

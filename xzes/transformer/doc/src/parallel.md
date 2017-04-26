@@ -1,8 +1,8 @@
 # Parallel Computation
 
-Parallel computation is how XZES40-transformer hold the faster transformer performance.
+Parallel computation is how XZES40-Transformer hold the faster transformer performance.
 
-Parallel computation will hold multiply threats for XZES40-transformer application.
+Parallel computation will hold multiply threats for XZES40-Transformer application.
 We will using Unix-socket lock function to handle the time conflict when we have mutiply file at the same time.
 
 Here is how Parallel computation run.
