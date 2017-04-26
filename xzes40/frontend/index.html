@@ -1,13 +1,63 @@
-<form enctype="multipart/form-data" action="/cgi-bin/xzes.py" method="post">
-    <div>
-    <label for="xml">Upload your XML file:</label>
-        <input type="file" accept=".xml" name="xml" size="40">
+<!DOCTYPE=html>
+<!--
+Copyright 2017, the Oregon State University Capstone Project 'XZES40'
+with the Apache Software Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="FileSaver.js"></script>
+    <script src="Blob.js"></script>
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="main">
+        <h1>XZES40 Transformer</h1>
+        <div id="usage">
+            <p>Choose an XML file, XML stylesheet, and [optional] custom parameters.</p>
+            <p>Click "Transform Files" to download your transformed documents.</p>
+        </div>
+        <form enctype="multipart/form-data" action="/cgi-bin/xzes.py" method="post" id="transform">
+            <div>
+            <label for="xml">Upload your XML file:</label>
+                <input type="file" accept=".xml" name="xml" size="40">
+            </div>
+            <div>
+            <label for="xsl">Upload your XSLT file:</label>
+                <input type="file" accept=".xslt , .xsl" name="xsl" size="40">
+            </div>
+            <div id="parameterValues">
+            </div>
+            <div>
+                <input type="button" value="Add XML Parameter" id ="addParameters" />
+                <input type="submit" value="Transform Files" />
+            </div>
+        </form>
+        <br>
+        <div id="result">
+        </div>
+        <br>
+        <div id="viewDoc">
+        </div>
+        <hr>
+        <div id="about">
+            <p>Made in association with the Oregon State University Capstone program and the Apache Software Foundation.</p>
+            <img src="osu.png"><img src="apache.png">
+            <p>For more information please visit <a href="https://github.com/xzes40/xzes40-transformer">github.com/xzes40/xzes40-transformer</a></p>
+        </div>
     </div>
-    <div>
-    <label for="xsl">Upload your XSLT file:</label>
-        <input type="file" accept=".xslt" name="xsl" size="40">
-    </div>
-    <div>
-        <input type="submit" value="Transform Files" />
-    </div>
-</form>
+</body>
+</html>

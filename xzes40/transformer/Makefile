@@ -9,7 +9,7 @@
 ###############################################################################
 
 CPP_C       = clang++
-CPP_FLAGS   = -Wall -g -v -std=c++11
+CPP_FLAGS   = -Wall -g -v -std=c++11 
 
 BUILD_DIR   = build
 LIBRARY_DIR = lib
@@ -36,7 +36,7 @@ main: $(OBJS)
 	$(CPP_C) -o $(BUILD_DIR)/main   $(SRC_DIR)/main.cpp   $(OBJS) $(CPP_FLAGS) $(LIBRARIES)
 
 daemon: $(OBJS)
-	$(CPP_C) -o $(BUILD_DIR)/xzesd $(SRC_DIR)/daemon.cpp $(OBJS) $(CPP_FLAGS) $(LIBRARIES)
+	$(CPP_C) -o $(BUILD_DIR)/xzes40d $(SRC_DIR)/daemon.cpp $(OBJS) $(CPP_FLAGS) $(LIBRARIES)
 
 test: $(OBJS)
 	$(CPP_C) -o $(BUILD_DIR)/cache  $(TEST_DIR)/cache.cpp $(OBJS) $(CPP_FLAGS) $(LIBRARIES)

@@ -87,17 +87,18 @@ main(
 
 				// Set the stylesheet parameter name and
 				// expression (a string expression).
-				theXalanTransformer.setStylesheetParam(
-						XalanDOMString(argv[1]),
-						XalanDOMString(argv[2]));
+				//theXalanTransformer.setStylesheetParam(
+				//		XalanDOMString(argv[1]),
+			//			XalanDOMString(argv[2]));
 
-				theXalanTransformer.setStylesheetParam(
-					XalanDOMString(argv[3]),
-					XalanDOMString(argv[4]));
+				//theXalanTransformer.setStylesheetParam(
+			//		XalanDOMString(argv[3]),
+			//		XalanDOMString(argv[4])) ;
 
 				// Our input files...The assumption is that the executable will be run
 				// from same directory as the input files.
-				theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
+				theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", std::cout);
+				//theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
 
 				if(theResult != 0)
 				{
