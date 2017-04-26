@@ -83,8 +83,8 @@ void* xzes::transform_documents( void* input )
     puts("\n");
 
     //feedback if we have error here
-    if (&status < 0)
-        args->error = "Transformation failed";
+    if (&status != 0)
+        args->error = "Transformation failed, please make sure you upload correct format document";
 
     //send error back to CGI script
     char ret[2048];

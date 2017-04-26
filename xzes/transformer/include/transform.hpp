@@ -31,7 +31,7 @@
 #include <cache.hpp>
 #include <parse.hpp>
 #include <arpa/inet.h>
-#include <string.>
+#include <string.h>
 
 #include <xalanc/Include/PlatformDefinitions.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
