@@ -34,24 +34,26 @@ xzes::Cache::Cache()
 	theList = NewKeyListEntry();
 	theList->next = NULL;
 }
+
 // --------------------------------------------------------------------
 // xzes::Cache::search(uid)
 //
 // search node in the keyList
 // return 0 means found, 1 means NOT found.
 // --------------------------------------------------------------------
-
-
 bool xzes::Cache::search( xzes::id_t uid ){
 	int objid = uid.id;
 	KeyListEntry *head = theList;
+	//Start search the link-list data
 	while (head != NULL){
 		int keyid = GetKeyEntryIdValue(head);
+		// if we found one we say yes
 		if (keyid == objid){
 			return SUCCESS;
 		}
 		head = head->next;
 	}
+	//else this is new item. it is not in the cache space.
 	return FAILURE;
 }
 
@@ -77,6 +79,7 @@ doc_t* xzes::Cache::get( xzes::id_t uid)
 	printf("Get FAILURE!!");
     return NULL;
 }
+
 
 // --------------------------------------------------------------------
 // Document* Cache::set( Document* )

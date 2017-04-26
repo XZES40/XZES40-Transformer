@@ -15,6 +15,7 @@
 // limitations under the License.
 ///////////////////////////////////////////////////////////////////////////////
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // Filename: transform.cpp
 // Description: Definition and documentation for custom structs, functions,
@@ -23,33 +24,13 @@
 
 #include <document.hpp>
 
-XALAN_USING_XALAN(XSLTInputSource);
-
 // ----------------------------------------------------------------------------
-// class Document
-// 
-// Stores all data about documents and functions to act on that data.
-// Data includes:
-// - Document contents (Parsed XML/XSL document, not raw)
-// - Document ID  (Unique identifier for document)
-// - Document URI (Path to find file)
-// Functions include:
-// - set_id( )
-// - set_uri( )
-// - set_content( )
-//
-// **NOTE** The majority of the Caching happens in this Document class.
-// The set_content( ) method uses the Cache to store and reference the Xerces
-// object.
-// ----------------------------------------------------------------------------
-// int Document( std::string file_path);
+// Document Document( std::string file_path);
 //
 // Intializes a document by setting the uri, path, and contents.
 // ----------------------------------------------------------------------------
 xzes::Document::Document( xzes::uri_t file_path, Cache *storeList, pthread_mutex_t mutex)
 {
-    //Cache::Cache storeList;
-
     // Set the file path to uri
     set_uri( file_path );
 
@@ -63,6 +44,7 @@ xzes::Document::Document( xzes::uri_t file_path, Cache *storeList, pthread_mutex
     } else {
         // lock the thread
         pthread_mutex_lock(&mutex);
+        // set the item into our cache;
         set_content( storeList->get( uid ));
         // unlock the thread
         pthread_mutex_unlock(&mutex);
@@ -70,26 +52,32 @@ xzes::Document::Document( xzes::uri_t file_path, Cache *storeList, pthread_mutex
 }
 
 // ----------------------------------------------------------------------------
+// Document Document( )
+// 
 // Empty Document constructor
 // ----------------------------------------------------------------------------
 xzes::Document::Document( )
 {
     xzes::uri_t blank_uri;
     blank_uri.uri = "";
-
     set_uri( blank_uri );
     set_id( );
 }
 
 // ----------------------------------------------------------------------------
-// int set_uri( );
+// Document set_uri( uri_t file_path )
+//
+// set the uri for the document object 
 // ----------------------------------------------------------------------------
 int xzes::Document::set_uri( xzes::uri_t file_path )
 {
-    uri = file_path ;
-
     //return status for debug
     int status = SUCCESS;
+
+    //set the file path to the object 
+    uri = file_path ;
+
+    //return status 
     return status;
 }
 
@@ -106,7 +94,7 @@ xzes::uri_t xzes::Document::get_uri( )
 }
 
 // ----------------------------------------------------------------------------
-// int set_id( );
+// Document set_id( );
 //
 // Set the Unique ID of a Document.
 // ----------------------------------------------------------------------------
@@ -141,13 +129,14 @@ int xzes::Document::set_content( xzes::doc_t* content )
     //return status for debug
     int status = SUCCESS;
 
+    //set the document to the object
     doc = content;
 
     return status;
 }
 
 // ----------------------------------------------------------------------------
-// doc_t get_content( );
+// doc_t* get_content( );
 //
 // Get the DOM contents of a Document.
 // ----------------------------------------------------------------------------
@@ -166,6 +155,7 @@ int xzes::Document::compile( )
     // return status for error handling
     int status = SUCCESS;
     
+    // create a pointer to point the parsed files
     doc_t* output_document = new xzes::doc_t;
     output_document->obj   = new XSLTInputSource( uri.uri.c_str() );
 
@@ -188,5 +178,3 @@ xzes::id_t xzes::Document::_hash_uri( )
 
     return output_id;
 }
-
-

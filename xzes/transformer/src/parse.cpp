@@ -48,9 +48,6 @@ xzes::job_t* xzes::parse_request( char* input )
         out->param.push_back(x);
     }
 
-    // printf("(%s,%s,%s)\n",out->jid.c_str(),
-    //                      out->xml.uri.c_str(),
-    //                      out->xml.uri.c_str());
 
     return out;
 }
@@ -59,8 +56,9 @@ xzes::job_t* xzes::parse_request( char* input )
 // ----------------------------------------------------------------------------
 // job_t * parse_args( int argc, char* argv[] )
 //
-// Parses argv into a job_t struct
+// Parses argv into a job_t structure
 // Assigns an argument to "NUL" ("\0") if the file does not exist.
+// This is old way to parse the argument for the simple transformation.
 // ----------------------------------------------------------------------------
 xzes::job_t* xzes::parse_args( int *argc , char* *argv[ ] )
 {
@@ -120,11 +118,3 @@ xzes::job_t* xzes::parse_args( int *argc , char* *argv[ ] )
     return args;
 }
 
-// copy in binary mode
-bool copyFile(const char *SRC, const char* DEST)
-{
-    std::ifstream src(SRC, std::ios::binary);
-    std::ofstream dest(DEST, std::ios::binary);
-    dest << src.rdbuf();
-    return src && dest;
-}

@@ -30,6 +30,8 @@
 #include <string>
 #include <cache.hpp>
 #include <parse.hpp>
+#include <arpa/inet.h>
+#include <string.>
 
 #include <xalanc/Include/PlatformDefinitions.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -42,6 +44,7 @@ XALAN_USING_XALAN(XSLTInputSource);
 XALAN_USING_XALAN(XSLTResultTarget);
 XALAN_USING_XALAN(XalanParsedSource);
 XALAN_USING_XALAN(XalanCompiledStylesheet);
+XALAN_USING_XALAN(XalanDOMString);
 
 namespace xzes {
 	// Accepts void* which gets cast to a job_t*;

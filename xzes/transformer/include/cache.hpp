@@ -25,7 +25,6 @@
 
 #include <lib.hpp>
 #include <keylist.hpp>
-//#include <cstdlib>
 
 #if !defined cache
 #define cache
@@ -37,11 +36,10 @@ namespace xzes
         	KeyListEntry *theList;
 
         public:
-        	Cache();
+        	Cache();         
             bool search(id_t);
             doc_t* get( id_t );
             int set( id_t,doc_t*,uri_t );
-            //int del( id_t );
             int print_name();
             int	print_id();
 

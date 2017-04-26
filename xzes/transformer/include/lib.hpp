@@ -34,7 +34,7 @@
 #include <cstdlib>
 #include <pthread.h>
 #include <fstream>
-//#include <array>
+
 // Include Xerces and Xalan libraries.
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 #include <xalanc/Include/PlatformDefinitions.hpp>
@@ -75,7 +75,7 @@ namespace xzes
     } id_t;
 
     // ------------------------------------------------------------------------
-    // typedef dom_t 
+    // typedef doc_t 
     //
     // A simple abstraction over the Xerces DOM object.
     // ------------------------------------------------------------------------
