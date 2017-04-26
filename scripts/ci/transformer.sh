@@ -7,10 +7,10 @@
 # - Runs tests (ish)
 #
 
-${TRAVIS_BUILD_DIR:=/xzes40}
+${TRAVIS_BUILD_DIR:=/xzes}
 
 # Navigate to the transformer software directory
-cd $TRAVIS_BUILD_DIR/xzes40/transformer
+cd $TRAVIS_BUILD_DIR/xzes/transformer
 
 # Run the make instructions
 make
@@ -19,7 +19,7 @@ make
 # $TRAVIS_BUILD_DIR/scripts/ci/cgi.sh
 
 # Start the daemon
-# $TRAVIS_BUILD_DIR/xzes40/transformer/build/daemon &
+# $TRAVIS_BUILD_DIR/xzes/transformer/build/daemon &
 
 # Run the cgi test script
-# $TRAVIS_BUILD_DIR/xzes40/cgi-glue/simple_test.sh
+# $TRAVIS_BUILD_DIR/xzes/cgi-glue/simple_test.sh
