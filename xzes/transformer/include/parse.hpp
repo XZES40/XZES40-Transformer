@@ -23,31 +23,21 @@
 #include <lib.hpp>
 #include <cache.hpp>
 
-// ------------------------------------------------------------------------
-// typedef struct job_t
-//
-// Parses input of the following format:
-//   `<binary> <input xml> <input xsl> <out xml>`
-// into a struct of the following format:
-//   string job.xml.uri -> <input xml>
-//   string job.xsl.uri -> <input xsl>
-//   string job.out.uri -> <output file destination>
-// As well as stores metadata about the job being processed (where the job
-// is the transformation of the above files.
-//   thread_t tid -> id of processing thread
-//   string jid -> unique ID of the request (like a service ticket ID)
-// -----------------------------------------------------------------------
 #if !defined parse
 #define parse
 
-
 namespace xzes
 {
-    // datatype to express parameters
+    // -----------------------------------------------------------------------
+    // typedef strcut param_t
+    // This datatype to express parameters
+    // 
+    // -----------------------------------------------------------------------
+
     typedef struct
     {
         std::string key;
-        std::string val;
+        std::string val;   
     } param_t;
 
     // ------------------------------------------------------------------------
@@ -59,29 +49,26 @@ namespace xzes
     //   string job.xml.uri -> <input xml>
     //   string job.xsl.uri -> <input xsl>
     //   string job.out.uri -> <output file destination>
-    // As well as stores metadata about the job being processed (where the job
-    // is the transformation of the above files.
-    //   thread_t tid -> id of processing thread
-    //   string jid -> unique ID of the request (like a service ticket ID)
     // ------------------------------------------------------------------------
+
     typedef struct
     {
         uri_t xml; // XML file location
         uri_t xsl; // Stylesheet file location
         uri_t out; // Output file location
-        //uri_t depend; // any dependency file
         std::string jid; // uniqe job id
         std::string error; // any error messages returned from the transform
         std::vector<xzes::param_t> param; //a array contain the parameter.
         int socket_fd; // socket used to communicate with calling script
-        int tid;
-        xzes::Cache *theList;
-        pthread_mutex_t lock_var;
+        int tid; // The thread id.
+        xzes::Cache *theList; // the Cache object.
+        pthread_mutex_t lock_var; // the thread mutex locker varb
     } job_t ;
 
+    // Parses argv into a job_t struct 
     job_t* parse_request( char* );
+    // Simple way to parses argv into a job_t struct
     job_t* parse_args( int*, char*** );
-    bool copyFile(const char *SRC, const char* DEST);
 }
 
 #endif

@@ -22,20 +22,38 @@
 // All function definitions are documented in src/daemon.cpp
 ///////////////////////////////////////////////////////////////////////////////
 
-//#include <vector>
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <sys/un.h>
 #include <stdlib.h>
 #include <csignal>
+#include <pthread.h>
+#include <vector>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <errno.h>
+#include <unistd.h>
 
-//#include <xalanc/Include/PlatformDefinitions.hpp>
-//#include <xercesc/util/PlatformUtils.hpp>
+
 #include <parse.hpp>
 #include <cache.hpp>
 #include <lib.hpp>
 #include <transform.hpp>
+
+
+// Xalan part
+#include <xalanc/Include/PlatformDefinitions.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+
+XALAN_USING_XERCES(XMLPlatformUtils);
+XALAN_USING_XALAN(XSLTInputSource);
+XALAN_USING_XALAN(XSLTResultTarget);
+XALAN_USING_XALAN(XalanParsedSource);
+XALAN_USING_XALAN(XalanCompiledStylesheet);
+XALAN_USING_XALAN(XalanTransformer);
+
 
 namespace xzes {
     int daemon( int );

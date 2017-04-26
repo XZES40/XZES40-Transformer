@@ -25,32 +25,7 @@
 // - http://www.binarytides.com/multiple-socket-connections-fdset-select-linux/
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <sys/un.h>
-#include <unistd.h>
-#include <vector>
-
-#include <pthread.h>
-
-#include <xalanc/Include/PlatformDefinitions.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-
-#include <lib.hpp>
-#include <transform.hpp>
 #include <daemon.hpp>
-
-XALAN_USING_XERCES(XMLPlatformUtils);
-XALAN_USING_XALAN(XSLTInputSource);
-XALAN_USING_XALAN(XSLTResultTarget);
-XALAN_USING_XALAN(XalanParsedSource);
-XALAN_USING_XALAN(XalanCompiledStylesheet);
-XALAN_USING_XALAN(XalanTransformer);
 
 #define TRUE 1
 #define BUFFER_SIZE 1024
@@ -60,6 +35,11 @@ XALAN_USING_XALAN(XalanTransformer);
 pthread_mutex_t mutex;
 pthread_t callThd[MAXTHREAD];
 
+// ------------------------------------------------------------------------
+// Eventloop for receiving requests and dispatching jobs
+// Keep running as daemon.
+// As the infinite loop.
+// ------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
     int conn, ret;
 
@@ -75,10 +55,13 @@ int main(int argc, char* argv[]) {
 }
 
 // ------------------------------------------------------------------------
-// Eventloop for receiving requests and dispatching jobs
-// Keep running as daemon.
-// As the infinite loop.
+// daemon ( int fd )
+//
+// The major function for the daemon/
+// This function contain the infinite loop and
+// create the multiply threads for the parallel computation.
 // ------------------------------------------------------------------------
+
 int xzes::daemon(int fd)
 {
 
@@ -86,10 +69,11 @@ int xzes::daemon(int fd)
 
     printf("Starting daemon on localhost:%d\n", PORT);
 
+    //declare varb for the function using.
     int rc;
+    void * status;
 	pthread_attr_t attr;
     pthread_t thread[MAXTHREAD];
-	void * status;
     xzes::job_t *job[MAXTHREAD], *temp = NULL;
 
 	//Create cache for file
@@ -98,13 +82,15 @@ int xzes::daemon(int fd)
 	//Initialize pthread mutex
 	pthread_mutex_init(&mutex, NULL);
 
+    //Initialize xalan transformer
     XMLPlatformUtils::Initialize();
     XalanTransformer::initialize();
 
-    /* Create threads to be joinable*/
+    /* Create threads to be Joinable*/
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
+    //Create array to handle the job data for each thread.
     for (int i = 0; i <= MAXTHREAD; i++){
         job[i] = temp;
     }
@@ -115,18 +101,19 @@ int xzes::daemon(int fd)
             puts("read file ");
 			if (job[i]!= NULL)
         	{
-
             	puts("pre-transform");
+                    //add the cache to job object
                 	job[i]->theList = storeList;
+                    //pass the mutex locker to job object
                 	job[i]->lock_var = mutex;
+                    //create connection
                 	rc = pthread_create(&thread[i], &attr, xzes::transform_documents, (void *)job[i]);
                     puts("back to damon");
+                    //give the feedback for thread 
 					if (rc){
 						printf("ERROR; return code from pthread_create is %d\n", rc);
 						exit(-1);
 					}
-					//Make j as null, so other thread will not transform
-					//need improve, maybe not work
 					job[i] = NULL;
             	puts("post-transform");
 
@@ -135,28 +122,33 @@ int xzes::daemon(int fd)
         	}
     	}
         puts("after the thread loop");
-        pthread_attr_destroy(&attr);
 
-        puts("after destory");
+        pthread_attr_destroy(&attr);
+        puts("after destroy");
+
+        //wait for other thread join
         for (int i = 0; i <= MAXTHREAD; i++ ){
             pthread_join(callThd[i], &status);
         }
         puts("after pthread join");
 
-        //pthread_exit(NULL);
-        puts("aftert pthread exit");
         pthread_mutex_destroy(&mutex);
         puts("after mutex desotry");
     }
 
+    //Terminate the xalan transformer
     XalanTransformer::ICUCleanUp();
     XMLPlatformUtils::Terminate();
 
     return *((int*)(&status));;
 }
 
+// ------------------------------------------------------------------------
+// job_t* recv_request(int conn, fd_set*)
+//
 // Recieves a request,
 // parses request into job_t
+// ------------------------------------------------------------------------
 xzes::job_t* xzes::recv_request(int conn, fd_set* )
 {
 
@@ -185,7 +177,6 @@ xzes::job_t* xzes::recv_request(int conn, fd_set* )
     {
     	puts("select error");
     }
-
 
     //type of socket created
     address.sin_family = AF_INET;
@@ -226,8 +217,13 @@ xzes::job_t* xzes::recv_request(int conn, fd_set* )
     return tmp;
 }
 
+
+// ------------------------------------------------------------------------
+// int master_connection(int port)
+// 
 // Sets up a connection,
 // Waits for input
+// ------------------------------------------------------------------------
 int xzes::master_connection(int port) {
     int opt = TRUE;
     int master_socket;

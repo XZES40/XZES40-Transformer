@@ -21,18 +21,36 @@
 // XZES40-Transformer document handling pipeline.
 ///////////////////////////////////////////////////////////////////////////////
 
+// ----------------------------------------------------------------------------
+// class Document
+// 
+// Stores all data about documents and functions to act on that data.
+// Data includes:
+// - Document contents (Parsed XML/XSL document, not raw)
+// - Document ID  (Unique identifier for document)
+// - Document URI (Path to find file)
+// Functions include:
+// - set_id( )
+// - set_uri( )
+// - set_content( )
+// - _hash_uri_( )
+// - get_id( )
+// - get_uri( )
+// - get_content( )
+// - complie( )
+//
+// **NOTE** The majority of the Caching happens in this Document class.
+// The set_content( ) method uses the Cache to store and reference the Xerces
+// object.
+// ----------------------------------------------------------------------------
+
 #include <lib.hpp>
-//#include <cstdlib>
-//#include <functional>
 #include <cache.hpp>
 
-// Xerces and Xalan
-//#include <xalanc/Include/PlatformDefinitions.hpp>
-//#include <xercesc/util/PlatformUtils.hpp>
-//#include <xalanc/XalanTransformer/XalanTransformer.hpp>
-
+// The xalan namespace using
 XALAN_USING_XALAN(  XalanTransformer  );
 XALAN_USING_XERCES( XMLPlatformUtils  );
+XALAN_USING_XALAN(  XSLTInputSource   );
 
 #if !defined document
 #define document
@@ -52,9 +70,7 @@ namespace xzes
         protected:
             int set_uri( uri_t );
             int set_id( );
-
             int set_content( doc_t* );
-
             id_t _hash_uri( );
 
         public:
@@ -63,10 +79,8 @@ namespace xzes
 
             uri_t   get_uri( );
             id_t    get_id( );
-
-            doc_t*   get_content( );
-        
-            int compile( );
+            doc_t*  get_content( );
+            int     compile( );
     };
 }
 

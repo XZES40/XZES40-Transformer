@@ -29,28 +29,6 @@
 //
 // This is help function for the parse_request.
 // ----------------------------------------------------------------------------
-/*
-xzes::job_t* xzes::parse_request( char* input )
-{
-    xzes::job_t *out = new xzes::job_t;
-
-    std::string tmp (input);
-
-    std::vector<std::string> tmpv = xzes::split(input,',');
-
-    out->jid     = tmpv[0];
-    out->xml.uri = tmpv[1];
-    out->xsl.uri = tmpv[2];
-    out->out.uri = tmpv[3];
-
-    // printf("(%s,%s,%s)\n",out->jid.c_str(),
-    //                      out->xml.uri.c_str(),
-    //                      out->xml.uri.c_str());
-
-    return out;
-}
-*/
-
 std::vector<std::string> xzes::split( std::string s, char c)
 {
     std::vector<std::string> v;
@@ -69,6 +47,7 @@ std::vector<std::string> xzes::split( std::string s, char c)
 
     return v;
 }
+
 // ----------------------------------------------------------------------------
 // bool xzes::_file_exists( string file_path )
 //
@@ -88,7 +67,6 @@ bool xzes::_file_exists( std::string file_path )
         return true;
     }
 }
-
 
 // ----------------------------------------------------------------------------
 // string _hash( string )
