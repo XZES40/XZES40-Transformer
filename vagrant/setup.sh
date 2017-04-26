@@ -34,7 +34,7 @@ mkdir --parents $XZES_WWW_BIN
 mkdir --parents $XZES_BIN
 
 if [ $XZES_INSTALL ]; then
-    ln -sf $XZES_ROOT_DIR $HOME/
+    ln -sf $XZES_ROOT_DIR /vagrant/xzes
 fi
 
 if ! which apache2ctl > /dev/null || ! [ -d $XZES_SRC_DIR ] ; then
@@ -47,7 +47,7 @@ fi
 cd $XZES_SRC_DIR/xzes/transformer/
 make
 if [ $XZES_INSTALL ]; then
-    cp -r $XZES_SRC_DIR/xzes/transformer/build/xzesd $XZES_BIN/xzesd
+    cp -rf $XZES_SRC_DIR/xzes/transformer/build/xzesd $XZES_BIN/xzesd
 else
     ln -sf $XZES_SRC_DIR/xzes/transformer/build/xzesd $XZES_BIN/xzesd
 fi
@@ -55,7 +55,7 @@ fi
 # Copy the cgi script to the correct location
 mkdir -p /var/www/cgi-bin/
 if [ $XZES_INSTALL ]; then
-    cp -r $XZES_SRC_DIR/xzes/cgi-glue/xzes.py $XZES_WWW_BIN/xzes.py
+    cp -rf $XZES_SRC_DIR/xzes/cgi-glue/xzes.py $XZES_WWW_BIN/xzes.py
 else
     ln -sf $XZES_SRC_DIR/xzes/cgi-glue/xzes.py /var/www/cgi-bin/xzes.py
 fi
@@ -63,7 +63,7 @@ chown -R www-data:www-data $XZES_WWW_BIN
 
 # Copy the apache config file to the correct location
 if [ $XZES_INSTALL ]; then
-    cp -r $XZES_SRC_DIR/xzes/xzes.conf /etc/apache2/sites-available/
+    cp -rf $XZES_SRC_DIR/xzes/xzes.conf /etc/apache2/sites-available/
 else
     ln -sf $XZES_SRC_DIR/xzes/xzes.conf /etc/apache2/sites-available/
 fi
@@ -72,10 +72,11 @@ chown -R www-data:www-data /etc/apache2/sites-{enabled,available}
 
 # Copy the frontend interface
 if [ $XZES_INSTALL ]; then
-    cp -r $XZES_SRC_DIR/xzes/frontend $XZES_WWW
+    cp -rf $XZES_SRC_DIR/xzes/frontend/* $XZES_WWW
 else
-    ln -sf $XZES_SRC_DIR/xzes/frontend $XZES_WWW
+    ln -sf $XZES_SRC_DIR/xzes/frontend/* $XZES_WWW
 fi
+chown www-data:www-data $XZES_WWW
 
 # Restart Apache
 a2enmod cgi
@@ -83,7 +84,12 @@ sleep 5
 systemctl restart apache2
 
 # Copy the systemd file to the correct location and start the daemon
-systemctl enable --force $XZES_SRC_DIR/xzes/xzesd.service
+if [ $XZES_INSTALL ]; then
+    cp -rf $XZES_SRC_DIR/xzes/xzesd.service /etc/systemd/user/xzesd.service
+    systemctl enable --force /etc/systemd/user/xzesd.service
+else
+    systemctl enable --force $XZES_SRC_DIR/xzes/xzesd.service
+fi
 systemctl daemon-reload
 systemctl start xzesd.service
 

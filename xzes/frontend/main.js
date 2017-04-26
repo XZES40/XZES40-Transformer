@@ -16,26 +16,26 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 $(function(){
-    var faces = {};
-    faces.good = ["&#x1F60E;", "&#x1F60A;", "&#x1F604;", "&#x1F601;"];
-    faces.bad  = ["&#x1F625;", "&#x1F622;", "&#x1F61E;", "&#x1F61F;",
-                  "&#x1F623;", "&#x1F628;", "&#x1F629;", "&#x1F62B;",
-                  "&#x1F62D;", "&#x1F630;", "&#x1F633;", "&#x1F635;",
-                  "&#x1F616;", "&#x1F613;", "&#x1F615;"];
+    // A cute little easter egg.
+    var faces = {good: ["&#x1F60E;", "&#x1F60A;", "&#x1F604;", "&#x1F601;"],
+                 bad:  ["&#x1F625;", "&#x1F622;", "&#x1F61E;", "&#x1F61F;", "&#x1F623;", "&#x1F628;", "&#x1F629;", "&#x1F62B;", "&#x1F62D;", "&#x1F630;", "&#x1F633;", "&#x1F635;", "&#x1F616;", "&#x1F613;", "&#x1F615;"]};
+    // Gets a random face from the above json object.
     var getFace = function(emotion) {
         n = Math.floor(Math.random() * 100) % faces[emotion].length;
         return faces[emotion][n];
     }
+    // Updates the text in the status div.
     var updateStatus = function(msg) {
         $("div#result").html(msg);
     }
+    // Displays an uncuccessful status.
+    // Clears any previous successful status text.
     var notSuccessful = function(content) {
         updateStatus(content + " " + getFace("bad"));
         $("div#viewDoc").html("");
     }
-    var successful = function(content) {
-        /* Output Message */
-        var m = "";
+    // Generates a filename based on the current date
+    var generateFilename = function() {
         var date = new Date();
         var filename = date.getFullYear() + '-'
                      + date.getMonth()    + '-' 
@@ -43,20 +43,32 @@ $(function(){
                      + date.getHours()    + ':'
                      + date.getMinutes()  + ':'
                      + date.getSeconds()  + '.xml';
+    }
 
-        m += "<p>Transformation Successful! " + getFace("good") + "</p>";
-        m += "<p>" + filename + "</p>";
+    // returns a string about the status of the browser.
+    // This is appended to a success status.
+    var isDownloadSupported = function() {
         /* Test if FileSaver works on this browser */
         try {
             /* If it is supported, add the download button */
             var isFileSaverSupported = !!new Blob;
-            m += "<button type=\"button\" id=\"downloadXML\">Download Output</button>";
+            return "<button type=\"button\" id=\"downloadXML\">Download Output</button>";
         } catch (e) {
             /* If it is not there, tell the user why they can't download the file */
-            m += "Your browser does not support downloading transformed XML files.";
-            m += "Consider upgrading your browser.";
+            m = "<p>Your browser does not support downloading transformed XML files.</p>";
+            m += "<p>Consider upgrading your browser.</p>";
             m += "<br>";
+            return m
         }
+    }
+    // Populates the status section with appropriate status text
+    var successful = function(content) {
+        /* Output Message */
+        var m = "";
+        m += "<p>Transformation Successful! " + getFace("good") + "</p>";
+        filename = generateFilename();
+        m += "<p>" + filename + "</p>";
+        m += isDownloadSupported();
         /* Always allow the user to just view the file */
         m += "<button type=\"button\" id=\"viewXML\">View Raw XML</button>";
         updateStatus(m);
@@ -65,14 +77,14 @@ $(function(){
         });
         $("#downloadXML").click(function(event){
             var blob= new Blob([content], {type: "text/plain;charset=utf-8"});
-            console.log(blob);
             saveAs(blob, filename);
         });
     }
+    // Processes the parameters in the form into JSON.
+    // Return the JSON
     var processParameters = function() {
         var p = {};
         var s = $("#parameterValues").children();
-        console.log( s );
 
         for (i=0; i<s.length; i+=3) {
             // {key: value}
@@ -84,31 +96,42 @@ $(function(){
         return p;
     }
 
+    // Append a empty parameter to the form
     $("input#addParameters").click(function(event) {
         $("#parameterValues").append("<input type=\"text\" id=\"key\" placeholder=\"Key\"><input type=\"text\" id=\"value\" placeholder=\"Value\"><br/>");
     });
+
+    // When happens when you submit the form
     $("form#transform").submit(function(event) {
         event.preventDefault();
 
         var file = "";
         var formData = new FormData($(this)[0]);
         formData.append("parameters", JSON.stringify(processParameters()));
-        console.log( formData.get("parameters") );
 
+        // Send the modified form to the /cgi-bin/xzes.py endpoint.
+        // If you messed with the apache service this will need to change.
         $.ajax({
             url: "/cgi-bin/xzes.py",
             type: "POST",
             data: formData,
             async: true,
             statusCode: {
+                404: function(data) {
+                    notSuccessful("&#x1F6AB; &#x2601; Could not reach the transformer server...");
+                },
                 400: function(data) {
                     notSuccessful(data.responseText);
                 },
+                // On successful transformation
                 200: function(data) {
+                    // If the repsonse is non-empty
                     if (data.responseText != ""
                      && data.responseText != undefined) {
+                        // Print the success, the filename, and give buttons to view/downlaod the file.
                         successful(data.responseText);
                     } else {
+                        // Otherwise give a generic failure message
                         notSuccessful("The transformation was not successful...");
                     }
                 },
@@ -117,6 +140,5 @@ $(function(){
             contentType: false,
             processData: false,
         });
-        console.log(file);
     });
 });
