@@ -18,7 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Filename: transform.hpp
 // Description: Implementation of custom types, classes, and functions used in
-// XZES40 Transformer transformation functionality.
+// XZES40-Transformer transformation functionality.
 //
 // All class declarations are documented in lib/transform.hpp.
 ///////////////////////////////////////////////////////////////////////////////

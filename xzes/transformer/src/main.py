@@ -17,8 +17,8 @@
 ###############################################################################
 
 ###############################################################################
-## Filename: xzes40.cpp
-## Description: Main entrypoint for the XZES40 Transformer application
+## Filename: main.cpp
+## Description: Main entrypoint for the XZES Transformer application
 ###############################################################################
 
 import socket

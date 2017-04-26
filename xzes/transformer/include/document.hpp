@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
-// Copyright 2017, the Oregon State University Capstone Project 'XZES40'
-// with the Apache Software Foundation
+// Copyright 2017, the Oregon State University Capstone Project
+// 'XZES40-Transformer' with the Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Filename: transform.hpp
 // Description: Declaration of custom structs, functions, and classes used in
-// XZES40 Transformer document handling pipeline.
+// XZES40-Transformer document handling pipeline.
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <lib.hpp>

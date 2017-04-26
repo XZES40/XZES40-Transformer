@@ -16,8 +16,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-// Filename: xzes40.cpp
-// Description: Main entrypoint for the XZES40 Transformer application
+// Filename: main.cpp
+// Description: Main entrypoint for the XZES40-Transformer application
 ///////////////////////////////////////////////////////////////////////////////
 //
 // NOTICE: THIS FILE HAS BEEN DEPRECATED IN FAVOR OF 'main.py'
@@ -26,45 +26,49 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <xalanc/Include/PlatformDefinitions.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xalanc/XalanTransformer/XalanTransformer.hpp>
-
 #include <cstdlib>
 #include <iostream>
 
+#include <parse.hpp>
 #include <lib.hpp>
-#include <document.hpp>
-#include <keylist.hpp>
-#include <cache.hpp>
+#include <transform.hpp>
 
-XALAN_USING_XERCES(XMLPlatformUtils);
-XALAN_USING_XALAN(XalanTransformer);
+std::string USAGE = "\
+Usage: \n\
+  a.out --xml=input.xml --xsl=style.xslt [--out=output file] \n\
+";
 
-int main(){
-	XMLPlatformUtils::Initialize();
-	XalanTransformer::initialize();
-	uri_t xml1, xsl1;
-	xml1.uri = "./examples/simple.xml";
-	xsl1.uri = "./examples/simple.xsl";
+// ----------------------------------------------------------------------------
+// int main ( int argc , char* argv[] )
+//
+// Performs the following operations:
+// 1. Parses user input (xml, xslt, and output file locations).
+// 2. Passes cli arguments to 'transform' function. 
+// 3. Exits with an appropriate status code.
+// ----------------------------------------------------------------------------
+int main( int argc , char * argv[] )
+{
+	int* status = new int;
+	*status = 0;
 
-	Document xmlDoc1 (xml1);
-	Document xslDoc1 (xsl1);
+    // Parse CLI arguments into struct `job_t`
+    xzes::job_t* args = xzes::parse_args( &argc , &argv );
 
-	uri_t xml2, xsl2;
-	xml2.uri = "./examples/simple.xml";
-	xsl2.uri = "./examples/simple.xsl";
+	// User input files that do not exist.
+    if( args->xml.uri == "\0" || args->xsl.uri == "\0" ||
+	// User supplied empty xml or xsl arguments.
+        args->xml.uri == ""   || args->xsl.uri == "" )
+	{
+		// Print usage
+        std::cout << USAGE;
+		// Set exit status code
+		status = FAILURE;
+	}
+	else
+	{
+		// Pass args to transform
+        status = (int*)xzes::transform_documents( args );
+	}
 
-	Document xmlDoc2 (xml2);
-	Document xslDoc2 (xsl2);
-
-	XalanTransformer theXalanTransformer;
-
-	int theResult = theXalanTransformer.transform(*xmlDoc2.get_content()->obj,
-												  *xslDoc2.get_content()->obj,
-												  std::cout);
-	XMLPlatformUtils::Terminate();
-	XalanTransformer::ICUCleanUp();
-
-	return theResult;
+    return *status;
 }

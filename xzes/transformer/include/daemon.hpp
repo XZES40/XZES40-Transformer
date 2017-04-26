@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright 2017, the Oregon State University Capstone Project 'XZES40'
-// with the Apache Software Foundation
+// Copyright 2017, the Oregon State University Capstone Project
+// 'XZES40-Transformer' with the Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,36 +16,30 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-// Filename: cache.hpp
-// Description: Declaration of custom structs, functions, and classes used in
-// XZES40 Transformer cacheing pipeline.
+// Filename: daemon.hpp
+// Description: Function declarations form the Daemon.
 //
-// All class definitions are documented in src/cache.cpp
+// All function definitions are documented in src/daemon.cpp
 ///////////////////////////////////////////////////////////////////////////////
 
+//#include <vector>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <stdlib.h>
+#include <csignal>
+
+//#include <xalanc/Include/PlatformDefinitions.hpp>
+//#include <xercesc/util/PlatformUtils.hpp>
+#include <parse.hpp>
+#include <cache.hpp>
 #include <lib.hpp>
-#include <keylist.hpp>
-//#include <cstdlib>
+#include <transform.hpp>
 
-#if !defined cache
-#define cache
-
-namespace xzes
-{
-    class Cache {
-        private:
-        	KeyListEntry *theList;
-
-        public:
-        	Cache();
-            bool search(id_t);
-            doc_t* get( id_t );
-            int set( id_t,doc_t*,uri_t );
-            //int del( id_t );
-            int print_name();
-            int	print_id();
-
-    };
+namespace xzes {
+    int daemon( int );
+    int master_connection( int );
+    job_t* recv_request( int , fd_set* );
 }
 
-#endif

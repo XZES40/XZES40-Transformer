@@ -18,7 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Filename: transform.cpp
 // Description: Definition and documentation for custom structs, functions,
-// and classes used in XZES40 Document handling pipeline.
+// and classes used in XZES Document handling pipeline.
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <document.hpp>

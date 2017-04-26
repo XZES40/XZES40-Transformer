@@ -63,7 +63,7 @@ pthread_t callThd[MAXTHREAD];
 int main(int argc, char* argv[]) {
     int conn, ret;
 
-    conn = master_connection(40404);
+    conn = master_connection(PORT);
     if (conn > 0) {
         ret = xzes::daemon(conn);
     } else {

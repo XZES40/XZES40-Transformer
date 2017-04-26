@@ -19,7 +19,7 @@ Now that you've built the project you can *use* it.
 How fancy.
 
 ```
-user@host:transformer/$ ./build/daemon &    # This runs the daemon in a background process
+user@host:transformer/$ ./build/xzesd &    # This runs the daemon in a background process
 [2] 14876
 user@host:transformer/$ ./build/main.py `pwd`/examples/simple.xml `pwd`/examples/simple.xsl
 <?xml version="1.0" encoding="UTF-8"?><out>Hello</out>
@@ -38,15 +38,15 @@ To develop the application you will need
 Vagrant us a convenient tool for using a portable Virtual Machine.
 
 ```
-(transformer/)$ cd vagrant
-(transformer/vagrant)$ vagrant up
+(XZES40-Transformer/)$ cd vagrant
+(XZES40-Transformer/vagrant)$ vagrant up
 Bringing machine 'default' up with 'virtualbox' provider...
 ==> default: Checking if box 'debian/jessie64' is up to date..
 [...]
 ==> default: Vanilla Debian box. See https://atlas.hashicorp.com/debian/ for help and bug reports
 (transformer/vagrant)$ vagrant ssh
 [...[
-vagrant@jessie:~$ cd xzes40/transformer/xzes40/transformer
+vagrant@jessie:~$ cd xzes/xzes/transformer
 ```
 
 See the file `vagant/README.md` for more information about the Vagrant development environment.

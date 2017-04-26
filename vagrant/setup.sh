@@ -1,7 +1,17 @@
 #!/bin/bash
 
-# if $TRAVIS_BUILD_DIR is unset, set it (for local vagrant stuff)
-# ${TRAVIS_BUILD_DIR:=/xzes}
+# Ideally used in automation...
+${TRAVIS_BUILD_DIR:=/xzes}
+# Specifies the directory where the repository is checked out
+${XZES_SRC_DIR:=$TRAVIS_BUILD_DIR}
+# Specifies where to install the application to
+XZES_BIN="/usr/local/bin/"
+# Specifies where to push cgi scripts
+XZES_WWW_BIN="/var/www/cgi-bin"
+# Where to put html/css/js files
+XZES_WWW="/var/www"
+# IF set to true, copies files instead of sym-linking them
+XZES_INSTALL=false
 
 apt update -y
 apt install -y curl \
@@ -18,12 +28,65 @@ apt install -y curl \
                apache2 \
 			   vim
 
-ln -sf /xzes40 /home/vagrant/xzes40
+# Ensure all directories exist that ought to 
+mkdir --parents $XZES_WWW
+mkdir --parents $XZES_WWW_BIN
+mkdir --parents $XZES_BIN
 
-# Configure the webserver
-/xzes40/scripts/setup.sh
+if [ $XZES_INSTALL ]; then
+    ln -sf $XZES_ROOT_DIR $HOME/
+fi
 
-# Display useful message to user
-echo "==========================================================="
-echo "Visit http://192.168.33.22:8080/xzes40/ to use the website!"
-echo "==========================================================="
+if ! which apache2ctl > /dev/null || ! [ -d $XZES_SRC_DIR ] ; then
+    echo Please install apache2 or clone the XZES40-Transformer repository.
+    exit 1
+fi
+
+
+# Build the daemon and copy it to the bin
+cd $XZES_SRC_DIR/xzes/transformer/
+make
+if [ $XZES_INSTALL ]; then
+    cp -r $XZES_SRC_DIR/xzes/transformer/build/xzesd $XZES_BIN/xzesd
+else
+    ln -sf $XZES_SRC_DIR/xzes/transformer/build/xzesd $XZES_BIN/xzesd
+fi
+
+# Copy the cgi script to the correct location
+mkdir -p /var/www/cgi-bin/
+if [ $XZES_INSTALL ]; then
+    cp -r $XZES_SRC_DIR/xzes/cgi-glue/xzes.py $XZES_WWW_BIN/xzes.py
+else
+    ln -sf $XZES_SRC_DIR/xzes/cgi-glue/xzes.py /var/www/cgi-bin/xzes.py
+fi
+chown -R www-data:www-data $XZES_WWW_BIN
+
+# Copy the apache config file to the correct location
+if [ $XZES_INSTALL ]; then
+    cp -r $XZES_SRC_DIR/xzes/xzes.conf /etc/apache2/sites-available/
+else
+    ln -sf $XZES_SRC_DIR/xzes/xzes.conf /etc/apache2/sites-available/
+fi
+ln -sf /etc/apache2/sites-available/xzes.conf /etc/apache2/sites-enabled/
+chown -R www-data:www-data /etc/apache2/sites-{enabled,available}
+
+# Copy the frontend interface
+if [ $XZES_INSTALL ]; then
+    cp -r $XZES_SRC_DIR/xzes/frontend $XZES_WWW
+else
+    ln -sf $XZES_SRC_DIR/xzes/frontend $XZES_WWW
+fi
+
+# Restart Apache
+a2enmod cgi
+sleep 5
+systemctl restart apache2
+
+# Copy the systemd file to the correct location and start the daemon
+systemctl enable --force $XZES_SRC_DIR/xzes/xzesd.service
+systemctl daemon-reload
+systemctl start xzesd.service
+
+echo "=============================================================="
+echo "Visit http://192.168.33.22:8000 to view the webiste in action!"
+echo "=============================================================="

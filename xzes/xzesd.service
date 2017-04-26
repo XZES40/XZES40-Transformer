@@ -4,7 +4,7 @@ After=apache2.service network.target
 
 [Service]
 User=www-data
-ExecStart=/usr/local/bin/xzes40d
+ExecStart=/usr/local/bin/xzesd
 Reload=always
 
 [Install]

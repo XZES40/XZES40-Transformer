@@ -19,7 +19,7 @@
 
 ###############################################################################
 ## Filename: xzes.py
-## Description: CGI glue between the XZES40 Daemon and the outside world.
+## Description: CGI glue between the XZES Daemon and the outside world.
 ###############################################################################
 import cgi
 import socket
@@ -37,6 +37,7 @@ success = """Content-Type: application/xml; charset=utf-8\nStatus: 200 OK\n\n{}"
 def main(ok, bad):
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # TODO make this an environemnt variable, not hard coded.
         s.connect(("localhost", 40404))
     except:
         print(bad.format("Error connecting to socket.\nPermissions error?"))
