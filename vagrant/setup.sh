@@ -9,7 +9,7 @@ XZES_BIN="/usr/local/bin/"
 # Specifies where to push cgi scripts
 XZES_WWW_BIN="/var/www/cgi-bin"
 # Where to put html/css/js files
-XZES_WWW="/var/www"
+XZES_WWW="/var/www/xzes"
 # IF set to true, copies files instead of sym-linking them
 XZES_INSTALL=false
 

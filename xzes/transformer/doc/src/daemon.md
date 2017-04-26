@@ -1,6 +1,6 @@
 # Application Daemon
 
-**NOTE** In production the daemon is called `xzes40d` and is stored on disk at `/usr/local/bin/xzes40d`.
+**NOTE** In production the daemon is called `xzesd` and is stored on disk at `/usr/local/bin/xzesd`.
 
 In order to preserve state in the in-memory cache, XZES has a long-running daemon.
 This could have been implemented a number of ways: Redis, a database, carrier pigeons.
@@ -60,7 +60,7 @@ This assumes that the application is not running with the web-app component. To 
 ## The Daemon process startup
 
 1. When the `daemon` binary is executed it sets up a long running process and goes into a state of cybernation.
-2. This process *will* start by:
+2. This process starts by:
   - Opening and listening on a `localhost:8000`
   - Allocating a block of memory for the cache.
   - Spawning a set of threads on which transformations may occur.
@@ -70,7 +70,7 @@ This assumes that the application is not running with the web-app component. To 
 1. When the `main.py` script recieves a request it is passed two files, input xml and xslt file-paths, as well as some parameters.
    This is either done via the web API (tested with `simple-test.sh` or a CLI directly talking to the daemon... probably the first of those two.
 2. The `main.py` script opens a local socket connection with the daemon process.
-3. The request is passed in a tuple with the following format: `(request-id#,input-filename.xml,input-filename.xsl)`.
+3. The request is passed in a tuple with the following format: `"request-id#,input-filename.xml,input-filename.xsl,output-filename.xml,{param1:value2},{param2:value2}..."`.
 4. The daemon process the arguments checking for errors.
 5. The daemon process spawns a thread and calls the `transform_documents` method in that thread.
 6. Once the thread completes the transofrmation it returns a status code which is propagated up to the `main.py` script and returns to the calling process.
