@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Ideally used in automation...
-${TRAVIS_BUILD_DIR:=/xzes}
+${TRAVIS_BUILD_DIR:="/xzes"}
 # Specifies the directory where the repository is checked out
 ${XZES_SRC_DIR:=$TRAVIS_BUILD_DIR}
 # Specifies where to install the application to
@@ -10,8 +10,11 @@ XZES_BIN="/usr/local/bin/"
 XZES_WWW_BIN="/var/www/cgi-bin"
 # Where to put html/css/js files
 XZES_WWW="/var/www/xzes"
-# IF set to true, copies files instead of sym-linking them
+# If set to true, copies files instead of sym-linking them
 XZES_INSTALL=false
+# set this to false if you do not want a symlink to the code in your homedirectory
+# otherwise set it to your user name
+DEV_USER="vagrant"
 
 apt update -y
 apt install -y curl \
@@ -33,8 +36,8 @@ mkdir --parents $XZES_WWW
 mkdir --parents $XZES_WWW_BIN
 mkdir --parents $XZES_BIN
 
-if [ $XZES_INSTALL ]; then
-    ln -sf $XZES_ROOT_DIR /vagrant/xzes
+if [ $DEV_USER ]; then
+    ln -sf $XZES_SRC_DIR /home/$DEV_USER/xzes
 fi
 
 if ! which apache2ctl > /dev/null || ! [ -d $XZES_SRC_DIR ] ; then
