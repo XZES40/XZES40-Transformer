@@ -37,7 +37,7 @@ mkdir --parents $XZES_WWW_BIN
 mkdir --parents $XZES_BIN
 
 if [ $DEV_USER ]; then
-	    ln -sf $XZES_SRC_DIR /home/$DEV_USER/xzes
+    ln -sf $XZES_SRC_DIR /home/$DEV_USER/xzes
 fi
 
 if ! which apache2ctl > /dev/null || ! [ -d $XZES_SRC_DIR ] ; then
