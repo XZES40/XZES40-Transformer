@@ -1,6 +1,7 @@
 # XZES40-Transformer
 
-*This project contains the Code, Code Documentation, Packaging, Tests, Examples, etc related to the Oregon State University + Apache Software Foundation Computer Science 2017 Capstone project.*
+*This repository contains the Code, Code Documentation, Tests, Examples, and Build/Dev infrastructure for the Oregon State University + Apache Software Foundation Computer Science 2017 Capstone project.*
+For more information about this project, see the project's [LaTeX document repository][capstone-repo]
 
 ## Build status
 
@@ -17,46 +18,71 @@ This project's purpose is to create an XML/XSLT transformation server which is
 
 It achieves these by:
 
-- **IMPLEMENTED** Processing documents in parallel.
-- **IMPLEMENTED** Using an in-memory cache to store processed documents.
-- **NOT IMPLEMENTED** Using [FPM][fpm] to package the application.
-- **IMPLEMENTED** Using the [Apache Webserver][apache] to handle requests.
-- **IMPLEMENTED** And of course developing in the Open!
+| Feature                                                   | Status              |
+| --------------------------------------------------------- | ------------------- |
+| Processing documents in parallel.                         | **IMPLEMENTED**     |
+| Using an in-memory cache to store processed documents.    | **IMPLEMENTED**     |
+| Using [FPM][fpm] to package the application.              | **NOT IMPLEMENTED** |
+| Using the [Apache Webserver][apache] to handle requests.  | **IMPLEMENTED**     |
+| And of course developing in the Open!                     | **IMPLEMENTED**     |
 
-For a complete guide about the *design* and *purpose* of this project refer to our [LaTeX Documents Repository][capstone-repo].
+For a complete guide on the *design* and *purpose* of this project refer to our [LaTeX Documents Repository][capstone-repo].
+
+## A what transformation server?
+
+XML is a standard format for storing data, like JSON or YAML.
+XSLT, or XML Style Sheets, are used for performing transformations on data in XML sheets.
+For example:
+
+### Problem
+
+- You have an XML spreadsheet with information about all cars sold at a used car lot.
+- You want to know how many *red* cars were sold between 2000 and 2015.
+
+### Solution
+
+Create an XML stylesheet (XSLT document) which specifies "if the <color> is red, and the <date sold> is between 2000 and 2015, include it in the output" (in psuedo XSLT).
+
+The XZES40-Transformer application is used to perform these transformations over the internet so one can process data without installing heavy XML transformation applications locally.
 
 ## How do I use this?
 
-The easiest way to use the application is to run a small Virtual Machine using Vagrant.
+The easiest way to use the application is to run a small Virtual Machine (VM).
 The application is designed to be run on Apache, but it is not encouraged that you install, run, or develop the application on your personal machine.
 
-Vagrant is a CLI interface for pulling, provisioning, and running Virtual Machines with arbitrary backends; think VirtualBox or VMWare.
-It runs on Linux, BSD, Windows, and MacOS.
+The tool the development team uses to run the application in a VM is Vagrant.
+Vagrant is a Command Line Interafce (CLI) interface for pulling, provisioning, and running VM with arbitrary back-ends.
+This means you can use the same commands to run a VirtualBox, VMWare, or Docker machine.
+Vagrant runs on Linux, BSD, Windows, and MacOS, so it is highly accessible for development.
 
 Once you have Vagrant installed and setup on your system you should be able to run `vagrant up`.
 Once the machine is setup it will give you a URL to visit in your local web browser.
 Visit that page and you'll be using the application!
 
-For information on running the application with Vagrant, see the `vagrant` directory's README file.
+For information on running the application with Vagrant, see the [`vagrant` directory's README file][vagrant-code].
 
 ## Where is everything?
 
-The code is contained in the `xzes` directory.
-In that directory we have the following project components:
+There are three components to the XZES40-Transformer project.
 
-- `transformer` is the part of the project that acutally performs XML transformations.
-- `cgi-glue` is the bridge between the transformer and web UI.
-- `frontend` is the web interface for the application to request XML transformations.
+| Component     | Description                                                 |
+| ------------- | ----------------------------------------------------------- |
+| `transformer` | Core of the project. Actually performs XML transformations. |
+| `cgi-glue`    | Bridge between the transformer and web UI.                  |
+| `frontend`    | Web interface for the application. Accepts XML transformation requests, displays results to user. |
 
-Each of these directories has a README of it's own explaining what it is and how it works.
+Each of these components can be found under the `xzes` directory.
+Each component has an explanatory README which explains what it in greater detail is and how it works.
 
 ## Contributing
 
 If you have interest in contributing to this project, **great**!
 
-Please create an [issue][issues-url].
+Please create an [issue][issues-url] and see if the developers respond.
+If you have a fix for your issue, make a pull request by forking the project, doing your work on your fork, and clicking the `Create a Pull Request` button once you push your changes to that fork.
 
 We have a [Vagrant Box][vagrant-code] which is probably your best way to test code-changes.
+See the `vagrant` directory for details about that work-flow.
 
 ## A note about names
 
@@ -66,16 +92,18 @@ There might be a bit of confusion about what is named what and why:
 - The application is just called `xzes` because programs shouldn't have numbers in their name.
 - The transformer daemon is called `xzesd`, and it's systemd service is called `xzesd.service.`
 - The CGI script used by apache is called `xzes.py`.
+- The component that runs between Apaache and the daemon is `cgi-glue` because it's just enough code to get `xzesd` exposed to the internet.
+- The frontend is called `frontend` because that is an intuitive name.
 
-So *most* things, unless they are the group or project, are just `xzes`.
+*Most* things, unless they are the group or project, are just `xzes`.
 The project as a whole is `XZES40-transformer`.
-There are no components called simply `XZES40`.
+There are no components called simply `XZES40`, although during development some components *were*.
 
 ## License
 
 This software is licensed under `Apache 2.0`. Read the `LICENSE` file for more information.
 
-[capstone-repo]: /xzes/cs-capstone-project
+[capstone-repo]: /XZES40/cs-capstone-project
 [issues-url]: /XZES40/XZES40-Transformer/issues
 [fpm]: /jordansissel/fpm
 [apache]: https://httpd.apache.org/

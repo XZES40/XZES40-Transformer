@@ -1,6 +1,7 @@
 # Transformer
 
-This is the C++ application which transforms and XML and XSLT document into an output XML document.
+This is the C++ application which transforms and XML and XML style-sheet documents into an output XML document.
+This transformation is requested over a local network connection on `localhost:40404` via an Apache CGI script found in `cgi-script` (located in the parent directory).
 
 ## Usage
 
@@ -21,7 +22,8 @@ How fancy.
 ```
 user@host:transformer/$ ./build/xzesd &    # This runs the daemon in a background process
 [2] 14876
-user@host:transformer/$ ./build/main.py `pwd`/examples/simple.xml `pwd`/examples/simple.xsl
+user@host:transformer/$ ./build/main.py `pwd`/examples/simple.xml `pwd`/examples/simple.xsl /tmp/example.xml
+user@host:transformer/$ cat /tmp/example.xml
 <?xml version="1.0" encoding="UTF-8"?><out>Hello</out>
 ```
 
@@ -30,12 +32,14 @@ user@host:transformer/$ ./build/main.py `pwd`/examples/simple.xml `pwd`/examples
 To develop the application you will need
 
 - A Debian Linux host (probably a virtual machine).
-- The C++ dependencies are listed in the `vagrant` directory in the `setup.sh` script.
-- Python2 to use `main.py` (demo above).
+- The C++ dependencies listed in the `vagrant` directory in the `setup.sh` script.
+- The ability to host a website locally.
 
 ### Using Vagrant
 
 Vagrant us a convenient tool for using a portable Virtual Machine.
+Our development environment depends heavily on Vagrant.
+It automatically runs a setup script which installs the dependencies, builds the binary, installs apache, sets up the daemon service, and starts the webserver to be accessed on your local virtual machine.
 
 ```
 (XZES40-Transformer/)$ cd vagrant
@@ -50,6 +54,8 @@ vagrant@jessie:~$ cd xzes/xzes/transformer
 ```
 
 See the file `vagant/README.md` for more information about the Vagrant development environment.
+
+Even if you are not using Vagrant, the README and setup script should help you start contributing if you want to do that.
 
 ## Structure
 
