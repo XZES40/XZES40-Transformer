@@ -1,0 +1,9 @@
+<?xml version="1.0"?> 
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+  <xsl:param name="param1" select="'no passing so show default value'"/>
+  <xsl:param name="param2" select="'no passing so show default value'"/>
+  <xsl:template match="doc">
+    <out><xsl:value-of select="$param1"/></out>
+    <out><xsl:value-of select="$param2"/></out>
+  </xsl:template>
+</xsl:stylesheet>
