@@ -1,4 +1,5 @@
 #!/bin/bash
++x
 
 # Ideally used in automation...
 ${TRAVIS_BUILD_DIR:="/xzes"}
@@ -32,11 +33,10 @@ apt install -y curl \
 			   vim
 
 # Ensure all directories exist that ought to 
-mkdir --parents $XZES_WWW
 mkdir --parents $XZES_WWW_BIN
 mkdir --parents $XZES_BIN
 
-if [ $DEV_USER ]; then
+if $DEV_USER; then
     ln -sf $XZES_SRC_DIR /home/$DEV_USER/xzes
 fi
 
@@ -49,7 +49,7 @@ fi
 # Build the daemon and copy it to the bin
 cd $XZES_SRC_DIR/xzes/transformer/
 make
-if [ $XZES_INSTALL ]; then
+if $XZES_INSTALL; then
     cp -rf $XZES_SRC_DIR/xzes/transformer/build/xzesd $XZES_BIN/xzesd
 else
     ln -sf $XZES_SRC_DIR/xzes/transformer/build/xzesd $XZES_BIN/xzesd
@@ -57,15 +57,15 @@ fi
 
 # Copy the cgi script to the correct location
 mkdir -p /var/www/cgi-bin/
-if [ $XZES_INSTALL ]; then
+if $XZES_INSTALL; then
     cp -rf $XZES_SRC_DIR/xzes/cgi-glue/xzes.py $XZES_WWW_BIN/xzes.py
 else
-    ln -sf $XZES_SRC_DIR/xzes/cgi-glue/xzes.py /var/www/cgi-bin/xzes.py
+    ln -sf $XZES_SRC_DIR/xzes/cgi-glue/xzes.py $XZES_WWW_BIN/xzes.py
 fi
 chown -R www-data:www-data $XZES_WWW_BIN
 
 # Copy the apache config file to the correct location
-if [ $XZES_INSTALL ]; then
+if $XZES_INSTALL; then
     cp -rf $XZES_SRC_DIR/xzes/xzes.conf /etc/apache2/sites-available/
 else
     ln -sf $XZES_SRC_DIR/xzes/xzes.conf /etc/apache2/sites-available/
@@ -74,12 +74,13 @@ ln -sf /etc/apache2/sites-available/xzes.conf /etc/apache2/sites-enabled/
 chown -R www-data:www-data /etc/apache2/sites-{enabled,available}
 
 # Copy the frontend interface
-if [ $XZES_INSTALL ]; then
-    cp -rf $XZES_SRC_DIR/xzes/frontend/* $XZES_WWW
+rm -rf $XZES_WWW
+if  $XZES_INSTALL; then
+    cp -rf $XZES_SRC_DIR/xzes/frontend $XZES_WWW
 else
-    ln -sf $XZES_SRC_DIR/xzes/frontend/* $XZES_WWW
+    ln -sf $XZES_SRC_DIR/xzes/frontend $XZES_WWW
 fi
-chown www-data:www-data $XZES_WWW
+chown -R www-data:www-data $XZES_WWW
 
 # Restart Apache
 a2enmod cgi
@@ -87,7 +88,7 @@ sleep 5
 systemctl restart apache2
 
 # Copy the systemd file to the correct location and start the daemon
-if [ $XZES_INSTALL ]; then
+if $XZES_INSTALL; then
     cp -rf $XZES_SRC_DIR/xzes/xzesd.service /etc/systemd/user/xzesd.service
     systemctl enable --force /etc/systemd/user/xzesd.service
 else

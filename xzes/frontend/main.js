@@ -37,12 +37,12 @@ $(function(){
     // Generates a filename based on the current date
     var generateFilename = function() {
         var date = new Date();
-        var filename = date.getFullYear() + '-'
-                     + date.getMonth()    + '-' 
-                     + date.getDate()     + 'T'
-                     + date.getHours()    + ':'
-                     + date.getMinutes()  + ':'
-                     + date.getSeconds()  + '.xml';
+        return filename = date.getFullYear() + '-'
+                        + date.getMonth()    + '-' 
+                        + date.getDate()     + 'T'
+                        + date.getHours()    + ':'
+                        + date.getMinutes()  + ':'
+                        + date.getSeconds()  + '.xml';
     }
 
     // returns a string about the status of the browser.
@@ -115,6 +115,7 @@ $(function(){
             url: "/cgi-bin/xzes.py",
             type: "POST",
             data: formData,
+			dataType: "text",
             async: true,
             statusCode: {
                 404: function(data) {
@@ -130,9 +131,14 @@ $(function(){
                      && data.responseText != undefined) {
                         // Print the success, the filename, and give buttons to view/downlaod the file.
                         successful(data.responseText);
+					} else if (typeof(data) == "string") {
+						// The response may just be a string...
+						// We're not sure why this happens sometimes...
+                        successful(data);
                     } else {
-                        // Otherwise give a generic failure message
-                        notSuccessful("The transformation was not successful...");
+						// Otherwise give a generic failure message
+						// Weird edge case where output xml is parsed by jquery as html
+						notSuccessful("The transformation was not successful.");
                     }
                 },
             },
