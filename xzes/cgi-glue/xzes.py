@@ -32,7 +32,7 @@ import cgitb; cgitb.enable() # for troubleshooting
 XZES_SAVE_PATH = "/tmp/xzes"
 
 error = """Content-Type: text/plain; charsetutf-8\nStatus: 400 Bad Request\n\n{}"""
-success = """Content-Type: application/xml; charset=utf-8\nStatus: 200 OK\n\n{}"""
+success = """Content-Type: application/text; charset=utf-8\nStatus: 200 OK\n\n{}"""
 
 def main(ok, bad):
     # Establish a connection with the local networked daemon
@@ -131,7 +131,8 @@ def main(ok, bad):
             # open the output file
             with open(split[1], 'r') as f:
                 # send it to the user.
-                print(ok.format('\n'.join(f.readlines())))
+                print(ok.format(''.join(f.readlines())))
+                print(" ")
                 s.close()
                 return 1
         # Otherwise send the error propogated from the daemon.

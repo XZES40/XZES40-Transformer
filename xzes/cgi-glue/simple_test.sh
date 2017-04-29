@@ -1,7 +1,7 @@
 #!/bin/bash
 
 XZES_HOST=${XZES_HOST:-192.168.33.22}
-XZES_PORT=${XZES_PORT:-8080}
+XZES_PORT=${XZES_PORT:-8000}
 XZES_PATH=${XZES_PATH:-cgi-bin/xzes.py}
 
 if [ $# -eq 0 ];
