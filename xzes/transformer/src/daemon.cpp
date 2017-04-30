@@ -98,7 +98,7 @@ int xzes::daemon(int fd)
     while (true) {
     	for (int i = 0; i <=MAXTHREAD ; i++){
             job[i] = xzes::recv_request(fd, &readfds);
-            puts("read file ");
+            puts("Read file ");
 			if (job[i]!= NULL)
         	{
             	puts("pre-transform");
@@ -106,9 +106,10 @@ int xzes::daemon(int fd)
                 	job[i]->theList = storeList;
                     //pass the mutex locker to job object
                 	job[i]->lock_var = mutex;
+                    //Set the thread id;
+                    job[i]->tid = i ;
                     //create connection
                 	rc = pthread_create(&thread[i], &attr, xzes::transform_documents, (void *)job[i]);
-                    puts("back to damon");
                     //give the feedback for thread 
 					if (rc){
 						printf("ERROR; return code from pthread_create is %d\n", rc);
@@ -159,13 +160,12 @@ xzes::job_t* xzes::recv_request(int conn, fd_set* )
     struct sockaddr_in address;
 	int new_socket;
 	xzes::job_t *tmp = NULL;
-
     puts("FD_ZERO, FD_SET");
 
 	FD_ZERO(&readfds);
 	FD_SET(conn, &readfds);
 
-    puts("post FD_ZERO, FD_SET");
+    puts("Post FD_ZERO, FD_SET");
 
 	// TODO: Debug this section, pretty sure conn+1 should be something else.
 	// `conn` should be "the highest file descriptor name.
@@ -183,13 +183,13 @@ xzes::job_t* xzes::recv_request(int conn, fd_set* )
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons( PORT );
 
-    puts("FD_ISSET");
+    puts("FD is set");
 
 	if (FD_ISSET(conn, &readfds)) 
 	{
         new_socket = accept(conn, (struct sockaddr *)&address, (socklen_t*)&addrlen);
 
-        puts("new socket");
+        puts("Create a new socket");
 
 		if ( new_socket < 0 )
 		{
@@ -206,7 +206,6 @@ xzes::job_t* xzes::recv_request(int conn, fd_set* )
 				tmp->error = "";
 				tmp->socket_fd = new_socket;
 
-                puts("set job");
 			}
             else
                 puts("failed with setting job");
@@ -262,6 +261,7 @@ int xzes::master_connection(int port) {
     }
       
     //accept the incoming connection
+    puts("============================");
     puts("Waiting for connections ...");
 
     return master_socket;

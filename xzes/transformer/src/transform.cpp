@@ -35,7 +35,11 @@ void* xzes::transform_documents( void* input )
     //create a local input data
 	xzes::job_t* args = (job_t*) input;
 	int* status = new int;
-
+    int result = 0;
+    puts("============================");
+    puts("==Below is transformer log==");
+    printf("This is the thread id : %d\n", args->tid );
+    puts("This is the temp file name: ");
     printf("%s, %s, %s\n", args->xml.uri.c_str(),
                            args->xsl.uri.c_str(),
                            args->out.uri.c_str());
@@ -53,13 +57,15 @@ void* xzes::transform_documents( void* input )
     Document xml(args->xml, cacheList, mutex);
     Document xsl(args->xsl, cacheList, mutex);
 
-    puts("setup documents");
+    puts("Setup documents");
 
     //set up the output file string
     std::string outName = args->out.uri;
     XSLTResultTarget *out = new XSLTResultTarget( outName.c_str() );
 
-    puts("setup the parameter");
+
+    pthread_mutex_lock(&mutex);
+    puts("Setup the parameter");
     //set up the top level parameter for the transformer
     for (int i = 0 ; i < args->param.size(); i += 1 ){
         printf("%s, %s\n", args->param[i].key.c_str(), args->param[i].val.c_str());
@@ -69,21 +75,23 @@ void* xzes::transform_documents( void* input )
         );
     }
 
-    puts("about to transform");
+    puts("Start to transform");
 
     //start transformer
-    *status = theXalanTransformer.transform( *xml.get_content()->obj ,
+    result = theXalanTransformer.transform( *xml.get_content()->obj ,
                                              *xsl.get_content()->obj ,
                                              *out );
 
     //clear the top level parameter 
     theXalanTransformer.clearStylesheetParams();
 
-    puts("after transform");
+    pthread_mutex_unlock(&mutex);
+    puts("Transform done");
+    puts("============================");
     puts("\n");
 
     //feedback if we have error here
-    if (&status < 0)
+    if (result != 0)
         args->error = "Transformation failed, please make sure you upload correct format document";
 
     //send error back to CGI script

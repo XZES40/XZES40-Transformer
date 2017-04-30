@@ -38,13 +38,16 @@ xzes::Document::Document( xzes::uri_t file_path, Cache *storeList, pthread_mutex
     set_id( );
 
     // Compile the document now that you know the type
+    printf("I am checking the cache.... \n");
     if(!storeList->search(uid)){
+        printf("Nope, this file is not in the cache. \n ");
         compile();
         storeList->set( uid , doc , uri );
     } else {
         // lock the thread
         pthread_mutex_lock(&mutex);
         // set the item into our cache;
+        printf("Good news, this file is in our cache ;) \n");
         set_content( storeList->get( uid ));
         // unlock the thread
         pthread_mutex_unlock(&mutex);
