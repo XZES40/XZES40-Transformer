@@ -131,8 +131,7 @@ def main(ok, bad):
             # open the output file
             with open(split[1], 'r') as f:
                 # send it to the user.
-                print(ok.format(''.join(f.readlines())))
-                print(" ")
+                print(ok.format('\n'.join(f.readlines())))
                 s.close()
                 return 1
         # Otherwise send the error propogated from the daemon.
