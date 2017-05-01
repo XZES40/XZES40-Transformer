@@ -33,15 +33,15 @@ namespace xzes
 {
     class Cache {
         private:
-        	KeyListEntry *theList;
+            KeyListEntry *theList;
 
         public:
-        	Cache();         
+            Cache();         
             bool search(id_t);
             doc_t* get( id_t );
             int set( id_t,doc_t*,uri_t );
             int print_name();
-            int	print_id();
+            int    print_id();
 
     };
 }

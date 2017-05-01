@@ -38,18 +38,24 @@ xzes::Document::Document( xzes::uri_t file_path, Cache *storeList, pthread_mutex
     set_id( );
 
     // Compile the document now that you know the type
-    printf("I am checking the cache.... \n");
-    if(!storeList->search(uid)){
-        printf("Nope, this file is not in the cache. \n ");
+    // printf("I am checking the cache.... \n");
+    if(!storeList->search(uid))
+    {
+        printf("Requested file not found in the cache. Processing new document. \n ");
+
         compile();
+
         storeList->set( uid , doc , uri );
     } else {
         // lock the thread
         pthread_mutex_lock(&mutex);
+
         // set the item into our cache;
-        printf("Good news, this file is in our cache ;) \n");
+        printf("Previously compiled document found in the cache. Retrieving pre-compiled document.\n");
+
         set_content( storeList->get( uid ));
         // unlock the thread
+
         pthread_mutex_unlock(&mutex);
     }
 }
@@ -108,6 +114,7 @@ int xzes::Document::set_id( )
 
     //return status for debug
     int status = SUCCESS;
+
     return status;
 }
 
@@ -119,6 +126,7 @@ int xzes::Document::set_id( )
 xzes::id_t xzes::Document::get_id( )
 {
     xzes::id_t obj = uid;
+
     return obj;
 }
 

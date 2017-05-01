@@ -47,7 +47,7 @@ XALAN_USING_XALAN(XalanCompiledStylesheet);
 XALAN_USING_XALAN(XalanDOMString);
 
 namespace xzes {
-	// Accepts void* which gets cast to a job_t*;
-	// Also returns void* which can be cast to int* for threading;
+    // Accepts void* which gets cast to a job_t*;
+    // Also returns void* which can be cast to int* for threading;
     void* transform_documents( void* );
 }

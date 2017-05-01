@@ -42,9 +42,12 @@ xzes::job_t* xzes::parse_request( char* input )
     out->out.uri = tmpv[3];
 
     // Stream ends in an empty "," for buffer cruft.
-    for (int i = 4 ; i+2 < tmpv.size(); i += 2){
+    for (int i = 4 ; i+2 < tmpv.size(); i += 2)
+    {
         param_t x = {tmpv[i], tmpv[i+1]};
+
         printf("%s:%s\n", x.key.c_str(), x.val.c_str());
+
         out->param.push_back(x);
     }
 

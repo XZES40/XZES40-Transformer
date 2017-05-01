@@ -31,8 +31,8 @@
 // --------------------------------------------------------------------
 xzes::Cache::Cache()
 {
-	theList = NewKeyListEntry();
-	theList->next = NULL;
+    theList = NewKeyListEntry();
+    theList->next = NULL;
 }
 
 // --------------------------------------------------------------------
@@ -41,20 +41,27 @@ xzes::Cache::Cache()
 // search node in the keyList
 // return 0 means found, 1 means NOT found.
 // --------------------------------------------------------------------
-bool xzes::Cache::search( xzes::id_t uid ){
-	int objid = uid.id;
-	KeyListEntry *head = theList;
-	//Start search the link-list data
-	while (head != NULL){
-		int keyid = GetKeyEntryIdValue(head);
-		// if we found one we say yes
-		if (keyid == objid){
-			return SUCCESS;
-		}
-		head = head->next;
-	}
-	//else this is new item. it is not in the cache space.
-	return FAILURE;
+bool xzes::Cache::search( xzes::id_t uid )
+{
+    int objid = uid.id;
+    KeyListEntry *head = theList;
+
+    //Start search the link-list data
+    while (head != NULL)
+    {
+    	int keyid = GetKeyEntryIdValue(head);
+
+    	// if we found one we say yes
+    	if (keyid == objid)
+        {
+    		return SUCCESS;
+    	}
+
+    	head = head->next;
+    }
+
+    //else this is new item. it is not in the cache space.
+    return FAILURE;
 }
 
 
@@ -66,17 +73,22 @@ bool xzes::Cache::search( xzes::id_t uid ){
 // Returns NULL if it does not exist in the cache.
 // --------------------------------------------------------------------
 doc_t* xzes::Cache::get( xzes::id_t uid)
-{	
-	int objid = uid.id;
-	KeyListEntry *head = theList;
-	while (head != NULL){
-		int keyid = GetKeyEntryIdValue(head);
-		if (keyid == objid){
-			return (doc_t*)GetKeyEntryData(head);
-		}
-		head = head->next;
-	}
-	printf("Get FAILURE!!");
+{    
+    int objid = uid.id;
+    KeyListEntry *head = theList;
+
+    while (head != NULL)
+    {
+    	int keyid = GetKeyEntryIdValue(head);
+    	if (keyid == objid)
+        {
+    		return (doc_t*)GetKeyEntryData(head);
+    	}
+
+    	head = head->next;
+    }
+
+    printf("Failed to GET item from the cache.");
     return NULL;
 }
 
@@ -90,21 +102,28 @@ doc_t* xzes::Cache::get( xzes::id_t uid)
 // --------------------------------------------------------------------
 int xzes::Cache::set( xzes::id_t uid, xzes::doc_t *doc, xzes::uri_t uri)
 {
-	int status = SUCCESS;
-	//Find the last node;
-	KeyListEntry *last = FindLastKeyListEntry(theList);
-	//Create empty node for next last node
-	last->next = NewKeyListEntry();
-	//Point to next last node
-	last = last->next;
-	//Set the name of the object
-	SetKeyEntryName(last,uri.uri.c_str());
-	//Set the id of the object
-	SetKeyEntryIdValue(last,uid.id);
-	//Set the content of the object
-	SetKeyEntryDataAndDestroy(last, doc, NULL);
-	//Set the next last node is null
-	last->next = NULL;
+    int status = SUCCESS;
+
+    //Find the last node;
+    KeyListEntry *last = FindLastKeyListEntry(theList);
+
+    //Create empty node for next last node
+    last->next = NewKeyListEntry();
+
+    //Point to next last node
+    last = last->next;
+
+    //Set the name of the object
+    SetKeyEntryName(last,uri.uri.c_str());
+
+    //Set the id of the object
+    SetKeyEntryIdValue(last,uid.id);
+
+    //Set the content of the object
+    SetKeyEntryDataAndDestroy(last, doc, NULL);
+
+    //Set the next last node is null
+    last->next = NULL;
 
     return status;
 }
@@ -117,14 +136,17 @@ int xzes::Cache::set( xzes::id_t uid, xzes::doc_t *doc, xzes::uri_t uri)
 // --------------------------------------------------------------------
 int xzes::Cache::print_name()
 {
-	KeyListEntry *itr = theList;
-	int i = 1;
-	while (itr != NULL){
-		printf("Name%d: %s \n", i ,GetKeyEntryName(itr));
-		itr = itr->next;
-		i++;
-	}
-	return 0;
+    KeyListEntry *itr = theList;
+    int i = 1;
+
+    while (itr != NULL)
+    {
+    	printf("Cache item name %d: %s \n", i ,GetKeyEntryName(itr));
+    	itr = itr->next;
+    	i++;
+    }
+
+    return 0;
 }
 
 
@@ -136,12 +158,15 @@ int xzes::Cache::print_name()
 // --------------------------------------------------------------------
 int xzes::Cache::print_id()
 {
-	KeyListEntry *itr = theList;
-	int i = 1;
-	while (itr != NULL){
-		printf("ID%d: %d \n", i ,GetKeyEntryIdValue(itr));
-		itr = itr->next;
-		i++;
-	}
-	return 0;
+    KeyListEntry *itr = theList;
+    int i = 1;
+
+    while (itr != NULL)
+    {
+    	printf("Cache item ID %d: %d \n", i ,GetKeyEntryIdValue(itr));
+    	itr = itr->next;
+    	i++;
+    }
+
+    return 0;
 }

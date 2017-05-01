@@ -48,27 +48,25 @@ Usage: \n\
 // ----------------------------------------------------------------------------
 int main( int argc , char * argv[] )
 {
-	int* status = new int;
-	*status = 0;
+    int* status = new int;
+    *status = 0;
 
     // Parse CLI arguments into struct `job_t`
     xzes::job_t* args = xzes::parse_args( &argc , &argv );
 
-	// User input files that do not exist.
+    // User input files that do not exist.
     if( args->xml.uri == "\0" || args->xsl.uri == "\0" ||
-	// User supplied empty xml or xsl arguments.
+    // User supplied empty xml or xsl arguments.
         args->xml.uri == ""   || args->xsl.uri == "" )
-	{
-		// Print usage
+    {
+        // Print usage
         std::cout << USAGE;
-		// Set exit status code
-		status = FAILURE;
-	}
-	else
-	{
-		// Pass args to transform
+        // Set exit status code
+        status = FAILURE;
+    } else {
+        // Pass args to transform
         status = (int*)xzes::transform_documents( args );
-	}
+    }
 
     return *status;
 }
