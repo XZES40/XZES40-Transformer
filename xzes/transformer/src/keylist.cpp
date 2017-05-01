@@ -19,8 +19,8 @@
 
 /* The Files:
  *
- *		keylist.h		Is the header file for this (keylist) library.
- *		keylist.c		Is the source file for this (keylist) library.
+ *        keylist.h        Is the header file for this (keylist) library.
+ *        keylist.c        Is the source file for this (keylist) library.
  */
 
 #include "keylist.hpp"
@@ -43,55 +43,55 @@ extern "C"
  * node = pointer to next node of KeyListEntry type.
  *
  * k_name = character string that can be used for anything suchas a name.
- *			It is initiallized via strdup() using malloc() memory management
- *			when a string value is assigned.
+ *            It is initiallized via strdup() using malloc() memory management
+ *            when a string value is assigned.
  *
  * k_id = an arbitrary integer that can be used for anything suchas node ID.
  *
  * k_size = integer that is commonly used to indicate the amount of data 
- *			referenced by the k_data pointer.
+ *            referenced by the k_data pointer.
  *
  * k_data = pointer to an arbitrary data buffer, usually initialized to zeros
- *			and allocated by calloc() memory management.  An application may
- *			use this pointer for anything, suchas a pointer to a C++ class.
+ *            and allocated by calloc() memory management.  An application may
+ *            use this pointer for anything, suchas a pointer to a C++ class.
  *
- *			If k_data points to data that should not be deallocated using the
- *			free() function, the application should register a k_destroy
- *			function that is called before free() deallocation is attempted.
+ *            If k_data points to data that should not be deallocated using the
+ *            free() function, the application should register a k_destroy
+ *            function that is called before free() deallocation is attempted.
  *
  * k_destroy = a 'C' namespace function to cleanup a KeyListEntry node of
- *			unwanted references before k_data is deallocated.  The k_destroy
- *			function must conform to the KeyEntDestroyType definition.
- *			The k_destroy function acts on the content of a KeyListEntry node
- *			before any node data is deallocated or freed.
+ *            unwanted references before k_data is deallocated.  The k_destroy
+ *            function must conform to the KeyEntDestroyType definition.
+ *            The k_destroy function acts on the content of a KeyListEntry node
+ *            before any node data is deallocated or freed.
  *
- *			The k_destroy function can be called with CallKeyEntryDestroy(node).
+ *            The k_destroy function can be called with CallKeyEntryDestroy(node).
  *
  * k_function = a 'C' namespace function is any arbitrary function that can
- *			be registered to the KeyListEntry node.  This function must
- *			conform to the KeyEntFunction type definition. It returns a pointer
- *			of type void that can be cast as required.  It can be programmed
- *			to return application-specific data found in or linked to k_data.
+ *            be registered to the KeyListEntry node.  This function must
+ *            conform to the KeyEntFunction type definition. It returns a pointer
+ *            of type void that can be cast as required.  It can be programmed
+ *            to return application-specific data found in or linked to k_data.
  *
- *			The k_function function can be called by the application via
- *			CallKeyEntryFunction(KeyListEntry * node, int argc, void * args[]).
+ *            The k_function function can be called by the application via
+ *            CallKeyEntryFunction(KeyListEntry * node, int argc, void * args[]).
  *
  * k_argc = an integer helper for k_function to cache the argument count.
- *			The CallKeyEntryFunction stores the argc here for use upon return.
+ *            The CallKeyEntryFunction stores the argc here for use upon return.
  *
  * k_argbuf = a 'C' pointer to an array of arguments (void * args[]).
- *			Allocation is not released. It is a helper for k_function in which
- *			to return multiple values.  The CallKeyEntryFunction stores the
- *			pointer to the argument array for use upon return.  The k_argbuf
- *			array IS NOT AUTOMATICALLY DEALLOCATED.
+ *            Allocation is not released. It is a helper for k_function in which
+ *            to return multiple values.  The CallKeyEntryFunction stores the
+ *            pointer to the argument array for use upon return.  The k_argbuf
+ *            array IS NOT AUTOMATICALLY DEALLOCATED.
  *
- *			Memory allocation requirements should be handled by the k_destroy
- *			function.  Otherwise such deallocation is ignored when the node
- *			is dropped.
+ *            Memory allocation requirements should be handled by the k_destroy
+ *            function.  Otherwise such deallocation is ignored when the node
+ *            is dropped.
  *
  * k_list = pointer to a sublist of KeyListEntry type.  The k_list is treated
- *			as the head of a new KeyListEntry list.  When the node containing
- *			this k_list element is dropped, the entire sublist tree is freed.
+ *            as the head of a new KeyListEntry list.  When the node containing
+ *            this k_list element is dropped, the entire sublist tree is freed.
 */
 
 #if 0
@@ -100,14 +100,14 @@ extern "C"
 typedef struct key_list_entry
 {
   struct key_list_entry * next;
-  char * k_name;			// malloc() string content
-  int    k_id;				// arbitrary integer value
-  size_t k_size;			// size of k_data
-  void * k_data;			// malloc() arbitrary data
+  char * k_name;            // malloc() string content
+  int    k_id;                // arbitrary integer value
+  size_t k_size;            // size of k_data
+  void * k_data;            // malloc() arbitrary data
   void * (* k_function)(struct key_list_entry * theNode,
-		int f_argc, void * f_args[]);
+        int f_argc, void * f_args[]);
   int (* k_destroy)(struct key_list_entry * theNode);
-  struct key_list_entry * k_list;	// supplemental Key List
+  struct key_list_entry * k_list;    // supplemental Key List
 }
 KeyListEntry;
 
@@ -125,8 +125,8 @@ typedef int KeyEntDestroyType  (KeyListEntry * theNode);
 
 void SetKeyEntryFunction(KeyListEntry * node, KeyEntFunctionType * fcn)
 {
-	if (node != NULL)
-	node->k_function = fcn;
+    if (node != NULL)
+    node->k_function = fcn;
 }
 
 
@@ -143,13 +143,13 @@ void SetKeyEntryFunction(KeyListEntry * node, KeyEntFunctionType * fcn)
 
 void * CallKeyEntryFunction(KeyListEntry * node, int argc, void * args[])
 {
-	if (node == NULL)
-		return NULL;
-	if (node->k_function == NULL)
-		return NULL;
-	node->k_argc = argc;
-	node->k_argbuf = args;
-	return (* node->k_function)(node, argc, args);
+    if (node == NULL)
+        return NULL;
+    if (node->k_function == NULL)
+        return NULL;
+    node->k_argc = argc;
+    node->k_argbuf = args;
+    return (* node->k_function)(node, argc, args);
 }
 
 
@@ -162,8 +162,8 @@ void * CallKeyEntryFunction(KeyListEntry * node, int argc, void * args[])
 
 void SetKeyEntryDestroy(KeyListEntry * node, KeyEntDestroyType * fcn)
 {
-	if (node != NULL)
-	node->k_destroy = fcn;
+    if (node != NULL)
+    node->k_destroy = fcn;
 }
 
 
@@ -178,11 +178,11 @@ void SetKeyEntryDestroy(KeyListEntry * node, KeyEntDestroyType * fcn)
 
 int CallKeyEntryDestroy(KeyListEntry * node)
 {
-	if (node == NULL)
-		return 0;
-	if (node->k_destroy == NULL)
-		return 0;
-	return (* node->k_destroy)(node);
+    if (node == NULL)
+        return 0;
+    if (node->k_destroy == NULL)
+        return 0;
+    return (* node->k_destroy)(node);
 }
 
 
@@ -195,19 +195,19 @@ int CallKeyEntryDestroy(KeyListEntry * node)
 
 char * SetKeyEntryName(KeyListEntry * node, const char * name)
 {
-	if (node == NULL)
-		return NULL;
-	
-	if (node->k_name != NULL)
-		free(node->k_name);
+    if (node == NULL)
+        return NULL;
+    
+    if (node->k_name != NULL)
+        free(node->k_name);
 
-	if (name == NULL)
-		node->k_name = NULL;
-	else
-	{
-		node->k_name = strdup(name);
-	}
-	return node->k_name;
+    if (name == NULL)
+        node->k_name = NULL;
+    else
+    {
+        node->k_name = strdup(name);
+    }
+    return node->k_name;
 }
 
 
@@ -219,9 +219,9 @@ char * SetKeyEntryName(KeyListEntry * node, const char * name)
 
 char * GetKeyEntryName(KeyListEntry * node)
 {
-	if (node == NULL)
-		return NULL;
-	return node->k_name;
+    if (node == NULL)
+        return NULL;
+    return node->k_name;
 }
 
 
@@ -234,10 +234,10 @@ char * GetKeyEntryName(KeyListEntry * node)
 
 int SetKeyEntryIdValue(KeyListEntry * node, int idval)
 {
-	if (node == NULL)
-		return 0;
-	node->k_id = idval;
-	return node->k_id;
+    if (node == NULL)
+        return 0;
+    node->k_id = idval;
+    return node->k_id;
 }
 
 
@@ -249,9 +249,9 @@ int SetKeyEntryIdValue(KeyListEntry * node, int idval)
 
 int GetKeyEntryIdValue(KeyListEntry * node)
 {
-	if (node == NULL)
-		return 0;
-	return node->k_id;
+    if (node == NULL)
+        return 0;
+    return node->k_id;
 }
 
 
@@ -264,9 +264,9 @@ int GetKeyEntryIdValue(KeyListEntry * node)
 KeyListEntry *
 GetKeyEntryNext(KeyListEntry * node)
 {
-	if (node == NULL)
-		return NULL;
-	return node->next;
+    if (node == NULL)
+        return NULL;
+    return node->next;
 }
 
 
@@ -284,9 +284,9 @@ GetKeyEntryNext(KeyListEntry * node)
 KeyListEntry *
 GetKeyEntrySubList(KeyListEntry * node)
 {
-	if (node == NULL)
-		return NULL;
-	return node->k_list;
+    if (node == NULL)
+        return NULL;
+    return node->k_list;
 }
 
 
@@ -314,14 +314,14 @@ NewKeyListEntry()
 KeyListEntry * 
 NewKeySubList(KeyListEntry * node)
 {
-	if (node == NULL)
-		return NULL;
+    if (node == NULL)
+        return NULL;
 
-	if (node->k_list)
-		return NULL;	/* Sub List Already Started */
+    if (node->k_list)
+        return NULL;    /* Sub List Already Started */
 
-	node->k_list = (struct key_list_entry *) calloc(1, sizeof(KeyListEntry));
-	return node->k_list;
+    node->k_list = (struct key_list_entry *) calloc(1, sizeof(KeyListEntry));
+    return node->k_list;
 }
 
 /* ================================================================
@@ -336,23 +336,23 @@ NewKeySubList(KeyListEntry * node)
 
 void * SetKeyEntryDataAndDestroy(KeyListEntry * theNode, void * theData, KeyEntDestroyType * theDestroy)
 {
-	if (theNode == NULL)
-		return NULL;
+    if (theNode == NULL)
+        return NULL;
 
-	if (theNode->k_data)
-	{
-		if (theNode->k_destroy)
-			CallKeyEntryDestroy(theNode);
-		if (theNode->k_data)
-		{
-			free(theNode->k_data);
-			theNode->k_size = 0;
-		}
-	}
+    if (theNode->k_data)
+    {
+        if (theNode->k_destroy)
+            CallKeyEntryDestroy(theNode);
+        if (theNode->k_data)
+        {
+            free(theNode->k_data);
+            theNode->k_size = 0;
+        }
+    }
 
-	theNode->k_data = theData;
-	theNode->k_destroy = theDestroy;
-	return theData;
+    theNode->k_data = theData;
+    theNode->k_destroy = theDestroy;
+    return theData;
 }
 
 /* ================================================================
@@ -371,33 +371,33 @@ void * SetKeyEntryDataAndDestroy(KeyListEntry * theNode, void * theData, KeyEntD
 
 void * NewKeyEntryData(KeyListEntry *node, const size_t nmemb, const size_t bufsz)
 {
-	if (node == NULL)
-		return NULL;
+    if (node == NULL)
+        return NULL;
 
-	if (node->k_data)
-	{
-		if (node->k_destroy)
-		{
-			CallKeyEntryDestroy(node);
-			node->k_destroy = NULL;
-		}
-		if (node->k_data)
-		{
-			free(node->k_data);
-			node->k_size = 0;
-			node->k_data = NULL;
-		}
-	}
+    if (node->k_data)
+    {
+        if (node->k_destroy)
+        {
+            CallKeyEntryDestroy(node);
+            node->k_destroy = NULL;
+        }
+        if (node->k_data)
+        {
+            free(node->k_data);
+            node->k_size = 0;
+            node->k_data = NULL;
+        }
+    }
 
-	if (bufsz && nmemb)
-	{
-		node->k_size = (bufsz * nmemb);
-		node->k_data = calloc(nmemb, bufsz);
-		if (node->k_data == NULL)
-			node->k_size = 0;
-	}
+    if (bufsz && nmemb)
+    {
+        node->k_size = (bufsz * nmemb);
+        node->k_data = calloc(nmemb, bufsz);
+        if (node->k_data == NULL)
+            node->k_size = 0;
+    }
 
-	return node->k_data;
+    return node->k_data;
 }
 
 
@@ -409,9 +409,9 @@ void * NewKeyEntryData(KeyListEntry *node, const size_t nmemb, const size_t bufs
 
 void * GetKeyEntryData(KeyListEntry * node)
 {
-	if (node == NULL)
-		return NULL;
-	return node->k_data;
+    if (node == NULL)
+        return NULL;
+    return node->k_data;
 }
 
 
@@ -425,18 +425,18 @@ void * GetKeyEntryData(KeyListEntry * node)
 
 void DropKeyEntryData(KeyListEntry * node)
 {
-	if (node == NULL)
-		return;
+    if (node == NULL)
+        return;
 
-	if (node->k_destroy != NULL)
-		(* node->k_destroy) (node);
+    if (node->k_destroy != NULL)
+        (* node->k_destroy) (node);
 
-	if (node->k_data)
-		free(node->k_data);
+    if (node->k_data)
+        free(node->k_data);
 
-	node->k_size = 0;
-	node->k_data = NULL;
-	return;
+    node->k_size = 0;
+    node->k_data = NULL;
+    return;
 }
 
 /* ================================================================
@@ -449,26 +449,26 @@ void DropKeyEntryData(KeyListEntry * node)
 KeyListEntry * 
 DropKeyListEntry(KeyListEntry * node)
 {
-	KeyListEntry * rtn;
+    KeyListEntry * rtn;
 
-	if (!node)
-		return NULL;
+    if (!node)
+        return NULL;
 
-	rtn = node->next;
+    rtn = node->next;
 
     CallKeyEntryDestroy(node);
 
-	if (node->k_name)
-		free(node->k_name);
+    if (node->k_name)
+        free(node->k_name);
 
-	if (node->k_data)
-		free(node->k_data);
+    if (node->k_data)
+        free(node->k_data);
 
-	if (node->k_list)
-		FreeKeyList(&node->k_list);
+    if (node->k_list)
+        FreeKeyList(&node->k_list);
 
-	free(node);
-	return rtn;
+    free(node);
+    return rtn;
 }
 
 /* ===============================================================
@@ -492,15 +492,15 @@ void FreeKeyList(KeyListEntry ** theListAdr)
     CallKeyEntryDestroy(tmpList);
 
     if (tmpList->k_name)
-		free(tmpList->k_name);
+        free(tmpList->k_name);
 
-	if (tmpList->k_data)
-		free(tmpList->k_data);
+    if (tmpList->k_data)
+        free(tmpList->k_data);
 
-	if (tmpList->k_list)
-		FreeKeyList(&tmpList->k_list);
+    if (tmpList->k_list)
+        FreeKeyList(&tmpList->k_list);
 
-	free(tmpList);
+    free(tmpList);
 
   }while (*theListAdr);
 
@@ -515,13 +515,13 @@ void FreeKeyList(KeyListEntry ** theListAdr)
 
 void DestroyKeyArgBuf(KeyListEntry * theNode)
 {
-	if (theNode == NULL)
-		return;
-	theNode->k_argc = 0;
-	if (theNode->k_argbuf)
-		free(theNode->k_argbuf);
-	theNode->k_argbuf = NULL;
-	return;
+    if (theNode == NULL)
+        return;
+    theNode->k_argc = 0;
+    if (theNode->k_argbuf)
+        free(theNode->k_argbuf);
+    theNode->k_argbuf = NULL;
+    return;
 }
 
 
@@ -534,9 +534,9 @@ void DestroyKeyArgBuf(KeyListEntry * theNode)
 KeyListEntry *
 FindLastKeyListEntry(KeyListEntry * theList)
 {
-	KeyListEntry *	LP;
-	for (LP = theList; LP && LP->next; LP = LP->next);
-	return LP;
+    KeyListEntry *    LP;
+    for (LP = theList; LP && LP->next; LP = LP->next);
+    return LP;
 }
 
 
@@ -577,9 +577,9 @@ FindLastKeyListEntry(KeyListEntry * theList)
 
 int KeyNodeNameCompare (const KeyListEntry * aNode, const KeyListEntry *bNode)
 {
-	if (!aNode || !bNode)
-		return 0;
-	return (strcmp((char *) aNode->k_name, (char *) bNode->k_name));
+    if (!aNode || !bNode)
+        return 0;
+    return (strcmp((char *) aNode->k_name, (char *) bNode->k_name));
 }
 
 /*================================================================
@@ -595,13 +595,13 @@ int KeyNodeNameCompare (const KeyListEntry * aNode, const KeyListEntry *bNode)
 
 int KeyNodeIDValueCompare (const KeyListEntry *aNode, const KeyListEntry *bNode)
 {
-	if (!aNode || !bNode)
-		return 0;
-	if (aNode->k_id > bNode->k_id)
-		return 1;
-	if (aNode->k_id < bNode->k_id)
-		return -1;
-	return 0;
+    if (!aNode || !bNode)
+        return 0;
+    if (aNode->k_id > bNode->k_id)
+        return 1;
+    if (aNode->k_id < bNode->k_id)
+        return -1;
+    return 0;
 }
 
 
@@ -619,9 +619,9 @@ int KeyNodeIDValueCompare (const KeyListEntry *aNode, const KeyListEntry *bNode)
  * typedef int KeyNodeCompareFunction (const KeyListEntry * A, const KeyListEntry * B);
  *
  * The helper comparison function returns an integer value.
- *		Positive (A > B)
- *		Zero     (A = B)
- *		Negative (A < B)
+ *        Positive (A > B)
+ *        Zero     (A = B)
+ *        Negative (A < B)
  * where A and B are KeyListEntry nodes.
  *
  * The KeyListSort has been adjusted by calling KeyListReverseOrder before entering
@@ -638,101 +638,101 @@ int KeyNodeIDValueCompare (const KeyListEntry *aNode, const KeyListEntry *bNode)
 KeyListEntry * KeyListSort (KeyListEntry * theList, KeyNodeCompareFunction * KCompare)
 {
 
-	KeyListEntry	* OutList;	// head of sorted list
-	KeyListEntry	* RevList;	// head of reversed list
+    KeyListEntry    * OutList;    // head of sorted list
+    KeyListEntry    * RevList;    // head of reversed list
 
-	KeyListEntry	* KPtrA;	// the base test node pointer
-	KeyListEntry	* KRefA;	// parent adjacency pointer
+    KeyListEntry    * KPtrA;    // the base test node pointer
+    KeyListEntry    * KRefA;    // parent adjacency pointer
 
-	KeyListEntry	* KPtrB;	// forward test node pointer
-	KeyListEntry	* KRefB;	// forward separation pointer
+    KeyListEntry    * KPtrB;    // forward test node pointer
+    KeyListEntry    * KRefB;    // forward separation pointer
 
-	KeyListEntry	* HoldB;	// forward next node pointer
-	KeyListEntry	* KTemp;	// address swapping pointer
+    KeyListEntry    * HoldB;    // forward next node pointer
+    KeyListEntry    * KTemp;    // address swapping pointer
 
-	KeyListEntry	* KMovA;	// forward base move test - optimization
-					// for initial list in descending order
+    KeyListEntry    * KMovA;    // forward base move test - optimization
+                    // for initial list in descending order
 
 
-	if (!theList)
-		return NULL;			// no list to sort
+    if (!theList)
+        return NULL;            // no list to sort
 
-	if (!KCompare)				// returning NULL here could cause memory leaks.
-		return theList;			// no comparison function, return unsorted.
+    if (!KCompare)                // returning NULL here could cause memory leaks.
+        return theList;            // no comparison function, return unsorted.
 
-	/* The following sort algorithm works hardest on ascending key-value lists
-	 * and reverses the node-link order when key-values appear identical.
-	 * Reversing the order before sorting resolves these issues.
-	 */
-	
-	RevList = KeyListReverseOrder(theList);
+    /* The following sort algorithm works hardest on ascending key-value lists
+     * and reverses the node-link order when key-values appear identical.
+     * Reversing the order before sorting resolves these issues.
+     */
+    
+    RevList = KeyListReverseOrder(theList);
 
-	/* The OutList points to the last KeyListEntry node with the lowest 
-	 * common key-value comparison.  If (<) comparison instead of (<=) is used,
-	 * then identical key-value comparisons cause problems.
-	 */
+    /* The OutList points to the last KeyListEntry node with the lowest 
+     * common key-value comparison.  If (<) comparison instead of (<=) is used,
+     * then identical key-value comparisons cause problems.
+     */
 
-	for (OutList = KTemp = RevList; KTemp; KTemp = KTemp->next)
-	{
-		if ((*KCompare)(KTemp, OutList) <= 0)
-			OutList = KTemp;
-	}
+    for (OutList = KTemp = RevList; KTemp; KTemp = KTemp->next)
+    {
+        if ((*KCompare)(KTemp, OutList) <= 0)
+            OutList = KTemp;
+    }
 
-	KRefA = NULL;		// no adjacent parent
-	KRefB = NULL;		// no forward separation (A & B are adjacent)
+    KRefA = NULL;        // no adjacent parent
+    KRefB = NULL;        // no forward separation (A & B are adjacent)
 
-	for (KPtrA = RevList; KPtrA; KPtrA = KRefA->next)
-	{
-		KRefB = NULL;				// No Forward Separation
-		KMovA = NULL;
+    for (KPtrA = RevList; KPtrA; KPtrA = KRefA->next)
+    {
+        KRefB = NULL;                // No Forward Separation
+        KMovA = NULL;
 
-		for (KPtrB = KPtrA->next; KPtrB; KPtrB = KRefB->next)
-		{
+        for (KPtrB = KPtrA->next; KPtrB; KPtrB = KRefB->next)
+        {
 
-			/* The comparison (<=) here must be the same which determines OutList earlier */
-			if ((*KCompare)(KPtrB, KPtrA) <= 0)
-			{
-				HoldB = KPtrB->next;	// Forward Looking Reference
-	
-				// Swap A B Pointers
-				KTemp = KPtrB;
-				KPtrB = KPtrA;
-				KPtrA = KTemp;
+            /* The comparison (<=) here must be the same which determines OutList earlier */
+            if ((*KCompare)(KPtrB, KPtrA) <= 0)
+            {
+                HoldB = KPtrB->next;    // Forward Looking Reference
+    
+                // Swap A B Pointers
+                KTemp = KPtrB;
+                KPtrB = KPtrA;
+                KPtrA = KTemp;
 
-				// Relink the nodes
-				KPtrA->next = KPtrB;
-				if (!KRefB)		// A & B are adjacent
-				{
-					KPtrB->next = HoldB;
-				}
-				else			// B has Forward Separation
-				{
-					KRefB->next = HoldB;
-				}
-				if (KRefA)		// A has a parent
-				{
-					KRefA->next = KPtrA;
-				}
-				KMovA = KPtrB;		// Show that KPtrA has moved
-			}
-			else
-			{
-				if (KRefB && ((*KCompare)(KPtrB, KRefB) <= 0))
-					KMovA = KPtrB;	// move KPtrA on future cycle
-				KRefB = KPtrB;
-			}
-			if (!KRefB)
-			{
-				KRefB = KPtrB;
-			}
-		}
-		if (!KMovA && KRefB)
-			KRefA = KRefB;			// points to end-of-list
-		else
-			KRefA = KPtrA;			// advance one node
-	}
+                // Relink the nodes
+                KPtrA->next = KPtrB;
+                if (!KRefB)        // A & B are adjacent
+                {
+                    KPtrB->next = HoldB;
+                }
+                else            // B has Forward Separation
+                {
+                    KRefB->next = HoldB;
+                }
+                if (KRefA)        // A has a parent
+                {
+                    KRefA->next = KPtrA;
+                }
+                KMovA = KPtrB;        // Show that KPtrA has moved
+            }
+            else
+            {
+                if (KRefB && ((*KCompare)(KPtrB, KRefB) <= 0))
+                    KMovA = KPtrB;    // move KPtrA on future cycle
+                KRefB = KPtrB;
+            }
+            if (!KRefB)
+            {
+                KRefB = KPtrB;
+            }
+        }
+        if (!KMovA && KRefB)
+            KRefA = KRefB;            // points to end-of-list
+        else
+            KRefA = KPtrA;            // advance one node
+    }
 
-	return OutList;
+    return OutList;
 }
 
 
@@ -748,7 +748,7 @@ KeyListEntry * KeyListSort (KeyListEntry * theList, KeyNodeCompareFunction * KCo
 
 KeyListEntry * KeyListNameSort(KeyListEntry * theList)
 {
-	return KeyListSort(theList, &KeyNodeNameCompare);
+    return KeyListSort(theList, &KeyNodeNameCompare);
 }
 
 
@@ -763,7 +763,7 @@ KeyListEntry * KeyListNameSort(KeyListEntry * theList)
 
 KeyListEntry * KeyListIDValueSort(KeyListEntry * theList)
 {
-	return KeyListSort(theList, &KeyNodeIDValueCompare);
+    return KeyListSort(theList, &KeyNodeIDValueCompare);
 }
 
 
@@ -775,23 +775,23 @@ KeyListEntry * KeyListIDValueSort(KeyListEntry * theList)
 
 KeyListEntry * KeyListReverseOrder(KeyListEntry * theList)
 {
-	KeyListEntry * PNode;
-	KeyListEntry * P1 = NULL;
-	KeyListEntry * P2 = NULL;
+    KeyListEntry * PNode;
+    KeyListEntry * P1 = NULL;
+    KeyListEntry * P2 = NULL;
 
-	for (PNode = theList; PNode; PNode = PNode->next)
-	{
-		if (P2)
-		{
-			P2->next = P1;
-			P1 = P2;
-		}
-		P2 = PNode;
-	}
-	if (P2)
-		P2->next = P1;
+    for (PNode = theList; PNode; PNode = PNode->next)
+    {
+        if (P2)
+        {
+            P2->next = P1;
+            P1 = P2;
+        }
+        P2 = PNode;
+    }
+    if (P2)
+        P2->next = P1;
 
-	return P2;
+    return P2;
 }
 
 /* ============================================================================
@@ -804,112 +804,112 @@ KeyListEntry * KeyListReverseOrder(KeyListEntry * theList)
 
 void * fcn_test(KeyListEntry * node, int ii, void * args[])
 {
-	int i;
-	printf("Function: Node %s\n", node->k_name);
-	for (i = 0; i < ii; i++)
-		printf("   argAdrs=%x   arg[%d] = %s\n", &args, i, (char *) args[i]);
-	return NULL;
+    int i;
+    printf("Function: Node %s\n", node->k_name);
+    for (i = 0; i < ii; i++)
+        printf("   argAdrs=%x   arg[%d] = %s\n", &args, i, (char *) args[i]);
+    return NULL;
 }
 
 int dstr_test(KeyListEntry * node)
 {
-	printf("Destroy: Node %s, DataSize %d\n",
-		node->k_name, node->k_size);
-	return 0;
+    printf("Destroy: Node %s, DataSize %d\n",
+        node->k_name, node->k_size);
+    return 0;
 }
 
 int main(int argc, char *argv[])
 {
-	int i;
-	char *KeyName[] = {"First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", NULL};
+    int i;
+    char *KeyName[] = {"First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", NULL};
     KeyListEntry * MyList = NULL;
-	KeyListEntry * listPtr = NULL;
+    KeyListEntry * listPtr = NULL;
 
-	listPtr = NewKeyListEntry();
-	MyList = listPtr;
-	listPtr->k_name = strdup(KeyName[0]);
+    listPtr = NewKeyListEntry();
+    MyList = listPtr;
+    listPtr->k_name = strdup(KeyName[0]);
 
-	for (i = 1; i<7 ;i++)
-	{
-		listPtr->next = NewKeyListEntry();
-		listPtr = listPtr->next;
-		listPtr->k_name = strdup(KeyName[i]);
-		if (i > 2)
-			SetKeyEntryFunction(listPtr, & fcn_test);
-		NewKeyEntryData(listPtr, i, 10);
-		SetKeyEntryDestroy(listPtr, & dstr_test);
-	}
+    for (i = 1; i<7 ;i++)
+    {
+        listPtr->next = NewKeyListEntry();
+        listPtr = listPtr->next;
+        listPtr->k_name = strdup(KeyName[i]);
+        if (i > 2)
+            SetKeyEntryFunction(listPtr, & fcn_test);
+        NewKeyEntryData(listPtr, i, 10);
+        SetKeyEntryDestroy(listPtr, & dstr_test);
+    }
 
-	listPtr = MyList->next;
-	for (i = 0; i<3; i++)
-	{
-		listPtr->k_list = NewKeyListEntry();
-		listPtr = listPtr->k_list;
-		listPtr->k_name = calloc(1,30);
-		strcpy(listPtr->k_name, "  Supplemental: ");
-		strcat(listPtr->k_name, KeyName[i]);
-	}
+    listPtr = MyList->next;
+    for (i = 0; i<3; i++)
+    {
+        listPtr->k_list = NewKeyListEntry();
+        listPtr = listPtr->k_list;
+        listPtr->k_name = calloc(1,30);
+        strcpy(listPtr->k_name, "  Supplemental: ");
+        strcat(listPtr->k_name, KeyName[i]);
+    }
 
-	listPtr = MyList->next->next->next;
-	for (i = 0; i<3; i++)
-	{
-		listPtr->k_list = NewKeyListEntry();
-		listPtr = listPtr->k_list;
-		listPtr->k_name = calloc(1,30);
-		strcpy(listPtr->k_name, "  Supplemental: ");
-		strcat(listPtr->k_name, KeyName[i]);
-	}
+    listPtr = MyList->next->next->next;
+    for (i = 0; i<3; i++)
+    {
+        listPtr->k_list = NewKeyListEntry();
+        listPtr = listPtr->k_list;
+        listPtr->k_name = calloc(1,30);
+        strcpy(listPtr->k_name, "  Supplemental: ");
+        strcat(listPtr->k_name, KeyName[i]);
+    }
 
-	for (listPtr = MyList; listPtr; listPtr = listPtr->next)
-	{
-		char * args[2] = {"arg1-text","arg2-text"};
-		KeyListEntry * supplKey;
+    for (listPtr = MyList; listPtr; listPtr = listPtr->next)
+    {
+        char * args[2] = {"arg1-text","arg2-text"};
+        KeyListEntry * supplKey;
 
-		printf("ArgumentArray = %x\n", &args);
-		printf("List Entry: %s\n", listPtr->k_name);
-		CallKeyEntryFunction(listPtr, 2, args);
-		printf("  k_argc = %d, k_argbuf = %x\n", listPtr->k_argc, listPtr->k_argbuf);
-		for (supplKey = listPtr->k_list; supplKey; supplKey = supplKey->k_list)
-			printf("%s\n", supplKey->k_name);
-	}
+        printf("ArgumentArray = %x\n", &args);
+        printf("List Entry: %s\n", listPtr->k_name);
+        CallKeyEntryFunction(listPtr, 2, args);
+        printf("  k_argc = %d, k_argbuf = %x\n", listPtr->k_argc, listPtr->k_argbuf);
+        for (supplKey = listPtr->k_list; supplKey; supplKey = supplKey->k_list)
+            printf("%s\n", supplKey->k_name);
+    }
 
-	printf("\n -- Now to drop second entry \n");
+    printf("\n -- Now to drop second entry \n");
 
-	MyList->next = DropKeyListEntry(MyList->next);
+    MyList->next = DropKeyListEntry(MyList->next);
 
-	for (listPtr = MyList; listPtr; listPtr = listPtr->next)
-	{
-		KeyListEntry * supplKey;
-		printf("List Entry: %s\n", listPtr->k_name);
-		for (supplKey = listPtr->k_list; supplKey; supplKey = supplKey->k_list)
-			printf("%s\n", supplKey->k_name);
-	}
+    for (listPtr = MyList; listPtr; listPtr = listPtr->next)
+    {
+        KeyListEntry * supplKey;
+        printf("List Entry: %s\n", listPtr->k_name);
+        for (supplKey = listPtr->k_list; supplKey; supplKey = supplKey->k_list)
+            printf("%s\n", supplKey->k_name);
+    }
 
 
-	printf("\n -- Now to drop first entry \n");
+    printf("\n -- Now to drop first entry \n");
 
-	MyList = DropKeyListEntry(MyList);
+    MyList = DropKeyListEntry(MyList);
 
-	for (listPtr = MyList; listPtr; listPtr = listPtr->next)
-	{
-		KeyListEntry * supplKey;
-		printf("List Entry: %s\n", listPtr->k_name);
-		for (supplKey = listPtr->k_list; supplKey; supplKey = supplKey->k_list)
-			printf("%s\n", supplKey->k_name);
-	}
+    for (listPtr = MyList; listPtr; listPtr = listPtr->next)
+    {
+        KeyListEntry * supplKey;
+        printf("List Entry: %s\n", listPtr->k_name);
+        for (supplKey = listPtr->k_list; supplKey; supplKey = supplKey->k_list)
+            printf("%s\n", supplKey->k_name);
+    }
 
-	printf("\n -- Now to drop entire list \n");
+    printf("\n -- Now to drop entire list \n");
 
-	FreeKeyList(&MyList);
+    FreeKeyList(&MyList);
 
-	if (!MyList)
-	{
-		printf("SUCCESS\n");
-	}
-	else
-	{
-		printf("FAILURE\n");
-	}
+    if (!MyList)
+    {
+        printf("SUCCESS\n");
+    }
+    else
+    {
+        printf("FAILURE\n");
+    }
 }
 #endif /* MAKE_LIST_TEST_EXE */
 

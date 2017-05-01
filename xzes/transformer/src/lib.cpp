@@ -36,13 +36,16 @@ std::vector<std::string> xzes::split( std::string s, char c)
     std::string::size_type i = 0;
     std::string::size_type j = s.find(c);
 
-    while (j != std::string::npos) {
+    while (j != std::string::npos)
+    {
         v.push_back(s.substr(i, j-i));
         i = ++j;
         j = s.find(c, j);
 
         if (j == std::string::npos)
+        {
             v.push_back(s.substr(i, s.length()));
+        }
     }
 
     return v;
@@ -81,10 +84,12 @@ int xzes::_hash( const char* s )
 {
     unsigned int seed = 0;
     unsigned int hash = seed;
+
     while (*s)
     {
         hash = hash * 101  +  *s++;
     }
+
     return hash;
 
 }
@@ -98,10 +103,13 @@ int xzes::valid_request(char * b)
 {
     std::string tmp (b);
     // printf("%lu\n", tmp.find(","));
+
     if ( tmp.find(",") )
+    {
         // printf("Found `,` in input\n");
         return SUCCESS;
-    else
+    } else {
         // printf("Could not find `,` in input\n");
         return FAILURE;
+    }
 }

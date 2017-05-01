@@ -50,6 +50,12 @@ In that directory we have the following project components:
 
 Each of these directories has a README of it's own explaining what it is and how it works.
 
+
+## How can I test?
+
+In the directory `xzes/transformer/test/simple_test_file` we have provided a simple test script that you can run on your local system which connects to the server running via Vagrant..
+Just run `./simple_test.sh` and then you should see HTTP 200 OK responses and transformed XML documents..
+
 ## Contributing
 
 If you have interest in contributing to this project, **great**!

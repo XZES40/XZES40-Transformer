@@ -40,14 +40,16 @@ pthread_t callThd[MAXTHREAD];
 // Keep running as daemon.
 // As the infinite loop.
 // ------------------------------------------------------------------------
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
     int conn, ret;
 
     conn = master_connection(PORT);
-    if (conn > 0) {
+    if (conn > 0)
+    {
         ret = xzes::daemon(conn);
     } else {
-        perror("XZES:: Unable to start daemon.\n");
+        perror("Unable to start daemon.");
         exit(EXIT_FAILURE);
     }
 
@@ -72,15 +74,15 @@ int xzes::daemon(int fd)
     //declare varb for the function using.
     int rc;
     void * status;
-	pthread_attr_t attr;
+    pthread_attr_t attr;
     pthread_t thread[MAXTHREAD];
     xzes::job_t *job[MAXTHREAD], *temp = NULL;
 
-	//Create cache for file
-	Cache::Cache *storeList = new Cache();
+    //Create cache for file
+    Cache::Cache *storeList = new Cache();
 
-	//Initialize pthread mutex
-	pthread_mutex_init(&mutex, NULL);
+    //Initialize pthread mutex
+    pthread_mutex_init(&mutex, NULL);
 
     //Initialize xalan transformer
     XMLPlatformUtils::Initialize();
@@ -91,49 +93,63 @@ int xzes::daemon(int fd)
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
     //Create array to handle the job data for each thread.
-    for (int i = 0; i <= MAXTHREAD; i++){
+    for (int i = 0; i <= MAXTHREAD; i++)
+    {
         job[i] = temp;
     }
 
-    while (true) {
-    	for (int i = 0; i <=MAXTHREAD ; i++){
+    while (true)
+    {
+        for (int i = 0; i <=MAXTHREAD ; i++)
+        {
             job[i] = xzes::recv_request(fd, &readfds);
-            puts("read file ");
-			if (job[i]!= NULL)
-        	{
-            	puts("pre-transform");
-                    //add the cache to job object
-                	job[i]->theList = storeList;
-                    //pass the mutex locker to job object
-                	job[i]->lock_var = mutex;
-                    //create connection
-                	rc = pthread_create(&thread[i], &attr, xzes::transform_documents, (void *)job[i]);
-                    puts("back to damon");
-                    //give the feedback for thread 
-					if (rc){
-						printf("ERROR; return code from pthread_create is %d\n", rc);
-						exit(-1);
-					}
-					job[i] = NULL;
-            	puts("post-transform");
+            // puts("Read file ");
 
-        	} else {
-				puts("don't do the transform");
-        	}
-    	}
-        puts("after the thread loop");
+            if (job[i]!= NULL)
+            {
+                printf("Processing transformation request.\n");
+                // puts("pre-transform");
+
+               //add the cache to job object
+               job[i]->theList = storeList;
+
+               //pass the mutex locker to job object
+               job[i]->lock_var = mutex;
+
+               //Set the thread id;
+               job[i]->tid = i ;
+
+               //create connection
+               rc = pthread_create(&thread[i], &attr, xzes::transform_documents, (void *)job[i]);
+
+               //give the feedback for thread 
+               if (rc){
+                   printf("ERROR; return code from pthread_create is %d\n", rc);
+                   exit(-1);
+               }
+
+               job[i] = NULL;
+                // puts("post-transform");
+
+            } else {
+                printf("Ignoring transformation request.\n");
+                // puts("don't do the transform");
+            }
+        }
+        // puts("after the thread loop");
 
         pthread_attr_destroy(&attr);
-        puts("after destroy");
+        // puts("after destroy");
 
         //wait for other thread join
-        for (int i = 0; i <= MAXTHREAD; i++ ){
+        for (int i = 0; i <= MAXTHREAD; i++ )
+        {
             pthread_join(callThd[i], &status);
         }
-        puts("after pthread join");
+        // puts("after pthread join");
 
         pthread_mutex_destroy(&mutex);
-        puts("after mutex desotry");
+        // puts("after mutex desotry");
     }
 
     //Terminate the xalan transformer
@@ -152,30 +168,29 @@ int xzes::daemon(int fd)
 xzes::job_t* xzes::recv_request(int conn, fd_set* )
 {
 
-	char buf[BUFFER_SIZE];
-	fd_set readfds;
-	int activity;
-	int addrlen;
+    char buf[BUFFER_SIZE];
+    fd_set readfds;
+    int activity;
+    int addrlen;
     struct sockaddr_in address;
-	int new_socket;
-	xzes::job_t *tmp = NULL;
+    int new_socket;
+    xzes::job_t *tmp = NULL;
+    // puts("FD_ZERO, FD_SET");
 
-    puts("FD_ZERO, FD_SET");
+    FD_ZERO(&readfds);
+    FD_SET(conn, &readfds);
 
-	FD_ZERO(&readfds);
-	FD_SET(conn, &readfds);
+    // puts("Post FD_ZERO, FD_SET");
 
-    puts("post FD_ZERO, FD_SET");
-
-	// TODO: Debug this section, pretty sure conn+1 should be something else.
-	// `conn` should be "the highest file descriptor name.
-	// Reference the second 'much thanks' link for more info.
+    // TODO: Debug this section, pretty sure conn+1 should be something else.
+    // `conn` should be "the highest file descriptor name.
+    // Reference the second 'much thanks' link for more info.
 
     activity = select( conn + 1 , &readfds , NULL , NULL , NULL);
     
     if ((activity < 0) && (errno!=EINTR)) 
     {
-    	puts("select error");
+        // puts("select error");
     }
 
     //type of socket created
@@ -183,36 +198,34 @@ xzes::job_t* xzes::recv_request(int conn, fd_set* )
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons( PORT );
 
-    puts("FD_ISSET");
+    // puts("FD is set");
 
-	if (FD_ISSET(conn, &readfds)) 
-	{
+    if (FD_ISSET(conn, &readfds)) 
+    {
         new_socket = accept(conn, (struct sockaddr *)&address, (socklen_t*)&addrlen);
 
-        puts("new socket");
+        // puts("Create a new socket");
 
-		if ( new_socket < 0 )
-		{
-            puts("socket is small than 0");
-			perror("accept");
-			exit(EXIT_FAILURE);
-		} else {
-			if (read(new_socket, buf, sizeof(buf)) > 0 && xzes::valid_request( buf ))
-			{
+        if ( new_socket < 0 )
+        {
+            // puts("socket is small than 0");
+            perror("Unable to accept daemon job requests...");
+            exit(EXIT_FAILURE);
+        } else {
+            if (read(new_socket, buf, sizeof(buf)) > 0 && xzes::valid_request( buf ))
+            {
 
-                puts("setting job");
+                // puts("setting job");
 
-				tmp = parse_request( buf );
-				tmp->error = "";
-				tmp->socket_fd = new_socket;
-
-                puts("set job");
-			}
-            else
-                puts("failed with setting job");
-		}
-	}
-
+                tmp = parse_request( buf );
+                tmp->error = "";
+                tmp->socket_fd = new_socket;
+            } else {
+                // puts("failed with setting job");
+            }
+            memset(&buf[0], 0, sizeof(buf));
+        }
+    }
 
     return tmp;
 }
@@ -232,13 +245,13 @@ int xzes::master_connection(int port) {
     //create a master socket
     if( (master_socket = socket(AF_INET , SOCK_STREAM , 0)) == 0) 
     {
-        perror("socket failed");
+        perror("Failed socket setup: socket()");
         exit(EXIT_FAILURE);
     }
     
     if( setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0 )
     {
-        perror("setsockopt");
+        perror("Failed socket setup: setsockopt()");
         exit(EXIT_FAILURE);
     }
 
@@ -250,19 +263,20 @@ int xzes::master_connection(int port) {
     //bind the socket to localhost port 8888
     if (bind(master_socket, (struct sockaddr *)&address, sizeof(address))<0) 
     {
-        perror("bind failed");
+        perror("Failed to bind to address.");
         exit(EXIT_FAILURE);
     }
 
     //try to specify maximum of 3 pending connections for the master socket
     if (listen(master_socket, 3) < 0)
     {
-        perror("listen");
+        perror("Failed to setup listen.");
         exit(EXIT_FAILURE);
     }
       
     //accept the incoming connection
-    puts("Waiting for connections ...");
+    // puts("============================");
+    // puts("Waiting for connections ...");
 
     return master_socket;
 }
