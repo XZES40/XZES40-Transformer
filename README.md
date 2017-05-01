@@ -50,6 +50,12 @@ In that directory we have the following project components:
 
 Each of these directories has a README of it's own explaining what it is and how it works.
 
+
+## How can I test?
+The code is contained in the `xzes/transformer/test/simple_test_file` directory.
+In that directory we have a simple test script that you can use.
+Just type ./simple\_test.sh and then you will see the result.
+
 ## Contributing
 
 If you have interest in contributing to this project, **great**!
