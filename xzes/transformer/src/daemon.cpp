@@ -208,7 +208,10 @@ xzes::job_t* xzes::recv_request(int conn, fd_set* )
 
 			}
             else
+            {
                 puts("failed with setting job");
+            }
+            memset(&buf[0], 0, sizeof(buf));
 		}
 	}
 
